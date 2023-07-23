@@ -1,0 +1,11 @@
+import { EventDriver } from '../../events/drivers'
+
+export class IframeCanvas {
+  constructor(
+    private readonly eventDrivers: EventDriver[],
+  ) {}
+
+  destroy() {
+    this.eventDrivers.forEach((driver) => driver.destroy())
+  }
+}
