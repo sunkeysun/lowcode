@@ -1,8 +1,9 @@
+
 /**
  * dragend event
  */
-export class DragEndEvent extends Event {
-  constructor(e: Event) {
-    super('custom:dragend', e)
-  }
+import { EngineEvent } from './EngineEvent';
+
+export class DragEndEvent extends EngineEvent{
+  static eventName: 'engine:dragend'
 }

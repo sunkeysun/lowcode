@@ -4,8 +4,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '..'
 
-interface DraggingElement {
-  info: {
+interface DraggingTarget {
+  target: {
     id: string
     type: 'component' | 'node'
   },
@@ -19,14 +19,14 @@ interface DraggingElement {
 
 export interface DocumentUI {
   selectedId: string | null
-  draggingElement: DraggingElement | null
-  dragoverElement: DraggingElement | null
+  draggingTarget: DraggingTarget | null
+  dragoverTarget: DraggingTarget | null
 }
 
 const initialState: DocumentUI = {
   selectedId: null,
-  draggingElement: null,
-  dragoverElement: null,
+  draggingTarget: null,
+  dragoverTarget: null,
 }
 
 export const name = 'document'

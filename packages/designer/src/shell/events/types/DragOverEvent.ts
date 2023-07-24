@@ -1,8 +1,15 @@
 /**
  * dragover event
  */
-export class DragOverEvent extends Event {
-  constructor(e: Event) {
-    super('custom:dragover', e)
-  }
+import { EngineEvent } from './EngineEvent'
+
+export interface DragOverEventData {
+  nativeEvent: MouseEvent
+  lcTarget: {
+    id: string
+    type: 'component' | 'node'
+  },
+}
+export class DragOverEvent extends EngineEvent<DragOverEventData> {
+  static eventName = 'engine:dragover'
 }

@@ -7,7 +7,8 @@ import { type RootState } from '..'
 interface DocumentEntity {
   id: string
   titile: string
-  rootNodeId: string
+  selectedId: string | null
+  rootNodeId: string | null
 }
 
 const adapter = createEntityAdapter<DocumentEntity>({})

@@ -13,8 +13,8 @@ interface NodeEntity {
   titile: string
   componentName: string
   props: unknown
-  childrenIds?: string[]
-  parentId?: string
+  childrenIds: string[]
+  parentId: string | null
 }
 
 const adapter = createEntityAdapter<NodeEntity>()
@@ -27,14 +27,22 @@ export const slice = createSlice({
     appendChild(state, action: PayloadAction<NodeEntity>) {
       const { payload: node } = action
       adapter.addOne(state, node)
-      state.entities[node.parentId]?.childrenIds?.push(node.id)
+      state.entities[node.parentId as string]?.childrenIds?.push(node.id)
+    },
+    remove(state, action: PayloadAction<string>) {
+      const { payload: nodeId } = action
+      const parentId = state.entities[nodeId]?.parentId
+      if (parentId) {
+        const parentNode = state.entities[parentId]
+        if (parentNode) {
+          const childIndex = parentNode.childrenIds.findIndex((childId) => childId === nodeId)
+          parentNode.childrenIds.splice(childIndex, 1)
+        }
+      }
+      adapter.removeOne(state, action.payload)
     },
     // insertBefore() { },
     // insertAfter() { },
-    // remove() { },
-    // updateProps() { },
-    // updateOne() { },
-    // setAll() { },
   },
 })
 

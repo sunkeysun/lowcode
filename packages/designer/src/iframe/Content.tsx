@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { ComponentRender } from '../components/ComponentRender'
-import { RootState, documentEntity, documentUI, nodeEntity } from '../store'
+import { RootState, documentEntity, documentUI } from '../store'
 
 export function Content() {
   const documentId = useSelector(documentUI.selectors.selectState).selectedId

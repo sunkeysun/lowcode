@@ -1,5 +1,5 @@
 interface HTMLElement {
-  __LC_ELEMENT: {
+  __LC_TARGET: {
     id: string
     type: 'component' | 'node'
   }

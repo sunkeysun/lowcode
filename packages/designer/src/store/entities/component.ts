@@ -1,5 +1,5 @@
 /**
- * 物料组件实体
+ * 组件实体
  */
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit'
 
@@ -7,13 +7,13 @@ interface ComponentEntity {
   id: string
   titile: string
   componentName: string
-  props: unknown[]
+  propsSetter: unknown[]
   variants: {
     title: string
     thumbnail: string
     schema: {
       componentName: string
-      props: unknown
+      props: Record<string, unknown>
     }
   }[]
 }

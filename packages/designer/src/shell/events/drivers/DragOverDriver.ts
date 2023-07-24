@@ -2,19 +2,18 @@
  * dragover事件驱动
  */
 import { EventDriver } from './EventDriver'
-import { LC_ELEMENT } from '../../../common/constants'
+import { DragLeaveEvent, DragOverEvent, DropEvent, type EngineEvent } from '../types'
 
 export class DragOverDriver extends EventDriver {
   element: HTMLElement
-  overEventInfo: {
-    offsetX: number
-    offsetY: number
-    target: HTMLElement
+  eventData: {
+    clientX: number
+    clientY: number
   } | null = null
 
   constructor(
     elem: HTMLElement | Document,
-    private dispatch: (name: string, d: any) => void,
+    private dispatchEvent: (event: EngineEvent) => void,
   ) {
     super()
     this.element = elem as HTMLElement
@@ -22,66 +21,36 @@ export class DragOverDriver extends EventDriver {
     this.element.addEventListener('drop', this.handleDrop)
   }
 
-  handleDragOver = (e: DragEvent) => {
-    e.preventDefault()
-    if (this.overEventInfo
-      && this.overEventInfo.offsetX === e.offsetX
-      && this.overEventInfo.offsetY === e.offsetY
-      && this.overEventInfo.target === e.target) {
+  handleDragOver = (event: DragEvent) => {
+    event.preventDefault()
+    if (this.eventData
+      && this.eventData.clientX === event.clientX
+      && this.eventData.clientY === event.clientY) {
       return;
     }
-    this.overEventInfo = {
-      offsetX: e.offsetX,
-      offsetY: e.offsetY,
-      target: e.target as HTMLElement,
+    this.eventData = {
+      clientX: event.clientX,
+      clientY: event.clientY,
     }
-    const lcElement = this.getNearestLCElement(e.target as HTMLElement)
-    if (!lcElement) return
-
-    const { top, left, width, height } = lcElement.getBoundingClientRect()
-    const info = lcElement[LC_ELEMENT]
-    const event = {
-      info,
-      rect: {
-        top,
-        left,
-        width,
-        height,
-      },
+    const lcTarget = this.getNearestLCElement(event.target as HTMLElement)
+    if (!lcTarget) {
+      return this.dispatchEvent(new DragLeaveEvent())
     }
-    this.dispatch('custom:dragover', event)
+    this.dispatchEvent(new DragOverEvent({ nativeEvent: event, lcTarget }))
   }
 
-  handleDrop = (e: DragEvent) => {
-    const lcElement = this.getNearestLCElement(e.target as HTMLElement)
-    if (!lcElement) return
+  handleDragLeave = (event: DragEvent) => {
+    console.log('leave', event)
+    return this.dispatchEvent(new DragLeaveEvent())
+  }
 
-    const { top, left, width, height } = lcElement.getBoundingClientRect()
-    const info = lcElement[LC_ELEMENT]
-    const event = {
-      info,
-      rect: {
-        top,
-        left,
-        width,
-        height,
-      },
-    }
-    this.dispatch('custom:drop', event)
+  handleDrop = (event: DragEvent) => {
+    const lcTarget = this.getNearestLCElement(event.target as HTMLElement)
+    if (!lcTarget) return
+    this.dispatchEvent(new DropEvent({ nativeEvent: event, lcTarget }))
   }
 
   destroy() {
     this.element.removeEventListener('dragover', this.handleDragOver)
-  }
-
-  getNearestLCElement(elem: HTMLElement | null): HTMLElement | null {
-    if (!elem || elem === document.body) {
-      return null
-    }
-    if (elem[LC_ELEMENT]) {
-      return elem
-    } else {
-      return this.getNearestLCElement(elem.parentElement)
-    }
   }
 }

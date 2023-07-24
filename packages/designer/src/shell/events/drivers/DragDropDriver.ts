@@ -1,7 +1,7 @@
 /**
  * drag drop事件驱动
  */
-import { LC_ELEMENT } from '../../../common/constants'
+import { DragEndEvent, DragStartEvent, type EngineEvent } from '../types'
 import { EventDriver } from './EventDriver'
 
 export class DragDropDriver extends EventDriver {
@@ -9,7 +9,7 @@ export class DragDropDriver extends EventDriver {
 
   constructor(
     elem: HTMLElement | Document,
-    private dispatch: (name: string, d: any) => void,
+    private dispatchEvent: (event: EngineEvent) => void,
   ) {
     super()
     this.element = elem as HTMLElement
@@ -17,41 +17,18 @@ export class DragDropDriver extends EventDriver {
     this.element.addEventListener('dragend', this.handleDragEnd)
   }
 
-  handleDragStart = (e: DragEvent) => {
-    const lcElement = this.getNearestLCElement(e.target as HTMLElement)
-    if (!lcElement) return
-
-    const { top, left, width, height } = lcElement.getBoundingClientRect()
-    const info = lcElement[LC_ELEMENT]
-    const event = {
-      info,
-      rect: {
-        top,
-        left,
-        width,
-        height,
-      },
-    }
-    this.dispatch('custom:dragstart', event)
+  handleDragStart = (event: DragEvent) => {
+    const lcTarget = this.getNearestLCElement(event.target as HTMLElement)
+    if (!lcTarget) return
+    this.dispatchEvent(new DragStartEvent({ nativeEvent: event, lcTarget }))
   }
 
-  handleDragEnd = (e: DragEvent) => {
-    this.dispatch('custom:dragend', e)
+  handleDragEnd = () => {
+    this.dispatchEvent(new DragEndEvent())
   }
 
   destroy() {
     this.element.removeEventListener('dragstart', this.handleDragStart)
     this.element.removeEventListener('dragend', this.handleDragEnd)
-  }
-
-  getNearestLCElement(elem: HTMLElement | null): HTMLElement | null {
-    if (!elem || elem === document.body) {
-      return null
-    }
-    if (elem[LC_ELEMENT]) {
-      return elem
-    } else {
-      return this.getNearestLCElement(elem.parentElement)
-    }
   }
 }

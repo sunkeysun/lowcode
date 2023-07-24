@@ -1,8 +1,11 @@
 /**
  * 画布滚动事件
  */
-export class CanvasScrollEvent extends Event {
-  constructor(e: Event) {
-    super('custom:canvasScroll', e)
-  }
+import { EngineEvent } from './EngineEvent';
+
+interface CanvasScrollEventData {
+  scrollTop: number
+}
+export class CanvasScrollEvent extends EngineEvent<CanvasScrollEventData>{
+  static eventName: 'engine:canvas-scroll'
 }
