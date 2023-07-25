@@ -6,12 +6,14 @@ import { store } from '../store'
 import { Shell } from '../shell'
 import { DragDropController } from '../shell/controllers/DragDropController'
 import { HoverController } from '../shell/controllers/HoverController'
+import { DocumentModel } from './DocumentModel'
 
 export class Designer {
   #shell: Shell
   #store = store
   #eventBus = new EventEmitter()
   #controllers: unknown[] = []
+  #documentModel: DocumentModel
 
   constructor() {
     this.#shell = new Shell()

@@ -4,11 +4,11 @@
 import { createSlice, createEntityAdapter, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '..'
 
-interface DocumentEntity {
+export interface DocumentEntity {
   id: string
   titile: string
-  selectedId: string | null
-  rootNodeId: string | null
+  rootNodeId: string
+  activedNodeId: string | null
 }
 
 const adapter = createEntityAdapter<DocumentEntity>({})
@@ -22,6 +22,10 @@ const slice = createSlice({
     addOne(state, action: PayloadAction<DocumentEntity>) {
       adapter.addOne(state, action.payload)
     },
+    updateOne(state, action: PayloadAction<{ id: string, changes: Partial<DocumentEntity>}>) {
+      const { payload } = action
+      adapter.updateOne(state, payload)
+    }
   },
 })
 

@@ -4,20 +4,18 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '..'
 
-export interface HistoryItem {}
-
-export interface Settings {}
-
 export interface ProjectEntity {
   id: string
-  title: string,
-  settings: {}
+  title: string
+  settings: unknown
+  activedDocumentId: string | null
 }
 
 const initialState: ProjectEntity = {
   id: '',
   title: '',
   settings: {},
+  activedDocumentId: null
 }
 
 export const name = 'project'
@@ -25,9 +23,8 @@ const slice = createSlice({
   name,
   initialState,
   reducers: {
-    changeSettings(state, action: PayloadAction<Settings>) {
-      const { payload: settings } = action
-      Object.assign(state.settings, settings)
+    setActivedDocumentId(state, action: PayloadAction<string>) {
+      state.activedDocumentId = action.payload
     },
     changeTitle(state, action: PayloadAction<{ title: string }>) {
       const { payload: { title } } = action

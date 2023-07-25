@@ -8,13 +8,14 @@ import {
 } from '@reduxjs/toolkit'
 import { type RootState } from '..'
 
-interface NodeEntity {
+export interface NodeEntity {
   id: string
-  titile: string
+  title: string
   componentName: string
   props: unknown
   childrenIds: string[]
   parentId: string | null
+  documentId: string
 }
 
 const adapter = createEntityAdapter<NodeEntity>()
@@ -24,12 +25,9 @@ export const slice = createSlice({
   name,
   initialState: adapter.getInitialState(),
   reducers: {
-    appendChild(state, action: PayloadAction<NodeEntity>) {
-      const { payload: node } = action
-      adapter.addOne(state, node)
-      state.entities[node.parentId as string]?.childrenIds?.push(node.id)
-    },
-    remove(state, action: PayloadAction<string>) {
+    addOne: adapter.addOne.bind(this),
+    updateOne: adapter.updateOne.bind(this),
+    removeOne(state, action: PayloadAction<string>) {
       const { payload: nodeId } = action
       const parentId = state.entities[nodeId]?.parentId
       if (parentId) {
@@ -41,8 +39,6 @@ export const slice = createSlice({
       }
       adapter.removeOne(state, action.payload)
     },
-    // insertBefore() { },
-    // insertAfter() { },
   },
 })
 

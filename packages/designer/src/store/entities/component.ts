@@ -3,7 +3,7 @@
  */
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit'
 
-interface ComponentEntity {
+export interface ComponentEntity {
   id: string
   titile: string
   componentName: string
