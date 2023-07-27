@@ -18,7 +18,7 @@ const initialState: ProjectEntity = {
   activedDocumentId: null
 }
 
-export const name = 'project'
+export const name = 'projectUI'
 const slice = createSlice({
   name,
   initialState,
@@ -26,15 +26,12 @@ const slice = createSlice({
     setActivedDocumentId(state, action: PayloadAction<string>) {
       state.activedDocumentId = action.payload
     },
-    changeTitle(state, action: PayloadAction<{ title: string }>) {
-      const { payload: { title } } = action
-      state.title = title
-    },
   },
 })
 
 export const reducer = slice.reducer
 export const actions = slice.actions
 export const selectors = {
-  selectState: (state: RootState) => state.ui.project
+  selectState: (state: RootState) => state.ui.project,
+  selectActivedDocumentId: (state: RootState) => state.ui.project.activedDocumentId,
 }

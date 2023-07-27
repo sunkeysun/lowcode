@@ -1,11 +1,8 @@
 import { LC_TARGET } from '../../../common/constants'
+import { type LCTarget } from '../../../types'
 
-export interface LCElement {
-  id: string
-  type: 'component' | 'node'
-}
 export class EventDriver {
-  getNearestLCElement(elem: HTMLElement | null): LCElement | null {
+  getNearestLCElement(elem: HTMLElement | null): LCTarget | null {
     if (!elem || elem === document.body) {
       return null
     }

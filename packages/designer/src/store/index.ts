@@ -7,7 +7,6 @@ import * as nodeEntity from './entities/node'
 import * as materialEntity from './entities/material'
 import * as componentEntity from './entities/component'
 import * as documentUI from './ui/document'
-import * as nodeUI from './ui/node'
 import * as projectUI from './ui/project'
 
 export const store = configureStore({
@@ -20,7 +19,6 @@ export const store = configureStore({
     }),
     ui: combineReducers({
       [documentUI.name]: documentUI.reducer,
-      [nodeUI.name]: nodeUI.reducer,
       [projectUI.name]: projectUI.reducer,
     }),
   },
@@ -29,4 +27,4 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 export type StoreType = typeof store
 
-export { documentEntity, nodeEntity, documentUI, nodeUI, projectUI }
+export { documentEntity, nodeEntity, documentUI, projectUI }

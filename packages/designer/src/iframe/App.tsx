@@ -1,18 +1,19 @@
-import { Provider } from 'react-redux'
-import { Content } from './Content'
+import { ComponentTree } from './ComponentTree'
+import { DesignerProvider } from '../context/DesignerContext'
+import { LC_DESIGNER } from '../common/constants'
 
 export function App() {
-  const win = window as any
+  const designer = window[LC_DESIGNER]
 
-  if (!win.designer) {
+  if (!designer) {
     return null
   }
 
   return (
-    <Provider store={win.designer.store}>
+    <DesignerProvider designer={designer}>
       <div style={{ padding: 50 }}>
-        <Content />
+        <ComponentTree />
       </div>
-    </Provider>
+    </DesignerProvider>
   )
 }

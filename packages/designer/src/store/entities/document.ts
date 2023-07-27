@@ -6,7 +6,7 @@ import { type RootState } from '..'
 
 export interface DocumentEntity {
   id: string
-  titile: string
+  title: string
   rootNodeId: string
   activedNodeId: string | null
 }

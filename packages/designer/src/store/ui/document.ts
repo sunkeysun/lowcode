@@ -3,55 +3,44 @@
  */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '..'
-
-interface DraggingTarget {
-  target: {
-    id: string
-    type: 'component' | 'node'
-  },
-  rect: {
-    top: number
-    left: number
-    width: number
-    height: number
-  }
-}
+import { type DragOverTarget } from '../../types'
+import { type NodeEntity } from '../entities/node'
 
 export interface DocumentUI {
-  selectedId: string | null
-  draggingTarget: DraggingTarget | null
-  dragoverTarget: DraggingTarget | null
+  hoverTarget: NodeEntity | null
+  draggingTarget: NodeEntity | null
+  dragoverTarget: DragOverTarget | null
 }
 
 const initialState: DocumentUI = {
-  selectedId: null,
+  hoverTarget: null,
   draggingTarget: null,
   dragoverTarget: null,
 }
 
-export const name = 'document'
+export const name = 'documentUI'
 
 const slice = createSlice({
   name,
   initialState,
   reducers: {
-    changeSelectId(state, action: PayloadAction<{ id: string }>) {
+    setDragingTarget(state, action: PayloadAction<NodeEntity | null>) {
       const {
-        payload: { id },
+        payload: draggingTarget,
       } = action
-      state.selectedId = id
+      state.draggingTarget = draggingTarget
     },
-    chnageDraggingElement(state, action: PayloadAction<DraggingElement | null>) {
+    setHoverTarget(state, action: PayloadAction<NodeEntity | null>) {
       const {
-        payload: draggingElement,
+        payload: hoverTarget,
       } = action
-      state.draggingElement = draggingElement
+      state.hoverTarget = hoverTarget
     },
-    changeDragoverElement(state, action: PayloadAction<DraggingElement | null>) {
+    setDragoverTarget(state, action: PayloadAction<DragOverTarget | null>) {
       const {
-        payload: dragoverElement,
+        payload: dragoverTarget,
       } = action
-      state.dragoverElement = dragoverElement
+      state.dragoverTarget = dragoverTarget
     },
   },
 })
@@ -59,5 +48,8 @@ const slice = createSlice({
 export const reducer = slice.reducer
 export const actions = slice.actions
 export const selectors = {
-  selectState: (state: RootState) => state.ui.document,
+  selectState: (state: RootState) => state.ui.documentUI,
+  selectDragingTarget: (state: RootState) => state.ui.documentUI.draggingTarget,
+  selectDragoverTarget: (state: RootState) => state.ui.documentUI.dragoverTarget,
+  selectHoverTarget: (state: RootState) => state.ui.documentUI.dragoverTarget,
 }

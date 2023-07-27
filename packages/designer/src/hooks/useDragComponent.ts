@@ -13,7 +13,7 @@ export function useDragComponent(componentName: string) {
         type: 'component',
       }
     }
-  }, [ref.current])
+  }, [componentName])
 
   return { ref }
 }

@@ -4,16 +4,16 @@
 import { useEffect, useRef } from 'react';
 import { LC_TARGET } from '../common/constants';
 
-export function useDragNode(componentName: string) {
+export function useDragNode(nodeId: string) {
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {
     if (ref.current) {
       ref.current[LC_TARGET] = {
-        id: componentName,
+        id: nodeId,
         type: 'node',
       }
     }
-  }, [ref.current])
+  }, [nodeId])
 
   return { ref }
 }

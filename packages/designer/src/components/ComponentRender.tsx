@@ -1,14 +1,13 @@
-import { useSelector } from 'react-redux'
 import { useDragNode } from '../hooks/useDragNode'
+import { useNodeById } from '../hooks/useNodeById'
 import * as components from '../materials/test'
-import { RootState, nodeEntity } from '../store'
 
-export function ComponentRender({ nodeId }) {
-  const node = useSelector((state: RootState) =>
-    nodeEntity.selectors.selectById(state, nodeId as string),
-  )
-  const Component = components[node.componentName]
-  const { ref } = useDragNode(node.id)
+export function ComponentRender({ nodeId }: { nodeId: string }) {
+  const { node } = useNodeById(nodeId)
+  const { ref } = useDragNode(nodeId)
+  if (!node) return null
+  const componentName = node.componentName.split('-')[0] as keyof typeof components
+  const Component = components[componentName]
   if (!Component) {
     return '组件不存在'
   }

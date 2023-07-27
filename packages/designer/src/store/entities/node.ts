@@ -7,12 +7,13 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit'
 import { type RootState } from '..'
+import { type Props } from '../../types'
 
 export interface NodeEntity {
   id: string
   title: string
   componentName: string
-  props: unknown
+  props: Props
   childrenIds: string[]
   parentId: string | null
   documentId: string
@@ -39,6 +40,32 @@ export const slice = createSlice({
       }
       adapter.removeOne(state, action.payload)
     },
+    appendChild(state, action: PayloadAction<{ node: NodeEntity, parentId: string }>) {
+      const { payload: { node, parentId } } = action
+      adapter.addOne(state, {
+        ...node,
+        parentId,
+      })
+      state.entities[parentId]?.childrenIds.push(node.id)
+    },
+    insertBefore(state, action: PayloadAction<{ parentId: string, node: NodeEntity, targetId: string }>) {
+      const { parentId, node, targetId } = action.payload
+      const childIds = state.entities[parentId]?.childrenIds ?? []
+      const targetIndex = childIds?.findIndex((id) => id === targetId)
+      if (targetIndex > -1) {
+        adapter.addOne(state, { ...node, parentId })
+        childIds.splice(targetIndex, 0, node.id)
+      }
+    },
+    insertAfter(state, action: PayloadAction<{ parentId: string, node: NodeEntity, targetId: string }>) {
+      const { parentId, node, targetId } = action.payload
+      const childIds = state.entities[parentId]?.childrenIds ?? []
+      const targetIndex = childIds?.findIndex((id) => id === targetId)
+      if (targetIndex > -1) {
+        adapter.addOne(state, { ...node, parentId })
+        childIds.splice(targetIndex + 1, 0, node.id)
+      }
+    }
   },
 })
 
