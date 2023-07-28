@@ -1,5 +1,3 @@
-export class Plugin {
-  destroy() {
-    //
-  }
+export abstract class Plugin {
+  abstract destroy(): void
 }

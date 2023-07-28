@@ -1,28 +1,51 @@
 /**
  * 拖拽控制器
  */
-import { Designer } from '..';
-import { Plugin } from './Plugin';
-import { DragStartEvent, DragEndEvent, DragOverEvent, DragLeaveEvent, DropEvent } from '../shell/events/types';
+import { Designer } from '..'
+import { Plugin } from './Plugin'
+import {
+  DragStartEvent,
+  DragEndEvent,
+  DragOverEvent,
+  DragLeaveEvent,
+  DropEvent,
+} from '../shell'
 
 export class DragDropPlugin extends Plugin {
+  #unsubscribers: Array<() => void> = []
+
   constructor(private readonly designer: Designer) {
     super()
-    this.designer.shell.subscribeEvent(DragStartEvent, this.handleDragStart)
-    this.designer.shell.subscribeEvent(DragEndEvent, this.handleDragEnd)
-    this.designer.shell.subscribeEvent(DragOverEvent, this.handleDragOver)
-    this.designer.shell.subscribeEvent(DragLeaveEvent, this.handleDragLeave)
-    this.designer.shell.subscribeEvent(DropEvent, this.handleDrop)
+    this.#unsubscribers.push(
+      this.designer.shellManager.subscribeEvent(
+        DragStartEvent,
+        this.handleDragStart,
+      ),
+      this.designer.shellManager.subscribeEvent(
+        DragEndEvent,
+        this.handleDragEnd,
+      ),
+      this.designer.shellManager.subscribeEvent(
+        DragOverEvent,
+        this.handleDragOver,
+      ),
+      this.designer.shellManager.subscribeEvent(
+        DragLeaveEvent,
+        this.handleDragLeave,
+      ),
+      this.designer.shellManager.subscribeEvent(DropEvent, this.handleDrop),
+    )
   }
 
   handleDragStart = (event: DragStartEvent) => {
-    const { eventData: { lcTarget } } = event
-    console.log('start', event)
+    const {
+      eventData: { target },
+    } = event
     let dragNode = null
-    if (lcTarget.type === 'component') {
-      dragNode = this.designer.documentModel?.createNode(lcTarget.id)
+    if (target.type === 'component') {
+      dragNode = this.designer.documentModel?.createNode(target.id)
     } else {
-      dragNode = this.designer.documentModel?.getNodeById(lcTarget.id)()
+      dragNode = this.designer.documentModel?.getNodeById(target.id)
     }
 
     if (dragNode) {
@@ -31,8 +54,10 @@ export class DragDropPlugin extends Plugin {
   }
 
   handleDragOver = (event: DragOverEvent) => {
-    const { eventData: { lcTarget } } = event
-    this.designer.documentModel?.setDragoverTarget({ target: lcTarget })
+    const {
+      eventData: { target },
+    } = event
+    this.designer.documentModel?.setDragoverTarget({ target })
   }
 
   handleDragEnd = () => {
@@ -48,11 +73,15 @@ export class DragDropPlugin extends Plugin {
     const draggingTarget = this.designer.documentModel?.getDragingTarget()
     const dragoverTarget = this.designer.documentModel?.getDragOverTarget()
     if (draggingTarget && dragoverTarget) {
-      this.designer.documentModel?.appendChild(draggingTarget, dragoverTarget.target.id) 
+      this.designer.documentModel?.appendChild(
+        draggingTarget,
+        dragoverTarget.target.id,
+      )
     }
   }
 
   destroy() {
-    //
+    this.#unsubscribers.forEach((uninstall) => uninstall())
+    this.#unsubscribers = []
   }
 }

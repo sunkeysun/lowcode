@@ -6,7 +6,7 @@ import { EngineEvent } from './EngineEvent';
 
 export interface MouseoverEventData {
   nativeEvent: MouseEvent
-  lcTarget: {
+  target: {
     id: string
     type: 'component' | 'node'
   },

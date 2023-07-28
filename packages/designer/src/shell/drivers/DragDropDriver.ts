@@ -1,7 +1,7 @@
 /**
  * drag drop事件驱动
  */
-import { DragEndEvent, DragStartEvent, type EngineEvent } from '../types'
+import { DragEndEvent, DragStartEvent, type EngineEvent } from '../events'
 import { EventDriver } from './EventDriver'
 
 export class DragDropDriver extends EventDriver {
@@ -18,9 +18,9 @@ export class DragDropDriver extends EventDriver {
   }
 
   handleDragStart = (event: DragEvent) => {
-    const lcTarget = this.getNearestLCElement(event.target as HTMLElement)
-    if (!lcTarget) return
-    this.dispatchEvent(new DragStartEvent({ nativeEvent: event, lcTarget }))
+    const target = this.getNearestLCTarget(event.target as HTMLElement)
+    if (!target) return
+    this.dispatchEvent(new DragStartEvent({ nativeEvent: event, target }))
   }
 
   handleDragEnd = () => {

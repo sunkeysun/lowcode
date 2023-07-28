@@ -1,7 +1,7 @@
 /**
  * 画布事件驱动
  */
-import { CanvasScrollEvent, type EngineEvent } from '../types'
+import { CanvasScrollEvent, type EngineEvent } from '../events'
 import { EventDriver } from './EventDriver'
 
 export class CanvasResizeDriver extends EventDriver {

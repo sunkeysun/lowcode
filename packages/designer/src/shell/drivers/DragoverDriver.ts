@@ -2,9 +2,9 @@
  * dragover事件驱动
  */
 import { EventDriver } from './EventDriver'
-import { DragLeaveEvent, DragOverEvent, DropEvent, type EngineEvent } from '../types'
+import { DragLeaveEvent, DragOverEvent, DropEvent, type EngineEvent } from '../events'
 
-export class DragOverDriver extends EventDriver {
+export class DragoverDriver extends EventDriver {
   element: HTMLElement
   eventData: {
     clientX: number
@@ -32,11 +32,11 @@ export class DragOverDriver extends EventDriver {
       clientX: event.clientX,
       clientY: event.clientY,
     }
-    const lcTarget = this.getNearestLCElement(event.target as HTMLElement)
-    if (!lcTarget) {
+    const target = this.getNearestLCTarget(event.target as HTMLElement)
+    if (!target) {
       return this.dispatchEvent(new DragLeaveEvent())
     }
-    this.dispatchEvent(new DragOverEvent({ nativeEvent: event, lcTarget }))
+    this.dispatchEvent(new DragOverEvent({ nativeEvent: event, target }))
   }
 
   handleDragLeave = (event: DragEvent) => {

@@ -1,27 +1,26 @@
 /**
  * Designer
  */
-import EventEmitter from 'eventemitter3'
 import { store } from '../store'
-import { Shell } from '../shell'
 import { DocumentModel } from './DocumentModel'
 import { DragDropPlugin, type Plugin } from '../plugins'
 import { type NodeSchema } from '../types'
+import { ComponentManager } from './managers/ComponentManager'
+import { ShellManager } from './managers/shellManager'
 
 export class Designer {
-  #shell: Shell
   #store = store
-  #eventBus = new EventEmitter()
   #plugins: Plugin[] = []
   #documentModel: DocumentModel | null = null
+  #componentManager = new ComponentManager(this)
+  #shellManager = new ShellManager(this)
 
   constructor() {
-    this.#shell = new Shell()
     this.initPlugins()
   }
 
-  get shell() {
-    return this.#shell
+  get shellManager() {
+    return this.#shellManager
   }
 
   get store() {
@@ -32,12 +31,12 @@ export class Designer {
     return this.store.getState()
   }
 
-  get eventBus() {
-    return this.#eventBus
-  }
-
   get documentModel() {
     return this.#documentModel
+  }
+
+  get componentManager() {
+    return this.#componentManager
   }
 
   get plugins() {
@@ -54,5 +53,9 @@ export class Designer {
 
   initPlugins() {
     this.#plugins.push(new DragDropPlugin(this))
+  }
+
+  destroy() {
+    //
   }
 }

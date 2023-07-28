@@ -5,7 +5,7 @@ import { EngineEvent } from './EngineEvent'
 
 export interface DragStartEventData {
   nativeEvent: MouseEvent
-  lcTarget: {
+  target: {
     id: string
     type: 'component' | 'node'
   },

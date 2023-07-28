@@ -3,13 +3,13 @@
  */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '..'
-import { type DragOverTarget } from '../../types'
+import { type HoverTarget, type DragoverTarget } from '../../types'
 import { type NodeEntity } from '../entities/node'
 
 export interface DocumentUI {
-  hoverTarget: NodeEntity | null
+  hoverTarget: HoverTarget | null
   draggingTarget: NodeEntity | null
-  dragoverTarget: DragOverTarget | null
+  dragoverTarget: DragoverTarget | null
 }
 
 const initialState: DocumentUI = {
@@ -19,27 +19,20 @@ const initialState: DocumentUI = {
 }
 
 export const name = 'documentUI'
-
 const slice = createSlice({
   name,
   initialState,
   reducers: {
     setDragingTarget(state, action: PayloadAction<NodeEntity | null>) {
-      const {
-        payload: draggingTarget,
-      } = action
+      const { payload: draggingTarget } = action
       state.draggingTarget = draggingTarget
     },
-    setHoverTarget(state, action: PayloadAction<NodeEntity | null>) {
-      const {
-        payload: hoverTarget,
-      } = action
+    setHoverTarget(state, action: PayloadAction<HoverTarget | null>) {
+      const { payload: hoverTarget } = action
       state.hoverTarget = hoverTarget
     },
-    setDragoverTarget(state, action: PayloadAction<DragOverTarget | null>) {
-      const {
-        payload: dragoverTarget,
-      } = action
+    setDragoverTarget(state, action: PayloadAction<DragoverTarget | null>) {
+      const { payload: dragoverTarget } = action
       state.dragoverTarget = dragoverTarget
     },
   },
@@ -50,6 +43,7 @@ export const actions = slice.actions
 export const selectors = {
   selectState: (state: RootState) => state.ui.documentUI,
   selectDragingTarget: (state: RootState) => state.ui.documentUI.draggingTarget,
-  selectDragoverTarget: (state: RootState) => state.ui.documentUI.dragoverTarget,
+  selectDragoverTarget: (state: RootState) =>
+    state.ui.documentUI.dragoverTarget,
   selectHoverTarget: (state: RootState) => state.ui.documentUI.dragoverTarget,
 }

@@ -7,16 +7,19 @@ export interface NodeSchema {
   props: Props
 }
 
-export type DragOverTarget = {
-  target: {
-    id: string
-    type: 'component' | 'node'
-  },
+export type LcTargetType = 'component' | 'node'
+
+export type DragoverTarget = {
+  target: LCTarget
+} | null
+
+export type HoverTarget = {
+  target: LCTarget
 } | null
 
 export interface LCTarget {
   id: string
-  type: 'component' | 'node'
+  type: LcTargetType
 }
 
 export interface ComponentMetaSnippet extends NodeSchema {

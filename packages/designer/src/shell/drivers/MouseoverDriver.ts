@@ -1,6 +1,5 @@
 import { EventDriver } from '.'
-import { type EngineEvent } from '../types/EngineEvent'
-import { MouseoverEvent } from '../types/MouseoverEvent'
+import { type EngineEvent, MouseoverEvent } from '../events'
 
 export class MouseoverDriver extends EventDriver {
   element: HTMLElement
@@ -19,8 +18,8 @@ export class MouseoverDriver extends EventDriver {
   }
 
   handleMouseover = (ev: MouseEvent) => {
-    const lcTarget = this.getNearestLCElement(ev.target as HTMLElement)
-    if (!lcTarget) return
-    this.dispatchEvent(new MouseoverEvent({ nativeEvent: ev, lcTarget }))
+    const target = this.getNearestLCTarget(ev.target as HTMLElement)
+    if (!target) return
+    this.dispatchEvent(new MouseoverEvent({ nativeEvent: ev, target }))
   }
 }

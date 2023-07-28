@@ -4,7 +4,7 @@
 import { type NodeEntity } from '../store/entities/node'
 import { documentEntity, documentUI, nodeEntity } from '../store'
 import { uniqId } from '../common/util'
-import { type DragOverTarget, type NodeSchema } from '../types'
+import { HoverTarget, type DragoverTarget, type NodeSchema } from '../types'
 import { Designer } from '..'
 
 export class DocumentModel {
@@ -15,12 +15,14 @@ export class DocumentModel {
     this.#id = uniqId()
     this.#rootNode = this.initNodeTree(schema, null)
     this.setRootNodeId(this.#rootNode.id)
-    this.designer.dispatch(documentEntity.actions.addOne({
-      id: this.#id,
-      title: schema.title,
-      rootNodeId: this.#rootNode.id,
-      activedNodeId: this.#rootNode.id,
-    }))
+    this.designer.dispatch(
+      documentEntity.actions.addOne({
+        id: this.#id,
+        title: schema.title,
+        rootNodeId: this.#rootNode.id,
+        activedNodeId: this.#rootNode.id,
+      }),
+    )
   }
 
   getId() {
@@ -28,25 +30,34 @@ export class DocumentModel {
   }
 
   getDocument() {
-    const document = documentEntity.selectors.selectById(this.designer.state, this.getId())
+    const document = documentEntity.selectors.selectById(
+      this.designer.state,
+      this.getId(),
+    )
     return document
   }
 
   getRootNode() {
     const document = this.getDocument()
     if (!document) return null
-    return nodeEntity.selectors.selectById(this.designer.state, document.rootNodeId)
+    return nodeEntity.selectors.selectById(
+      this.designer.state,
+      document.rootNodeId,
+    )
   }
 
   getSchema() {
     const rootNode = this.getRootNode()
     if (!rootNode) return null
-    return this.getSchemaById(rootNode.id)
+    return this.getNodeSchemaById(rootNode.id)
   }
 
   getActivedNode() {
     const document = this.getDocument()
-    return nodeEntity.selectors.selectById(this.designer.state, document?.activedNodeId as string)
+    return nodeEntity.selectors.selectById(
+      this.designer.state,
+      document?.activedNodeId as string,
+    )
   }
 
   getDragingTarget() {
@@ -61,8 +72,11 @@ export class DocumentModel {
     return documentUI.selectors.selectHoverTarget(this.designer.state)
   }
 
-  getSchemaById(nodeId: string) {
-    const targetNode = nodeEntity.selectors.selectById(this.designer.state, nodeId)
+  getNodeSchemaById(nodeId: string) {
+    const targetNode = nodeEntity.selectors.selectById(
+      this.designer.state,
+      nodeId,
+    )
     if (!targetNode) return null
 
     const { title, componentName, childrenIds, props } = targetNode
@@ -70,26 +84,34 @@ export class DocumentModel {
     const schema: NodeSchema = {
       title,
       componentName,
-      children: childrenIds?.map((childId) => this.getSchemaById(childId) as NodeSchema).filter(Boolean),
+      children: childrenIds
+        ?.map((childId) => this.getNodeSchemaById(childId) as NodeSchema)
+        .filter(Boolean),
       props,
     }
     return schema
   }
 
   getNodeById(nodeId: string) {
-    return () => nodeEntity.selectors.selectById(this.designer.state, nodeId)
+    return nodeEntity.selectors.selectById(this.designer.state, nodeId)
   }
 
   setDraggingTarget(draggingTarget: NodeEntity | null) {
-    return this.designer.dispatch(documentUI.actions.setDragingTarget(draggingTarget))
+    return this.designer.dispatch(
+      documentUI.actions.setDragingTarget(draggingTarget),
+    )
   }
 
-  setDragoverTarget(dragoverTarget: DragOverTarget | null) {
-    return this.designer.dispatch(documentUI.actions.setDragoverTarget(dragoverTarget))
+  setDragoverTarget(dragoverTarget: DragoverTarget | null) {
+    return this.designer.dispatch(
+      documentUI.actions.setDragoverTarget(dragoverTarget),
+    )
   }
 
-  setHoverTarget(hoverTarget: NodeEntity | null) {
-    return this.designer.dispatch(documentUI.actions.setHoverTarget(hoverTarget))
+  setHoverTarget(hoverTarget: HoverTarget | null) {
+    return this.designer.dispatch(
+      documentUI.actions.setHoverTarget(hoverTarget),
+    )
   }
 
   setRootNodeId(nodeId: string) {
@@ -103,11 +125,18 @@ export class DocumentModel {
   }
 
   setTitle(title: string) {
-    return this.designer.dispatch(documentEntity.actions.updateOne({ id: this.getId(), changes: { title } }))
+    return this.designer.dispatch(
+      documentEntity.actions.updateOne({
+        id: this.getId(),
+        changes: { title },
+      }),
+    )
   }
 
   appendChild(node: NodeEntity, parentId: string) {
-    return this.designer.dispatch(nodeEntity.actions.appendChild({ node, parentId }))
+    return this.designer.dispatch(
+      nodeEntity.actions.appendChild({ node, parentId }),
+    )
   }
 
   initNodeTree(schema: NodeSchema, parentId: string | null) {
@@ -121,10 +150,11 @@ export class DocumentModel {
       props,
       parentId,
       documentId,
-      childrenIds: !children?.length ? []
+      childrenIds: !children?.length
+        ? []
         : children.map(
-          (child: NodeSchema) => this.initNodeTree(child, nodeId).id,
-        ),
+            (child: NodeSchema) => this.initNodeTree(child, nodeId).id,
+          ),
     }
     this.designer.dispatch(nodeEntity.actions.addOne(node))
     return node
