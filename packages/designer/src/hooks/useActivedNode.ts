@@ -3,18 +3,19 @@ import { useSelector } from 'react-redux'
 import { useDesigner } from './useDesigner'
 import { useEffect } from 'react'
 
-export function useHoverNode() {
+export function useActivedNode() {
   const [domRect, setDomRect] = useState<DOMRect | null>(null)
   const { designer } = useDesigner()
-  const hoverNode = useSelector(() => designer!.documentModel!.getHoverTarget())
+  const activedNode = useSelector(() => designer!.documentModel!.getActivedNode())
   useEffect(() => {
-    if (hoverNode) {
-      const nodeDom = designer?.documentModel?.getNodeDomById(hoverNode?.target.id)
+    if (activedNode) {
+      const nodeDom = designer?.documentModel?.getNodeDomById(activedNode.id)
+      console.log(activedNode, nodeDom, '11111111')
       setDomRect(nodeDom?.getBoundingClientRect() as DOMRect)
     } else {
       setDomRect(null)
     }
-  }, [designer?.documentModel, hoverNode])
+  }, [designer?.documentModel, activedNode])
 
-  return { hoverNode, domRect }
+  return { activedNode, domRect }
 }

@@ -2,7 +2,7 @@
  * dragover事件驱动
  */
 import { EventDriver } from './EventDriver'
-import { DragLeaveEvent, DragOverEvent, DropEvent, type EngineEvent } from '../events'
+import { DragLeaveEvent, DragOverEvent, type EngineEvent } from '../events'
 
 export class DragoverDriver extends EventDriver {
   element: HTMLElement
@@ -12,13 +12,12 @@ export class DragoverDriver extends EventDriver {
   } | null = null
 
   constructor(
-    elem: HTMLElement | Document,
+    elem: HTMLElement,
     private dispatchEvent: (event: EngineEvent) => void,
   ) {
     super()
-    this.element = elem as HTMLElement
+    this.element = ((elem as HTMLIFrameElement)?.contentDocument ?? elem) as HTMLElement
     this.element.addEventListener('dragover', this.handleDragOver)
-    this.element.addEventListener('drop', this.handleDrop)
   }
 
   handleDragOver = (event: DragEvent) => {
@@ -39,15 +38,8 @@ export class DragoverDriver extends EventDriver {
     this.dispatchEvent(new DragOverEvent({ nativeEvent: event, target }))
   }
 
-  handleDragLeave = (event: DragEvent) => {
-    console.log('leave', event)
+  handleDragLeave = () => {
     return this.dispatchEvent(new DragLeaveEvent())
-  }
-
-  handleDrop = (event: DragEvent) => {
-    const lcTarget = this.getNearestLCElement(event.target as HTMLElement)
-    if (!lcTarget) return
-    this.dispatchEvent(new DropEvent({ nativeEvent: event, lcTarget }))
   }
 
   destroy() {

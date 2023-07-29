@@ -5,22 +5,22 @@ import { DragEndEvent, DragStartEvent, type EngineEvent } from '../events'
 import { EventDriver } from './EventDriver'
 
 export class DragDropDriver extends EventDriver {
-  element: HTMLElement
+  element: HTMLElement | Document
 
   constructor(
-    elem: HTMLElement | Document,
+    elem: HTMLElement,
     private dispatchEvent: (event: EngineEvent) => void,
   ) {
     super()
-    this.element = elem as HTMLElement
+    this.element = ((elem as HTMLIFrameElement)?.contentDocument ?? elem) as HTMLElement
     this.element.addEventListener('dragstart', this.handleDragStart)
     this.element.addEventListener('dragend', this.handleDragEnd)
   }
 
-  handleDragStart = (event: DragEvent) => {
-    const target = this.getNearestLCTarget(event.target as HTMLElement)
+  handleDragStart = (evt: DragEvent) => {
+    const target = this.getNearestLCTarget(evt.target as HTMLElement)
     if (!target) return
-    this.dispatchEvent(new DragStartEvent({ nativeEvent: event, target }))
+    this.dispatchEvent(new DragStartEvent({ nativeEvent: evt, target }))
   }
 
   handleDragEnd = () => {

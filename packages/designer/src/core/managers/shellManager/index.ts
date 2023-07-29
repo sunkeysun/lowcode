@@ -2,7 +2,6 @@
  * 终端管理
  */
 import { Designer } from '../../..';
-import { DragDropDriver, DragoverDriver } from '../../../shell/even/drivers'
 import { type EngineEvent } from '../../../shell/events/EngineEvent'
 import EventEmitter from 'eventemitter3'
 import { Workbench } from './Workbench';
@@ -38,8 +37,8 @@ export class ShellManager {
     return this.#workbench
   }
 
-  createIframeCanvas(contentDocument: Document) {
-    this.#iframeCanvas = new IframeCanvas(contentDocument, this)
+  createIframeCanvas(iframeElement: HTMLIFrameElement) {
+    this.#iframeCanvas = new IframeCanvas(iframeElement, this)
     return this.#iframeCanvas
   }
 }

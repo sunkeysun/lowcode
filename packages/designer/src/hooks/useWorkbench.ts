@@ -1,17 +1,16 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDesigner } from './useDesigner'
+import { Workbench } from '../core/managers/shellManager/Workbench'
 
 export function useWorkbench() {
-  const ref = useRef<HTMLElement>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const workbenchRef = useRef<Workbench>()
   const { designer } = useDesigner()
-  let workbench = null
 
   useEffect(() => {
-    let workbench = null
-    if (ref.current && designer) {
-      workbench = designer.shell.createWorkbench(ref.current)
+    if (containerRef.current && designer && !workbenchRef.current) {
+      workbenchRef.current = designer.shellManager.createWorkbench(containerRef.current)
     }
-    return () => workbench.destroy()
   }, [designer])
 
   return { containerRef }

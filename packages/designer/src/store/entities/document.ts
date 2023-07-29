@@ -25,7 +25,7 @@ const slice = createSlice({
     updateOne(state, action: PayloadAction<{ id: string, changes: Partial<DocumentEntity>}>) {
       const { payload } = action
       adapter.updateOne(state, payload)
-    }
+    },
   },
 })
 

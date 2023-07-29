@@ -1,5 +1,5 @@
 /**
- * 拖拽控制器
+ * 拖拽插件
  */
 import { Designer } from '..'
 import { Plugin } from './Plugin'
@@ -8,7 +8,6 @@ import {
   DragEndEvent,
   DragOverEvent,
   DragLeaveEvent,
-  DropEvent,
 } from '../shell'
 
 export class DragDropPlugin extends Plugin {
@@ -33,7 +32,6 @@ export class DragDropPlugin extends Plugin {
         DragLeaveEvent,
         this.handleDragLeave,
       ),
-      this.designer.shellManager.subscribeEvent(DropEvent, this.handleDrop),
     )
   }
 
@@ -61,15 +59,6 @@ export class DragDropPlugin extends Plugin {
   }
 
   handleDragEnd = () => {
-    this.designer.documentModel?.setDraggingTarget(null)
-    this.designer.documentModel?.setDragoverTarget(null)
-  }
-
-  handleDragLeave = () => {
-    this.designer.documentModel?.setDragoverTarget(null)
-  }
-
-  handleDrop = () => {
     const draggingTarget = this.designer.documentModel?.getDragingTarget()
     const dragoverTarget = this.designer.documentModel?.getDragOverTarget()
     if (draggingTarget && dragoverTarget) {
@@ -78,6 +67,13 @@ export class DragDropPlugin extends Plugin {
         dragoverTarget.target.id,
       )
     }
+
+    this.designer.documentModel?.setDraggingTarget(null)
+    this.designer.documentModel?.setDragoverTarget(null)
+  }
+
+  handleDragLeave = () => {
+    this.designer.documentModel?.setDragoverTarget(null)
   }
 
   destroy() {

@@ -45,5 +45,5 @@ export const selectors = {
   selectDragingTarget: (state: RootState) => state.ui.documentUI.draggingTarget,
   selectDragoverTarget: (state: RootState) =>
     state.ui.documentUI.dragoverTarget,
-  selectHoverTarget: (state: RootState) => state.ui.documentUI.dragoverTarget,
+  selectHoverTarget: (state: RootState) => state.ui.documentUI.hoverTarget,
 }

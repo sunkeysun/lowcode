@@ -1,4 +1,4 @@
-import { useDragComponent } from '../hooks/useDragComponent'
+import { useDragComponent } from '../../hooks/useDragComponent'
 
 export function DragComponent({ meta }) {
   const { ref } = useDragComponent(meta.id)

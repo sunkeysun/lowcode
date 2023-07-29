@@ -10,29 +10,31 @@ import { Designer } from '..'
 export class DocumentModel {
   #id: string
   #rootNode: NodeEntity
+  #nodeDomMap = new Map<string, HTMLElement>()
 
   constructor(private readonly designer: Designer, schema: NodeSchema) {
     this.#id = uniqId()
     this.#rootNode = this.initNodeTree(schema, null)
-    this.setRootNodeId(this.#rootNode.id)
     this.designer.dispatch(
       documentEntity.actions.addOne({
         id: this.#id,
         title: schema.title,
         rootNodeId: this.#rootNode.id,
-        activedNodeId: this.#rootNode.id,
+        activedNodeId: null,
       }),
     )
+    this.setRootNodeId(this.#rootNode.id)
+    this.setActivedNode(this.#rootNode.id)
   }
 
-  getId() {
+  get id() {
     return this.#id
   }
 
   getDocument() {
     const document = documentEntity.selectors.selectById(
       this.designer.state,
-      this.getId(),
+      this.id
     )
     return document
   }
@@ -96,6 +98,10 @@ export class DocumentModel {
     return nodeEntity.selectors.selectById(this.designer.state, nodeId)
   }
 
+  getNodeDomById(nodeId: string) {
+    return this.#nodeDomMap.get(nodeId)
+  }
+
   setDraggingTarget(draggingTarget: NodeEntity | null) {
     return this.designer.dispatch(
       documentUI.actions.setDragingTarget(draggingTarget),
@@ -115,19 +121,21 @@ export class DocumentModel {
   }
 
   setRootNodeId(nodeId: string) {
-    const id = this.getId()
-    documentEntity.actions.updateOne({ id, changes: { rootNodeId: nodeId } })
+    this.designer.dispatch(
+      documentEntity.actions.updateOne({ id: this.id, changes: { rootNodeId: nodeId } })
+    )
   }
 
   setActivedNode(nodeId: string) {
-    const id = this.getId()
-    documentEntity.actions.updateOne({ id, changes: { activedNodeId: nodeId } })
+    this.designer.dispatch(
+      documentEntity.actions.updateOne({ id: this.id, changes: { activedNodeId: nodeId } })
+    )
   }
 
   setTitle(title: string) {
     return this.designer.dispatch(
       documentEntity.actions.updateOne({
-        id: this.getId(),
+        id: this.id,
         changes: { title },
       }),
     )
@@ -142,7 +150,7 @@ export class DocumentModel {
   initNodeTree(schema: NodeSchema, parentId: string | null) {
     const { title, componentName, props, children } = schema
     const nodeId = uniqId()
-    const documentId = this.getId()
+    const documentId = this.id
     const node: NodeEntity = {
       id: nodeId,
       title,
@@ -153,8 +161,8 @@ export class DocumentModel {
       childrenIds: !children?.length
         ? []
         : children.map(
-            (child: NodeSchema) => this.initNodeTree(child, nodeId).id,
-          ),
+          (child: NodeSchema) => this.initNodeTree(child, nodeId).id,
+        ),
     }
     this.designer.dispatch(nodeEntity.actions.addOne(node))
     return node
@@ -162,7 +170,7 @@ export class DocumentModel {
 
   createNode(componentName: string) {
     const nodeId = uniqId()
-    const documentId = this.getId()
+    const documentId = this.id
     const node: NodeEntity = {
       id: nodeId,
       title: componentName,
@@ -173,5 +181,17 @@ export class DocumentModel {
       childrenIds: [],
     }
     return node
+  }
+
+  mountNode(nodeId: string, dom: HTMLElement) {
+    this.#nodeDomMap.set(nodeId, dom)
+  }
+
+  unmountNode(nodeId: string) {
+    this.#nodeDomMap.delete(nodeId)
+  }
+
+  destroy() {
+    this.#nodeDomMap.clear()
   }
 }

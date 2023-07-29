@@ -1,19 +1,15 @@
-import { Workbench } from './components/Workbench'
-import { IframeCanvas } from './components/IframeCanvas'
 import { DesignerProvider } from './context/DesignerContext'
-import { Designer } from '.'
+import { Designer } from './components/designer/Designer'
+import { Designer as Engine } from '.'
 import { LC_DESIGNER } from './common/constants'
 
-const designer = new Designer()
+const designer = new Engine()
 window[LC_DESIGNER] = designer
 
 function App() {
   return (
     <DesignerProvider designer={designer}>
-      <div>
-        <Workbench />
-        <IframeCanvas />
-      </div>
+      <Designer />
     </DesignerProvider>
   )
 }
