@@ -3,19 +3,22 @@
  */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '..'
-import { type HoverTarget, type DragoverTarget } from '../../types'
+import { type HoverTarget, type DragoverTarget, type CanvasState } from '../../types'
 import { type NodeEntity } from '../entities/node'
 
 export interface DocumentUI {
   hoverTarget: HoverTarget | null
   draggingTarget: NodeEntity | null
   dragoverTarget: DragoverTarget | null
+  canvasState: CanvasState | null
 }
+
 
 const initialState: DocumentUI = {
   hoverTarget: null,
   draggingTarget: null,
   dragoverTarget: null,
+  canvasState: null,
 }
 
 export const name = 'documentUI'
@@ -23,18 +26,18 @@ const slice = createSlice({
   name,
   initialState,
   reducers: {
-    setDragingTarget(state, action: PayloadAction<NodeEntity | null>) {
-      const { payload: draggingTarget } = action
+    setDragingTarget(state, { payload: draggingTarget }: PayloadAction<NodeEntity | null>) {
       state.draggingTarget = draggingTarget
     },
-    setHoverTarget(state, action: PayloadAction<HoverTarget | null>) {
-      const { payload: hoverTarget } = action
+    setHoverTarget(state, { payload: hoverTarget }: PayloadAction<HoverTarget | null>) {
       state.hoverTarget = hoverTarget
     },
-    setDragoverTarget(state, action: PayloadAction<DragoverTarget | null>) {
-      const { payload: dragoverTarget } = action
+    setDragoverTarget(state, { payload: dragoverTarget }: PayloadAction<DragoverTarget | null>) {
       state.dragoverTarget = dragoverTarget
     },
+    setCanvasState(state, { payload: canvasState }: PayloadAction<CanvasState>) {
+      state.canvasState = canvasState
+    }
   },
 })
 
@@ -46,4 +49,5 @@ export const selectors = {
   selectDragoverTarget: (state: RootState) =>
     state.ui.documentUI.dragoverTarget,
   selectHoverTarget: (state: RootState) => state.ui.documentUI.hoverTarget,
+  selectCanvasState: (state: RootState) => state.ui.documentUI.canvasState,
 }

@@ -8,6 +8,7 @@ import { type NodeSchema } from '../types'
 import { ComponentManager } from './managers/ComponentManager'
 import { ShellManager } from './managers/shellManager'
 import { HoverSelectPlugin } from '../plugins/HoverSelectPlugin'
+import { CanvasMutatePlugin } from '../plugins/CanvasMutatePlugin'
 
 export class Designer {
   #store = store
@@ -53,7 +54,11 @@ export class Designer {
   }
 
   initPlugins() {
-    this.#plugins.push(new DragDropPlugin(this), new HoverSelectPlugin(this))
+    this.#plugins.push(
+      new DragDropPlugin(this),
+      new HoverSelectPlugin(this),
+      new CanvasMutatePlugin(this),
+    )
   }
 
   destroy() {

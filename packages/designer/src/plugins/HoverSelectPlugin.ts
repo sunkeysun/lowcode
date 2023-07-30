@@ -29,16 +29,23 @@ export class HoverSelectPlugin extends Plugin {
     const {
       eventData: { target },
     } = ev
-    if (target.type !== 'node') return
+    const activedNode = this.designer.documentModel?.getActivedNode()
+    if (target.type !== 'node' || activedNode?.id === target.id) return
     this.designer.documentModel?.setHoverTarget({ target })
   }
 
   handleMouseleave = () => {
+    const hoverTarget = this.designer.documentModel?.getHoverTarget()
+    if (!hoverTarget) return
     this.designer.documentModel?.setHoverTarget(null)
   }
 
   handleMouseclick = (ev: MouseclickEvent) => {
     const { eventData: { target } } = ev
+    const hoverTarget = this.designer.documentModel?.getHoverTarget()
+    if (hoverTarget?.target.id === target.id) {
+      this.designer.documentModel?.setHoverTarget(null)
+    }
     this.designer.documentModel?.setActivedNode(target.id)
   }
 

@@ -18,7 +18,9 @@ export class CanvasMutatePlugin extends Plugin {
   }
 
   handleCanvasMutate = (ev: CanvasMutateEvent) => {
-    // this.designer.documentModel?.setHoverTarget({ target })
+    const { eventData } = ev
+    if (!eventData) return
+    this.designer.documentModel?.setCanvasState(eventData)
   }
 
   destroy() {

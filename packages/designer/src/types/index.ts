@@ -8,9 +8,13 @@ export interface NodeSchema {
 }
 
 export type LcTargetType = 'component' | 'node'
+export type AtPosition = 'top' | 'left' | 'bottom' | 'right' | 'in'
+export type AcceptType = 'accept' | 'reject'
 
 export type DragoverTarget = {
-  target: LCTarget
+  nodeId: string
+  acceptType: AcceptType
+  atPosition: AtPosition
 } | null
 
 export type HoverTarget = {
@@ -31,4 +35,19 @@ export interface ComponentMetaSchema {
   title: string
   props: []
   snippets: ComponentMetaSnippet[]
+}
+
+export interface DOMRect {
+  top: number
+  left: number
+  width: number
+  height: number
+}
+
+export interface CanvasState {
+  scroll: {
+    top: number
+    left: number
+  },
+  domRect: DOMRect
 }

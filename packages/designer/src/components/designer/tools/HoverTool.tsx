@@ -8,7 +8,7 @@ export function HoverTool() {
   return (
     <div
       style={{
-        position: 'fixed',
+        position: 'absolute',
         top: domRect.top,
         left: domRect.left,
         width: domRect.width,
@@ -17,7 +17,6 @@ export function HoverTool() {
         pointerEvents: 'none',
       }}
     >
-      {hoverNode.target.id}
     </div>
   )
 }

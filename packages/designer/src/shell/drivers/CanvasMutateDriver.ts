@@ -17,13 +17,18 @@ export class CanvasMutateDriver extends EventDriver {
     this.contentWindow = iframe.contentWindow
     this.contentDocument?.addEventListener('scroll', this.handleMutate)
     this.contentWindow?.addEventListener('resize', this.handleMutate)
+    this.handleMutate()
   }
 
   handleMutate = () => {
     const scrollTop = this.contentDocument?.documentElement.scrollTop ?? 0
+    const scrollLeft = this.contentDocument?.documentElement.scrollLeft ?? 0
     const domRect = this.iframe.getBoundingClientRect()
     this.dispatchEvent(new CanvasMutateEvent({
-      scrollTop,
+      scroll: {
+        top: scrollTop,
+        left: scrollLeft,
+      },
       domRect: {
         top: domRect.top,
         left: domRect.left,
@@ -33,20 +38,8 @@ export class CanvasMutateDriver extends EventDriver {
     }))
   }
 
-  handleScroll = (evt: Event) => {
-    const htmlTarget = evt.target as HTMLElement
-    const documentTarget = evt.target as Document
-    let scrollTop = 0
-    if (documentTarget?.documentElement?.scrollTop ?? -1 >= 0) {
-      scrollTop = documentTarget?.documentElement?.scrollTop
-    } else {
-      scrollTop = htmlTarget.scrollTop
-    }
-    this.dispatchEvent(new CanvasScrollEvent({ scrollTop }))
-  }
-
   destroy() {
-    this.contentDocument?.removeEventListener('scroll', this.handleScroll)
-    this.contentWindow?.removeEventListener('resize', this.handleResize)
+    this.contentDocument?.removeEventListener('scroll', this.handleMutate)
+    this.contentWindow?.removeEventListener('resize', this.handleMutate)
   }
 }

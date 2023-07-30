@@ -8,7 +8,7 @@ export const Root = forwardRef(({
   title: string
 }, ref) => {
   return (
-    <div ref={ref} style={{ width: 200, height: 200, background: 'lightblue'}}>
+    <div ref={ref} style={{ width: 300, height: 300, background: 'lightblue'}}>
       {title}
       {children}
     </div>

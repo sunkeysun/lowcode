@@ -2,8 +2,6 @@ import { useWorkbench } from '../../hooks/useWorkbench'
 import { DragComponent } from './DragComponent'
 import * as componentsMeta from '../../materials/test/meta'
 import { IframeCanvas } from './IframeCanvas'
-import { HoverTool } from './tools/HoverTool'
-import { ActivedTool } from './tools/ActivedTool'
 
 type ComponentName = keyof typeof componentsMeta
 
@@ -28,8 +26,6 @@ export function Workbench() {
         )}
       </ul>
       <IframeCanvas />
-      <HoverTool />
-      <ActivedTool />
     </div>
   )
 }

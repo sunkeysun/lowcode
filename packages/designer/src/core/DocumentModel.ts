@@ -4,7 +4,7 @@
 import { type NodeEntity } from '../store/entities/node'
 import { documentEntity, documentUI, nodeEntity } from '../store'
 import { uniqId } from '../common/util'
-import { HoverTarget, type DragoverTarget, type NodeSchema } from '../types'
+import { HoverTarget, type DragoverTarget, type NodeSchema, type CanvasState } from '../types'
 import { Designer } from '..'
 
 export class DocumentModel {
@@ -66,7 +66,7 @@ export class DocumentModel {
     return documentUI.selectors.selectDragingTarget(this.designer.state)
   }
 
-  getDragOverTarget() {
+  getDragoverTarget() {
     return documentUI.selectors.selectDragoverTarget(this.designer.state)
   }
 
@@ -94,12 +94,32 @@ export class DocumentModel {
     return schema
   }
 
-  getNodeById(nodeId: string) {
+  getNode(nodeId: string) {
     return nodeEntity.selectors.selectById(this.designer.state, nodeId)
   }
 
-  getNodeDomById(nodeId: string) {
+  getNodeParents(nodeId: string) {
+    let node = this.getNode(nodeId)
+    const parents = []
+    while (node?.parentId) {
+      node = this.getNode(node.parentId)
+      parents.push(node)
+    }
+    return parents
+  }
+
+  getNodeDom(nodeId: string) {
     return this.#nodeDomMap.get(nodeId)
+  }
+
+  getCanvasState() {
+    return documentUI.selectors.selectCanvasState(this.designer.state)
+  }
+
+  setCanvasState(canvasState: CanvasState) {
+    return this.designer.dispatch(
+      documentUI.actions.setCanvasState(canvasState)
+    )
   }
 
   setDraggingTarget(draggingTarget: NodeEntity | null) {

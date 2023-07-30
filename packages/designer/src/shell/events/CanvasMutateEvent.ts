@@ -4,7 +4,10 @@
 import { EngineEvent } from './EngineEvent';
 
 export interface CanvasMutateEventData {
-  scrollTop: number
+  scroll: {
+    top: number
+    left: number
+  }
   domRect: {
     top: number
     left: number
@@ -14,5 +17,5 @@ export interface CanvasMutateEventData {
 }
 
 export class CanvasMutateEvent extends EngineEvent<CanvasMutateEventData> {
-  static eventName: 'engine:canvas-resize'
+  static eventName: 'engine:canvas-mutate'
 }

@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { useDesigner } from './useDesigner';
 
-export function useNodeById(nodeId: string) {
+export function useNode(nodeId: string) {
   const { designer } = useDesigner()
-  const node = useSelector(() => designer!.documentModel!.getNodeById(nodeId))
+  const node = useSelector(() => designer!.documentModel!.getNode(nodeId))
   return { node }
 }

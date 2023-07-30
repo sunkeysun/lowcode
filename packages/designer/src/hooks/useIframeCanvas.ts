@@ -1,14 +1,14 @@
 /**
  * iframeCanvas
  */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { useDesigner } from './useDesigner'
 import { LC_DESIGNER } from '../common/constants'
 
 export function useIframeCanvas() {
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const { designer } = useDesigner()
-  const [domRect, setDomRect] = useState<DOMRect | null>(null)
 
   useEffect(() => {
     const contentDocument = iframeRef.current?.contentDocument
@@ -24,14 +24,7 @@ export function useIframeCanvas() {
     if (contentWindow && contentDocument) {
       contentWindow[LC_DESIGNER].shellManager.createIframeCanvas(iframeRef.current)
     }
-    const domRect = iframeRef.current?.getBoundingClientRect() ?? null
-    setDomRect(domRect)
-
-    contentWindow?.addEventListener('resize', () => {
-      const domRect = iframeRef.current?.getBoundingClientRect() ?? null
-      setDomRect(domRect)
-    })
   }
 
-  return { iframeRef, onLoad, domRect }
+  return { iframeRef, onLoad }
 }

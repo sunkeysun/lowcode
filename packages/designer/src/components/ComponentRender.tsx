@@ -1,9 +1,9 @@
 import { useDragNode } from '../hooks/useDragNode'
-import { useNodeById } from '../hooks/useNodeById'
+import { useNode } from '../hooks/useNode'
 import * as components from '../materials/test'
 
 export function ComponentRender({ nodeId }: { nodeId: string }) {
-  const { node } = useNodeById(nodeId)
+  const { node } = useNode(nodeId)
   const { ref } = useDragNode(nodeId)
   if (!node) return null
   const componentName = node.componentName.split('-')[0] as keyof typeof components

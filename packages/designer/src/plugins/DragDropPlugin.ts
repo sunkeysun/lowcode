@@ -9,6 +9,28 @@ import {
   DragOverEvent,
   DragLeaveEvent,
 } from '../shell'
+import { DragoverTarget } from '../types'
+
+function getAtPosition(ev: MouseEvent, dom?: HTMLElement) {
+  if (!ev || !dom) return 'in'
+  const { width, height } = dom.getBoundingClientRect()
+  const { offsetX, offsetY } = ev
+  const inWidth = width * 0.7
+  const inHeight = height * 0.7
+  if (offsetX > (width - inWidth) / 2 && offsetX < width - (width - inWidth) / 2 && offsetY > (height - inHeight) / 2 && offsetY < height - (height - inHeight) / 2) {
+    return 'in'
+  } else if (offsetX <= (width - inWidth) / 2) {
+    return 'left'
+  } else if (offsetX >= width - (width - inWidth) / 2) {
+    return 'right'
+  } else if (offsetY <= (height - inHeight) / 2) {
+    return 'top'
+  } else if (offsetY >= height - (height - inHeight) / 2) {
+    return 'bottom'
+  }
+
+  return 'left'
+}
 
 export class DragDropPlugin extends Plugin {
   #unsubscribers: Array<() => void> = []
@@ -43,7 +65,7 @@ export class DragDropPlugin extends Plugin {
     if (target.type === 'component') {
       dragNode = this.designer.documentModel?.createNode(target.id)
     } else {
-      dragNode = this.designer.documentModel?.getNodeById(target.id)
+      dragNode = this.designer.documentModel?.getNode(target.id)
     }
 
     if (dragNode) {
@@ -53,18 +75,23 @@ export class DragDropPlugin extends Plugin {
 
   handleDragOver = (event: DragOverEvent) => {
     const {
-      eventData: { target },
+      eventData: { target, nativeEvent },
     } = event
-    this.designer.documentModel?.setDragoverTarget({ target })
+    const dragoverTarget: DragoverTarget = {
+      nodeId: target.id,
+      acceptType: 'accept',
+      atPosition: getAtPosition(nativeEvent, this.designer.documentModel?.getNodeDom(target.id)),
+    }
+    this.designer.documentModel?.setDragoverTarget(dragoverTarget)
   }
 
   handleDragEnd = () => {
     const draggingTarget = this.designer.documentModel?.getDragingTarget()
-    const dragoverTarget = this.designer.documentModel?.getDragOverTarget()
-    if (draggingTarget && dragoverTarget) {
+    const dragoverTarget = this.designer.documentModel?.getDragoverTarget()
+    if (draggingTarget && dragoverTarget?.acceptType === 'accept') {
       this.designer.documentModel?.appendChild(
         draggingTarget,
-        dragoverTarget.target.id,
+        dragoverTarget.nodeId,
       )
     }
 
