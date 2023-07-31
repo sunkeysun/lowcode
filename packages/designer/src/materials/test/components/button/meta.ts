@@ -36,14 +36,14 @@ export const Button =  {
       title: '提交按钮',
       props: {
         htmlType: 'submit',
-        children: '提交',
+        text: '提交',
       },
     },
     {
       title: '重置按钮',
       props: {
         htmlType: 'reset',
-        children: '重置',
+        text: '重置',
       },
     },
   ]

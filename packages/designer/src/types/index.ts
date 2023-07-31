@@ -8,13 +8,15 @@ export interface NodeSchema {
 }
 
 export type LcTargetType = 'component' | 'node'
-export type AtPosition = 'top' | 'left' | 'bottom' | 'right' | 'in'
-export type AcceptType = 'accept' | 'reject'
+export type AcceptStatus = 'accept' | 'reject'
+export type LayoutPosition = 'Top' | 'Left' | 'Bottom' | 'Right' | 'In'
+export type LayoutDirection = 'V' | 'H'
 
 export type DragoverTarget = {
   nodeId: string
-  acceptType: AcceptType
-  atPosition: AtPosition
+  acceptStatus: AcceptStatus
+  layoutPosition: LayoutPosition
+  layoutDirection: LayoutDirection
 } | null
 
 export type HoverTarget = {

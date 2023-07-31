@@ -48,19 +48,19 @@ export const slice = createSlice({
       })
       state.entities[parentId]?.childrenIds.push(node.id)
     },
-    insertBefore(state, action: PayloadAction<{ parentId: string, node: NodeEntity, targetId: string }>) {
-      const { parentId, node, targetId } = action.payload
+    insertBefore(state, action: PayloadAction<{ parentId: string, node: NodeEntity, refId: string }>) {
+      const { parentId, node, refId } = action.payload
       const childIds = state.entities[parentId]?.childrenIds ?? []
-      const targetIndex = childIds?.findIndex((id) => id === targetId)
+      const targetIndex = childIds?.findIndex((id) => id === refId)
       if (targetIndex > -1) {
         adapter.addOne(state, { ...node, parentId })
         childIds.splice(targetIndex, 0, node.id)
       }
     },
-    insertAfter(state, action: PayloadAction<{ parentId: string, node: NodeEntity, targetId: string }>) {
-      const { parentId, node, targetId } = action.payload
+    insertAfter(state, action: PayloadAction<{ parentId: string, node: NodeEntity, refId: string }>) {
+      const { parentId, node, refId } = action.payload
       const childIds = state.entities[parentId]?.childrenIds ?? []
-      const targetIndex = childIds?.findIndex((id) => id === targetId)
+      const targetIndex = childIds?.findIndex((id) => id === refId)
       if (targetIndex > -1) {
         adapter.addOne(state, { ...node, parentId })
         childIds.splice(targetIndex + 1, 0, node.id)

@@ -1,22 +1,18 @@
 import { useDragoverNode } from '../../../hooks/useDragoverNode'
 
-function upper(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
-
 export function DragoverTool() {
   const { dragoverTarget, domRect } = useDragoverNode()
   if (!dragoverTarget || !domRect) return null
   let borderStyle: Record<string, string> = {
     backgroundColor:
-      dragoverTarget.acceptType === 'accept'
+      dragoverTarget.acceptStatus === 'accept'
         ? 'rgba(0, 0, 255, 0.3)'
         : 'rgba(255, 0, 0, 0.3)',
   }
-  if (dragoverTarget.atPosition !== 'in') {
+  if (dragoverTarget.layoutPosition !== 'In') {
     borderStyle = {
-      [`border${upper(dragoverTarget.atPosition)}`]: `3px solid ${
-        dragoverTarget.acceptType === 'accept' ? 'blue' : 'red'
+      [`border${dragoverTarget.layoutPosition}`]: `3px solid ${
+        dragoverTarget.acceptStatus === 'accept' ? 'blue' : 'red'
       }`,
     }
   }

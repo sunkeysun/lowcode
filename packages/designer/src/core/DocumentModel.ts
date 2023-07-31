@@ -7,6 +7,7 @@ import { uniqId } from '../common/util'
 import { HoverTarget, type DragoverTarget, type NodeSchema, type CanvasState } from '../types'
 import { Designer } from '..'
 
+let count = 0
 export class DocumentModel {
   #id: string
   #rootNode: NodeEntity
@@ -167,6 +168,18 @@ export class DocumentModel {
     )
   }
 
+  insertBefore(parentId: string, node: NodeEntity, refId: string) {
+    return this.designer.dispatch(
+      nodeEntity.actions.insertBefore({ parentId, node, refId })
+    )
+  }
+
+  insertAfter(parentId: string, node: NodeEntity, refId: string) {
+    return this.designer.dispatch(
+      nodeEntity.actions.insertAfter({ parentId, node, refId })
+    )
+  }
+
   initNodeTree(schema: NodeSchema, parentId: string | null) {
     const { title, componentName, props, children } = schema
     const nodeId = uniqId()
@@ -195,7 +208,9 @@ export class DocumentModel {
       id: nodeId,
       title: componentName,
       componentName,
-      props: {},
+      props: {
+        text: String(count++)
+      },
       parentId: null,
       documentId,
       childrenIds: [],
