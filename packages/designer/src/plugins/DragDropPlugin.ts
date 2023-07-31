@@ -175,7 +175,7 @@ export class DragDropPlugin extends Plugin {
     return childId
   }
 
-  getAcceptType(): AcceptStatus {
+  getAcceptStatus(): AcceptStatus {
     return 'accept'
   }
 
@@ -217,7 +217,7 @@ export class DragDropPlugin extends Plugin {
     const acceptStatus =
       layoutPosition !== 'In' && !targetNode.parentId
         ? 'reject'
-        : this.getAcceptType()
+        : this.getAcceptStatus()
     const dragoverTarget: DragoverTarget = {
       nodeId,
       acceptStatus,

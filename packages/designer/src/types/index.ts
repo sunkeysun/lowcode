@@ -7,7 +7,29 @@ export interface NodeSchema {
   props: Props
 }
 
-export type LcTargetType = 'component' | 'node'
+export interface ComponentMetaSchema {
+  componentName: string
+  title: string
+  propsSetters: []
+  resources: ComponentResouce[]
+  slots?: Record<string, ComponentMetaSchema>
+  configure: {
+    behaviourRule: {
+      dragable?: boolean
+      dropable?: boolean
+      deletable?: boolean
+      clonable?: boolean
+      lockable?: boolean
+      allowChild?: string[]
+    },
+  },
+}
+
+export interface ComponentResouce extends NodeSchema {
+  imageUrl?: string
+}
+
+export type LcTargetType = 'resource' | 'node'
 export type AcceptStatus = 'accept' | 'reject'
 export type LayoutPosition = 'Top' | 'Left' | 'Bottom' | 'Right' | 'In'
 export type LayoutDirection = 'V' | 'H'
@@ -26,17 +48,6 @@ export type HoverTarget = {
 export interface LCTarget {
   id: string
   type: LcTargetType
-}
-
-export interface ComponentMetaSnippet extends NodeSchema {
-    thumbnail?: string
-}
-
-export interface ComponentMetaSchema {
-  componentName: string
-  title: string
-  props: []
-  snippets: ComponentMetaSnippet[]
 }
 
 export interface DOMRect {
