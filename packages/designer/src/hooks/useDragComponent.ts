@@ -10,7 +10,7 @@ export function useDragComponent(componentName: string) {
     if (ref.current) {
       ref.current[LC_TARGET] = {
         id: componentName,
-        type: 'component',
+        type: 'resource',
       }
     }
   }, [componentName])

@@ -5,6 +5,7 @@ import {
   createSlice,
   createEntityAdapter,
   type PayloadAction,
+  type EntityState,
 } from '@reduxjs/toolkit'
 import { type RootState } from '..'
 import { type Props } from '../../types'
@@ -17,55 +18,118 @@ export interface NodeEntity {
   childrenIds: string[]
   parentId: string | null
   documentId: string
+  childNodes?: NodeEntity[]
 }
 
 const adapter = createEntityAdapter<NodeEntity>()
+
+function insert(
+  state: EntityState<NodeEntity>,
+  payload: { refId: string; node: NodeEntity },
+  location: 'before' | 'after',
+) {
+  const {
+    node: { childNodes, ...insertNode },
+    refId,
+  } = payload
+  const { parentId } = insertNode
+  if (!parentId || !refId) {
+    return
+  }
+  const refNode = state.entities[refId]
+  if (!refNode || !refNode.parentId) return
+
+  const refParentNode = state.entities[refNode.parentId]
+  const parentNode = state.entities[parentId]
+  if (!refParentNode || !parentNode) return
+
+  const refIndex = refParentNode.childrenIds?.findIndex(
+    (childId) => childId === refId,
+  )
+  if (refIndex < 0) return
+
+  if (state.entities[insertNode.id]) {
+    parentNode.childrenIds = parentNode.childrenIds.filter(
+      (childId) => childId !== insertNode.id,
+    )
+    adapter.updateOne(state, {
+      id: insertNode.id,
+      changes: { ...insertNode, parentId: refNode.parentId },
+    })
+  } else {
+    adapter.addOne(state, {
+      ...insertNode,
+      parentId: refNode.parentId,
+    })
+  }
+  const targetIndex = location === 'before' ? refIndex : refIndex + 1
+  refParentNode.childrenIds.splice(targetIndex, 0, insertNode.id)
+
+  if (childNodes) {
+    adapter.addMany(state, childNodes)
+  }
+}
 
 export const name = 'node'
 export const slice = createSlice({
   name,
   initialState: adapter.getInitialState(),
   reducers: {
-    addOne: adapter.addOne.bind(this),
-    updateOne: adapter.updateOne.bind(this),
-    removeOne(state, action: PayloadAction<string>) {
+    remove(state, action: PayloadAction<string>) {
       const { payload: nodeId } = action
-      const parentId = state.entities[nodeId]?.parentId
-      if (parentId) {
-        const parentNode = state.entities[parentId]
-        if (parentNode) {
-          const childIndex = parentNode.childrenIds.findIndex((childId) => childId === nodeId)
-          parentNode.childrenIds.splice(childIndex, 1)
+      function removeTree(nodeId: string) {
+        const parentId = state.entities[nodeId]?.parentId
+        const childrenIds = state.entities[nodeId]?.childrenIds ?? []
+        if (parentId) {
+          const parentNode = state.entities[parentId]
+          if (parentNode) {
+            const childIndex = parentNode.childrenIds.findIndex(
+              (childId) => childId === nodeId,
+            )
+            parentNode.childrenIds.splice(childIndex, 1)
+          }
         }
+        if (childrenIds?.length > 0) {
+          childrenIds.forEach((childId) => removeTree(childId))
+          adapter.removeMany(state, childrenIds)
+        }
+        adapter.removeOne(state, nodeId)
       }
-      adapter.removeOne(state, action.payload)
+      removeTree(nodeId)
     },
-    appendChild(state, action: PayloadAction<{ node: NodeEntity, parentId: string }>) {
-      const { payload: { node, parentId } } = action
-      adapter.addOne(state, {
-        ...node,
-        parentId,
-      })
-      state.entities[parentId]?.childrenIds.push(node.id)
-    },
-    insertBefore(state, action: PayloadAction<{ parentId: string, node: NodeEntity, refId: string }>) {
-      const { parentId, node, refId } = action.payload
-      const childIds = state.entities[parentId]?.childrenIds ?? []
-      const targetIndex = childIds?.findIndex((id) => id === refId)
-      if (targetIndex > -1) {
-        adapter.addOne(state, { ...node, parentId })
-        childIds.splice(targetIndex, 0, node.id)
+
+    appendChild(state, action: PayloadAction<NodeEntity>) {
+      const { payload } = action
+      const { childNodes, ...node } = payload
+      adapter.addOne(state, node)
+
+      if (node.parentId) {
+        state.entities[node.parentId]?.childrenIds.push(node.id)
+      }
+      if (childNodes) {
+        adapter.addMany(state, childNodes)
       }
     },
-    insertAfter(state, action: PayloadAction<{ parentId: string, node: NodeEntity, refId: string }>) {
-      const { parentId, node, refId } = action.payload
-      const childIds = state.entities[parentId]?.childrenIds ?? []
-      const targetIndex = childIds?.findIndex((id) => id === refId)
-      if (targetIndex > -1) {
-        adapter.addOne(state, { ...node, parentId })
-        childIds.splice(targetIndex + 1, 0, node.id)
-      }
-    }
+
+    insertBefore(
+      state,
+      action: PayloadAction<{
+        node: NodeEntity
+        refId: string
+      }>,
+    ) {
+      insert(state, action.payload, 'before')
+    },
+
+    insertAfter(
+      state,
+      action: PayloadAction<{
+        node: NodeEntity
+        refId: string
+      }>,
+    ) {
+      insert(state, action.payload, 'after')
+    },
   },
 })
 

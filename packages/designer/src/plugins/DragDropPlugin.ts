@@ -115,13 +115,13 @@ export class DragDropPlugin extends Plugin {
       nodeId = node.id
       const nodeDom = this.designer.documentModel?.getNodeDom(node.id)
       alignDirection = this.getAlignDirection(nodeDom)
-      if (alignDirection === 'vertical') { // 垂直排列
+      if (alignDirection === 'vertical') {
         if (offsetY / (height - offsetY) <= 1) {
           alignPosition = 'top'
         } else {
           alignPosition = 'bottom'
         }
-      } else { // 水平排列
+      } else {
         if (offsetX / (width - offsetX) <= 1) {
           alignPosition = 'left'
         } else {
@@ -181,16 +181,7 @@ export class DragDropPlugin extends Plugin {
     const {
       eventData: { target },
     } = event
-    let dragNode = null
-    if (target.type === 'component') {
-      dragNode = this.designer.documentModel?.createNode(target.id)
-    } else {
-      dragNode = this.designer.documentModel?.getNode(target.id)
-    }
-
-    if (dragNode) {
-      this.designer.documentModel?.setDraggingTarget(dragNode)
-    }
+    this.designer.documentModel?.setDraggingTarget(target)
   }
 
   handleDragOver = (event: DragOverEvent) => {
@@ -237,15 +228,38 @@ export class DragDropPlugin extends Plugin {
 
     const node = this.designer.documentModel?.getNode(dragoverTarget.nodeId)
     if (!node) return
+
+    let draggingNode = null
+    if (draggingTarget.type === 'resource') {
+      const resource = this.designer.materialManager.getComponentResourceById(
+        draggingTarget.id,
+      )
+      if (!resource) return
+      draggingNode = this.designer.documentModel?.createNode(
+        {
+          ...resource.schema,
+          title: resource.title,
+          componentName: resource.componentName,
+        },
+        null,
+      )
+    } else {
+      draggingNode = this.designer.documentModel?.getNode(draggingTarget.id)
+    }
+
+    if (!draggingNode) return
+
     if (dragoverTarget.alignPosition === 'in') {
-      this.designer.documentModel?.appendChild(draggingTarget, node.id)
+      this.designer.documentModel?.appendChild({
+        ...draggingNode,
+        parentId: node.id,
+      })
     } else if (
       ['left', 'top'].includes(dragoverTarget.alignPosition) &&
       node.parentId
     ) {
       this.designer.documentModel?.insertBefore(
-        node.parentId,
-        draggingTarget,
+        { ...draggingNode, parentId: node.parentId },
         node.id,
       )
     } else if (
@@ -253,8 +267,7 @@ export class DragDropPlugin extends Plugin {
       node.parentId
     ) {
       this.designer.documentModel?.insertAfter(
-        node.parentId,
-        draggingTarget,
+        { ...draggingNode, parentId: node.parentId },
         node.id,
       )
     }

@@ -4,8 +4,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import * as documentEntity from './entities/document'
 import * as nodeEntity from './entities/node'
-import * as materialEntity from './entities/material'
-import * as componentEntity from './entities/component'
+import * as resourceEntity from './entities/resource'
 import * as documentUI from './ui/document'
 import * as projectUI from './ui/project'
 
@@ -14,8 +13,7 @@ export const store = configureStore({
     entities: combineReducers({
       [documentEntity.name]: documentEntity.reducer,
       [nodeEntity.slice.name]: nodeEntity.slice.reducer,
-      [materialEntity.slice.name]: materialEntity.slice.reducer,
-      [componentEntity.slice.name]: componentEntity.slice.reducer,
+      [resourceEntity.slice.name]: resourceEntity.slice.reducer,
     }),
     ui: combineReducers({
       [documentUI.name]: documentUI.reducer,
@@ -27,4 +25,4 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 export type StoreType = typeof store
 
-export { documentEntity, nodeEntity, documentUI, projectUI }
+export { documentEntity, nodeEntity, resourceEntity, documentUI, projectUI }

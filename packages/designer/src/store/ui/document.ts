@@ -3,12 +3,11 @@
  */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { type RootState } from '..'
-import { type HoverTarget, type DragoverTarget, type CanvasState } from '../../types'
-import { type NodeEntity } from '../entities/node'
+import type { HoverTarget, DragoverTarget, CanvasState, DraggingTarget } from '../../types'
 
 export interface DocumentUI {
   hoverTarget: HoverTarget | null
-  draggingTarget: NodeEntity | null
+  draggingTarget: DraggingTarget | null
   dragoverTarget: DragoverTarget | null
   canvasState: CanvasState | null
 }
@@ -26,7 +25,7 @@ const slice = createSlice({
   name,
   initialState,
   reducers: {
-    setDragingTarget(state, { payload: draggingTarget }: PayloadAction<NodeEntity | null>) {
+    setDragingTarget(state, { payload: draggingTarget }: PayloadAction<DraggingTarget | null>) {
       state.draggingTarget = draggingTarget
     },
     setHoverTarget(state, { payload: hoverTarget }: PayloadAction<HoverTarget | null>) {

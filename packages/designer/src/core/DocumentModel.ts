@@ -4,10 +4,15 @@
 import { type NodeEntity } from '../store/entities/node'
 import { documentEntity, documentUI, nodeEntity } from '../store'
 import { uniqId } from '../common/util'
-import { HoverTarget, type DragoverTarget, type NodeSchema, type CanvasState } from '../types'
+import {
+  HoverTarget,
+  type DragoverTarget,
+  type NodeSchema,
+  type CanvasState,
+  DraggingTarget,
+} from '../types'
 import { Designer } from '..'
 
-let count = 0
 export class DocumentModel {
   #id: string
   #rootNode: NodeEntity
@@ -15,7 +20,7 @@ export class DocumentModel {
 
   constructor(private readonly designer: Designer, schema: NodeSchema) {
     this.#id = uniqId()
-    this.#rootNode = this.initNodeTree(schema, null)
+    this.#rootNode = this.createNode(schema, null)
     this.designer.dispatch(
       documentEntity.actions.addOne({
         id: this.#id,
@@ -26,6 +31,7 @@ export class DocumentModel {
     )
     this.setRootNodeId(this.#rootNode.id)
     this.setActivedNode(this.#rootNode.id)
+    this.appendChild(this.#rootNode)
   }
 
   get id() {
@@ -35,7 +41,7 @@ export class DocumentModel {
   getDocument() {
     const document = documentEntity.selectors.selectById(
       this.designer.state,
-      this.id
+      this.id,
     )
     return document
   }
@@ -119,11 +125,11 @@ export class DocumentModel {
 
   setCanvasState(canvasState: CanvasState) {
     return this.designer.dispatch(
-      documentUI.actions.setCanvasState(canvasState)
+      documentUI.actions.setCanvasState(canvasState),
     )
   }
 
-  setDraggingTarget(draggingTarget: NodeEntity | null) {
+  setDraggingTarget(draggingTarget: DraggingTarget | null) {
     return this.designer.dispatch(
       documentUI.actions.setDragingTarget(draggingTarget),
     )
@@ -143,13 +149,19 @@ export class DocumentModel {
 
   setRootNodeId(nodeId: string) {
     this.designer.dispatch(
-      documentEntity.actions.updateOne({ id: this.id, changes: { rootNodeId: nodeId } })
+      documentEntity.actions.updateOne({
+        id: this.id,
+        changes: { rootNodeId: nodeId },
+      }),
     )
   }
 
   setActivedNode(nodeId: string) {
     this.designer.dispatch(
-      documentEntity.actions.updateOne({ id: this.id, changes: { activedNodeId: nodeId } })
+      documentEntity.actions.updateOne({
+        id: this.id,
+        changes: { activedNodeId: nodeId },
+      }),
     )
   }
 
@@ -162,60 +174,53 @@ export class DocumentModel {
     )
   }
 
-  appendChild(node: NodeEntity, parentId: string) {
+  appendChild(node: NodeEntity) {
+    return this.designer.dispatch(nodeEntity.actions.appendChild(node))
+  }
+
+  insertBefore(node: NodeEntity, refId: string) {
     return this.designer.dispatch(
-      nodeEntity.actions.appendChild({ node, parentId }),
+      nodeEntity.actions.insertBefore({ node, refId }),
     )
   }
 
-  insertBefore(parentId: string, node: NodeEntity, refId: string) {
+  insertAfter(node: NodeEntity, refId: string) {
     return this.designer.dispatch(
-      nodeEntity.actions.insertBefore({ parentId, node, refId })
+      nodeEntity.actions.insertAfter({ node, refId }),
     )
   }
 
-  insertAfter(parentId: string, node: NodeEntity, refId: string) {
-    return this.designer.dispatch(
-      nodeEntity.actions.insertAfter({ parentId, node, refId })
-    )
-  }
-
-  initNodeTree(schema: NodeSchema, parentId: string | null) {
-    const { title, componentName, props, children } = schema
-    const nodeId = uniqId()
-    const documentId = this.id
-    const node: NodeEntity = {
-      id: nodeId,
-      title,
-      componentName,
-      props,
-      parentId,
-      documentId,
-      childrenIds: !children?.length
-        ? []
-        : children.map(
-          (child: NodeSchema) => this.initNodeTree(child, nodeId).id,
-        ),
+  createNode(schema: NodeSchema, parentId: string | null) {
+    const childNodes: NodeEntity[] = []
+    function create(
+      schema: NodeSchema,
+      parentId: string | null,
+      documentId: string,
+    ) {
+      const { title, componentName, props, children } = schema
+      const nodeId = uniqId()
+      const node: NodeEntity = {
+        id: nodeId,
+        title,
+        componentName,
+        props,
+        parentId,
+        documentId,
+        childrenIds: !children?.length
+          ? []
+          : children.map(
+              (child: NodeSchema) => create(child, nodeId, documentId).id,
+            ),
+      }
+      childNodes.push(node)
+      return node
     }
-    this.designer.dispatch(nodeEntity.actions.addOne(node))
-    return node
+    const node = create(schema, parentId, this.id)
+    return { ...node, childNodes }
   }
 
-  createNode(componentName: string) {
-    const nodeId = uniqId()
-    const documentId = this.id
-    const node: NodeEntity = {
-      id: nodeId,
-      title: componentName,
-      componentName,
-      props: {
-        text: String(count++)
-      },
-      parentId: null,
-      documentId,
-      childrenIds: [],
-    }
-    return node
+  removeNode(nodeId: string) {
+    this.designer.dispatch(nodeEntity.actions.remove(nodeId))
   }
 
   mountNode(nodeId: string, dom: HTMLElement) {

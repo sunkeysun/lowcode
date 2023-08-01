@@ -5,7 +5,7 @@ import { store } from '../store'
 import { DocumentModel } from './DocumentModel'
 import { DragDropPlugin, type Plugin } from '../plugins'
 import { type NodeSchema } from '../types'
-import { ComponentManager } from './managers/ComponentManager'
+import { MaterialManager } from './managers/MaterialManager'
 import { ShellManager } from './managers/shellManager'
 import { HoverSelectPlugin } from '../plugins/HoverSelectPlugin'
 import { CanvasMutatePlugin } from '../plugins/CanvasMutatePlugin'
@@ -14,7 +14,7 @@ export class Designer {
   #store = store
   #plugins: Plugin[] = []
   #documentModel: DocumentModel | null = null
-  #componentManager = new ComponentManager(this)
+  #materialManager = new MaterialManager(this)
   #shellManager = new ShellManager(this)
 
   constructor() {
@@ -37,8 +37,8 @@ export class Designer {
     return this.#documentModel
   }
 
-  get componentManager() {
-    return this.#componentManager
+  get materialManager() {
+    return this.#materialManager
   }
 
   get plugins() {

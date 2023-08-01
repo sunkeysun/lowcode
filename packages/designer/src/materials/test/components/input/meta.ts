@@ -1,19 +1,23 @@
-export const Input = {
+import { type ComponentMetaSchema } from '../../../../types'
+
+export const Input: ComponentMetaSchema = {
   componentName: 'Input',
   title: '输入框',
-  propsSetter: [
+  props: [
     {
       name: 'defaultValue',
       title: { label: '默认值', tip: '默认内容' },
       setter: 'StringSetter',
     },
   ],
-  variants: [
+  snippets: [
     {
       title: '默认内容',
-      props: {
-        defaultValue: '默认哈哈哈'  
+      schema: {
+        props: {
+          defaultValue: '默认哈哈哈',
+        },
       },
     },
-  ]
+  ],
 }

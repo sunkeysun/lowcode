@@ -1,7 +1,9 @@
-export const Button =  {
+import { type ComponentMetaSchema } from '../../../../types'
+
+export const Button: ComponentMetaSchema = {
   componentName: 'Button',
   title: '按钮',
-  propsSetter: [
+  props: [
     {
       name: 'htmlType',
       title: {
@@ -25,26 +27,31 @@ export const Button =  {
                 label: 'Button',
                 value: 'button',
               },
-            ],  
+            ],
           },
         },
       ],
     },
   ],
-  variants: [
+  snippets: [
     {
       title: '提交按钮',
-      props: {
-        htmlType: 'submit',
-        text: '提交',
+      screenshot: '',
+      schema: {
+        props: {
+          htmlType: 'submit',
+          text: '提交',
+        },
       },
     },
     {
       title: '重置按钮',
-      props: {
-        htmlType: 'reset',
-        text: '重置',
+      schema: {
+        props: {
+          htmlType: 'reset',
+          text: '重置',
+        },
       },
     },
-  ]
+  ],
 }

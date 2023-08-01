@@ -12,11 +12,11 @@ export type BehaviorRules = 'move' | 'remove' | 'copy'
 export interface ComponentMetaSchema {
   componentName: string
   title: string
-  propsSettings: []
-  resources: ComponentResouce[]
+  props: Record<string, unknown>[]
+  snippets: ComponentSnippet[]
   slots?: Record<string, ComponentMetaSchema>
-  configure: {
-    component: {
+  configure?: {
+    component?: {
       isContainer?: boolean
       isModal?: boolean
       rootSelector?: string
@@ -29,14 +29,22 @@ export interface ComponentMetaSchema {
   }
 }
 
-export interface ComponentResouce extends NodeSchema {
-  imageUrl?: string
+export interface ComponentSnippet {
+  screenshot?: string
+  title: string
+  schema: Pick<NodeSchema, 'props' | 'children'>
+}
+
+export interface ComponentResource extends ComponentSnippet {
+  id: string
 }
 
 export type LcTargetType = 'resource' | 'node'
 export type AcceptStatus = 'accept' | 'reject'
 export type AlignPosition = 'top' | 'left' | 'bottom' | 'right' | 'in'
 export type AlignDirection = 'vertical' | 'horizontal'
+
+export type DraggingTarget = LCTarget
 
 export type DragoverTarget = {
   nodeId: string

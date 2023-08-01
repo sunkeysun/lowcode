@@ -1,3 +1,4 @@
+import { useDesigner } from '../hooks/useDesigner'
 import { useDragNode } from '../hooks/useDragNode'
 import { useNode } from '../hooks/useNode'
 import * as components from '../materials/test'
@@ -5,9 +6,11 @@ import * as components from '../materials/test'
 export function ComponentRender({ nodeId }: { nodeId: string }) {
   const { node } = useNode(nodeId)
   const { ref } = useDragNode(nodeId)
-  if (!node) return null
+  const { designer } = useDesigner()
+  const componentMap = designer?.materialManager.componentMap
+  if (!node || !componentMap) return null
   const componentName = node.componentName.split('-')[0] as keyof typeof components
-  const Component = components[componentName]
+  const Component = componentMap[componentName] as () => React.ReactNode
   if (!Component) {
     return '组件不存在'
   }
