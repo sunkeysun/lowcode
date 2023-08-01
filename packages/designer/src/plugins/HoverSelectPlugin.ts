@@ -30,7 +30,10 @@ export class HoverSelectPlugin extends Plugin {
       eventData: { target },
     } = ev
     const activedNode = this.designer.documentModel?.getActivedNode()
-    if (target.type !== 'node' || activedNode?.id === target.id) return
+    if (target.type !== 'node' || activedNode?.id === target.id) {
+      this.designer.documentModel?.setHoverTarget(null)
+      return
+    }
     this.designer.documentModel?.setHoverTarget({ target })
   }
 

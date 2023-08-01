@@ -1,4 +1,5 @@
 import { useDragoverNode } from '../../../hooks/useDragoverNode'
+import { capitalize } from '../../../common/util'
 
 export function DragoverTool() {
   const { dragoverTarget, domRect } = useDragoverNode()
@@ -9,9 +10,9 @@ export function DragoverTool() {
         ? 'rgba(0, 0, 255, 0.3)'
         : 'rgba(255, 0, 0, 0.3)',
   }
-  if (dragoverTarget.alignPosition !== 'In') {
+  if (dragoverTarget.alignPosition !== 'in') {
     borderStyle = {
-      [`border${dragoverTarget.alignPosition}`]: `3px solid ${
+      [`border${capitalize(dragoverTarget.alignPosition)}`]: `3px solid ${
         dragoverTarget.acceptStatus === 'accept' ? 'blue' : 'red'
       }`,
     }

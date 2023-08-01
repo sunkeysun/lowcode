@@ -7,22 +7,26 @@ export interface NodeSchema {
   props: Props
 }
 
+export type BehaviorRules = 'move' | 'remove' | 'copy'
+
 export interface ComponentMetaSchema {
   componentName: string
   title: string
-  propsSetters: []
+  propsSettings: []
   resources: ComponentResouce[]
   slots?: Record<string, ComponentMetaSchema>
   configure: {
-    behaviourRule: {
-      dragable?: boolean
-      dropable?: boolean
-      deletable?: boolean
-      clonable?: boolean
-      lockable?: boolean
-      allowChild?: string[]
-    },
-  },
+    component: {
+      isContainer?: boolean
+      isModal?: boolean
+      rootSelector?: string
+      disableBehaviors?: BehaviorRules[]
+      nestingRule?: {
+        childWhiteList?: string[]
+        parentWhiteList?: string[]
+      }
+    }
+  }
 }
 
 export interface ComponentResouce extends NodeSchema {
@@ -31,13 +35,13 @@ export interface ComponentResouce extends NodeSchema {
 
 export type LcTargetType = 'resource' | 'node'
 export type AcceptStatus = 'accept' | 'reject'
-export type AlignPosition = 'Top' | 'Left' | 'Bottom' | 'Right' | 'In'
-export type AlignDirection = 'V' | 'H'
+export type AlignPosition = 'top' | 'left' | 'bottom' | 'right' | 'in'
+export type AlignDirection = 'vertical' | 'horizontal'
 
 export type DragoverTarget = {
   nodeId: string
-  alignPosition: AlignPosition 
-  alignDirection: AlignDirection 
+  alignPosition: AlignPosition
+  alignDirection: AlignDirection
   acceptStatus: AcceptStatus
 } | null
 
@@ -61,6 +65,6 @@ export interface CanvasState {
   scroll: {
     top: number
     left: number
-  },
+  }
   domRect: DOMRect
 }
