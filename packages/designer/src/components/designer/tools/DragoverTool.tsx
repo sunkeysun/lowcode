@@ -9,9 +9,9 @@ export function DragoverTool() {
         ? 'rgba(0, 0, 255, 0.3)'
         : 'rgba(255, 0, 0, 0.3)',
   }
-  if (dragoverTarget.layoutPosition !== 'In') {
+  if (dragoverTarget.alignPosition !== 'In') {
     borderStyle = {
-      [`border${dragoverTarget.layoutPosition}`]: `3px solid ${
+      [`border${dragoverTarget.alignPosition}`]: `3px solid ${
         dragoverTarget.acceptStatus === 'accept' ? 'blue' : 'red'
       }`,
     }

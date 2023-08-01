@@ -4,8 +4,8 @@
 import type {
   AcceptStatus,
   DragoverTarget,
-  LayoutDirection,
-  LayoutPosition,
+  AlignDirection,
+  AlignPosition,
 } from '../types'
 import { Designer } from '..'
 import { Plugin } from './Plugin'
@@ -70,7 +70,7 @@ export class DragDropPlugin extends Plugin {
     return false
   }
 
-  getLayoutData(ev: MouseEvent, node: NodeEntity) {
+  getNodeAlignData(ev: MouseEvent, node: NodeEntity) {
     const nodeDom = this.designer.documentModel?.getNodeDom(node.id)
     if (!nodeDom) return null
     const domRect = nodeDom.getBoundingClientRect()
@@ -78,14 +78,14 @@ export class DragDropPlugin extends Plugin {
     const { width, height } = domRect
 
     let nodeId: string | null = null
-    let layoutPosition: LayoutPosition | null = null
-    let layoutDirection: LayoutDirection = 'V'
+    let alignPosition: AlignPosition | null = null
+    let alignDirection: AlignDirection = 'V'
 
     if (this.isInRect(ev, domRect)) {
       // 鼠标在内容区
       nodeId = node.id
       if (!node.childrenIds?.length) {
-        layoutPosition = 'In'
+        alignPosition = 'In'
       } else {
         // 存在 children 则计算相对 children 的插入位置
         const afterChildId = this.getNearestChild(ev, node, 'after')
@@ -98,43 +98,43 @@ export class DragDropPlugin extends Plugin {
             this.designer.documentModel?.getNodeDom(beforeChildId)
           if (beforeNodeDom) {
             nodeId = beforeChildId
-            layoutDirection = this.getLayoutDirection(beforeNodeDom)
-            layoutPosition = layoutDirection === 'V' ? 'Bottom' : 'Right'
+            alignDirection = this.getAlignDirection(beforeNodeDom)
+            alignPosition = alignDirection === 'V' ? 'Bottom' : 'Right'
           }
         } else if (afterChildId) {
           const afterNodeDom =
             this.designer.documentModel?.getNodeDom(afterChildId)
           if (afterNodeDom) {
             nodeId = afterChildId
-            layoutDirection = this.getLayoutDirection(afterNodeDom)
-            layoutPosition = layoutDirection === 'V' ? 'Top' : 'Left'
+            alignDirection = this.getAlignDirection(afterNodeDom)
+            alignPosition = alignDirection === 'V' ? 'Top' : 'Left'
           }
         }
       }
     } else {
       nodeId = node.id
       const nodeDom = this.designer.documentModel?.getNodeDom(node.id)
-      layoutDirection = this.getLayoutDirection(nodeDom)
-      if (layoutDirection === 'V') {
+      alignDirection = this.getAlignDirection(nodeDom)
+      if (alignDirection === 'V') {
         // 垂直排列
         if (offsetY / (height - offsetY) <= 1) {
-          layoutPosition = 'Top'
+          alignPosition = 'Top'
         } else {
-          layoutPosition = 'Bottom'
+          alignPosition = 'Bottom'
         }
       } else {
         // 水平排列
         if (offsetX / (width - offsetX) <= 1) {
-          layoutPosition = 'Left'
+          alignPosition = 'Left'
         } else {
-          layoutPosition = 'Right'
+          alignPosition = 'Right'
         }
       }
     }
-    return { nodeId, layoutPosition, layoutDirection }
+    return { nodeId, alignPosition, alignDirection }
   }
 
-  getLayoutDirection(nodeDom?: HTMLElement): LayoutDirection {
+  getAlignDirection(nodeDom?: HTMLElement): AlignDirection {
     if (!nodeDom || !nodeDom.parentElement) {
       return 'V'
     }
@@ -202,27 +202,27 @@ export class DragDropPlugin extends Plugin {
     const node = this.designer.documentModel?.getNode(target.id)
     if (!node) return
 
-    const layoutData = this.getLayoutData(nativeEvent, node)
+    const nodeAlignData = this.getNodeAlignData(nativeEvent, node)
     if (
-      !layoutData ||
-      !layoutData.nodeId ||
-      !layoutData.layoutPosition ||
-      !layoutData.layoutDirection
+      !nodeAlignData ||
+      !nodeAlignData.nodeId ||
+      !nodeAlignData.alignPosition ||
+      !nodeAlignData.alignDirection
     )
       return
 
-    const { nodeId, layoutPosition, layoutDirection } = layoutData
+    const { nodeId, alignPosition, alignDirection } = nodeAlignData
     const targetNode = this.designer.documentModel?.getNode(nodeId)
     if (!targetNode) return
     const acceptStatus =
-      layoutPosition !== 'In' && !targetNode.parentId
+      alignPosition !== 'In' && !targetNode.parentId
         ? 'reject'
         : this.getAcceptStatus()
     const dragoverTarget: DragoverTarget = {
       nodeId,
       acceptStatus,
-      layoutPosition,
-      layoutDirection,
+      alignPosition,
+      alignDirection,
     }
     this.designer.documentModel?.setDragoverTarget(dragoverTarget)
   }
@@ -234,10 +234,10 @@ export class DragDropPlugin extends Plugin {
     if (draggingTarget && dragoverTarget?.acceptStatus === 'accept') {
       const node = this.designer.documentModel?.getNode(dragoverTarget.nodeId)
       if (!node) return
-      if (dragoverTarget.layoutPosition === 'In') {
+      if (dragoverTarget.alignPosition === 'In') {
         this.designer.documentModel?.appendChild(draggingTarget, node.id)
       } else if (
-        ['Left', 'Top'].includes(dragoverTarget.layoutPosition) &&
+        ['Left', 'Top'].includes(dragoverTarget.alignPosition) &&
         node.parentId
       ) {
         this.designer.documentModel?.insertBefore(
@@ -246,7 +246,7 @@ export class DragDropPlugin extends Plugin {
           node.id,
         )
       } else if (
-        ['Right', 'Bottom'].includes(dragoverTarget.layoutPosition) &&
+        ['Right', 'Bottom'].includes(dragoverTarget.alignPosition) &&
         node.parentId
       ) {
         this.designer.documentModel?.insertAfter(

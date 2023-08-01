@@ -31,14 +31,14 @@ export interface ComponentResouce extends NodeSchema {
 
 export type LcTargetType = 'resource' | 'node'
 export type AcceptStatus = 'accept' | 'reject'
-export type LayoutPosition = 'Top' | 'Left' | 'Bottom' | 'Right' | 'In'
-export type LayoutDirection = 'V' | 'H'
+export type AlignPosition = 'Top' | 'Left' | 'Bottom' | 'Right' | 'In'
+export type AlignDirection = 'V' | 'H'
 
 export type DragoverTarget = {
   nodeId: string
+  alignPosition: AlignPosition 
+  alignDirection: AlignDirection 
   acceptStatus: AcceptStatus
-  layoutPosition: LayoutPosition
-  layoutDirection: LayoutDirection
 } | null
 
 export type HoverTarget = {
