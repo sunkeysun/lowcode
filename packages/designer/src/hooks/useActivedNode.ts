@@ -8,11 +8,13 @@ export function useActivedNode() {
   const [domRect, setDomRect] = useState<DOMRect | null>(null)
   const { designer } = useDesigner()
   const { canvasState } = useCanvasState()
-  const activedNode = useSelector(() => designer!.documentModel!.getActivedNode())
+  const activedNode = useSelector(() =>
+    designer!.documentModel!.getActivedNode(),
+  )
   useEffect(() => {
     if (activedNode && canvasState) {
       const nodeDom = designer?.documentModel?.getNodeDom(activedNode.id)
-      setDomRect(nodeDom?.getBoundingClientRect() as DOMRect)
+      nodeDom && setDomRect(nodeDom.getBoundingClientRect())
     } else {
       setDomRect(null)
     }

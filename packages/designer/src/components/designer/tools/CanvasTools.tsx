@@ -10,6 +10,7 @@ export function CanvasTools() {
 
   return (
     <div
+      id="iframeMask"
       style={{
         ...domRect,
         position: 'fixed',

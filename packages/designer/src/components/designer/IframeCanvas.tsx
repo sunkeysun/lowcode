@@ -7,6 +7,7 @@ export function IframeCanvas() {
   return (
     <>
       <iframe
+        id="iframe"
         style={{ width: 500, height: 500, border: '1px solid' }}
         ref={iframeRef}
         src="/iframe.html"

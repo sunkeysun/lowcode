@@ -1,19 +1,19 @@
 /**
- * 拖拽组件
+ * 拖拽资源
  */
 import { useEffect, useRef } from 'react';
 import { LC_TARGET } from '../common/constants';
 
-export function useDragComponent(componentName: string) {
+export function useComponentResource(resourceId: string) {
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {
     if (ref.current) {
       ref.current[LC_TARGET] = {
-        id: componentName,
+        id: resourceId,
         type: 'resource',
       }
     }
-  }, [componentName])
+  }, [resourceId])
 
   return { ref }
 }

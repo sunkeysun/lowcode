@@ -4,8 +4,8 @@ import { resourceEntity } from '../../store'
 import { uniqId } from '../../common/util'
 
 export class MaterialManager {
-  #componentMap: Record<string, unknown> | null = null
-  #componentMetasMap: Record<string, ComponentMetaSchema> | null = null
+  #componentMap = new Map<string, unknown>()
+  #componentMetaMap = new Map<string, ComponentMetaSchema>()
 
   constructor(private readonly designer: Designer) {}
 
@@ -13,48 +13,54 @@ export class MaterialManager {
     return this.#componentMap
   }
 
-  get componentMetasMap() {
-    return this.#componentMetasMap
+  get componentMetaMap() {
+    return this.#componentMetaMap
   }
 
   getComponentResources() {
     return resourceEntity.selectors.selectAll(this.designer.state)
   }
 
-  getComponentResourceById(id: string) {
+  getComponentResource(id: string) {
     return resourceEntity.selectors.selectById(this.designer.state, id)
   }
 
-  initComponentResources() {
-    if (!this.componentMetasMap) return
-    const resources = Object.entries(this.componentMetasMap).map(
-      ([componentName, meta]) =>
-        meta.snippets.map((snippet) => ({
-          id: uniqId(),
-          componentName,
-          ...snippet,
-        })),
-    ).flat()
-    this.designer.dispatch(resourceEntity.actions.setAll(resources))
+  getComponentMeta(componentName: string) {
+    if (!this.componentMetaMap.size) return null
+    return this.componentMetaMap.get(componentName)
   }
 
-  getComponentMeta(componentName: string) {
-    if (!this.componentMap) return null
-    return this.componentMap[componentName]
+  getComponent(componentName: string) {
+    if (!this.componentMap.size) return null
+    return this.componentMap.get(componentName)
+  }
+
+  initComponentResources() {
+    if (!this.componentMetaMap.size) return
+    const resources = Array.from(this.componentMetaMap
+      .values())
+      .map((componentMeta) =>
+        componentMeta.snippets.map((snippet) => ({
+          ...snippet,
+          id: uniqId(),
+        })),
+      )
+      .flat()
+    this.designer.dispatch(resourceEntity.actions.setAll(resources))
   }
 
   register(
     componentMap: Record<string, unknown>,
-    componentMatasMap: Record<string, ComponentMetaSchema>,
+    componentMataMap: Record<string, ComponentMetaSchema>,
   ) {
-    this.#componentMap = componentMap
-    this.#componentMetasMap = componentMatasMap
+    this.#componentMap = new Map(Object.entries(componentMap))
+    this.#componentMetaMap = new Map(Object.entries(componentMataMap))
     this.initComponentResources()
   }
 
   destroy() {
-    this.#componentMap = null
-    this.#componentMetasMap = null
+    this.#componentMap.clear()
+    this.#componentMetaMap.clear()
     this.designer.dispatch(resourceEntity.actions.removeAll())
   }
 }

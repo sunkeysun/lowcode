@@ -231,16 +231,12 @@ export class DragDropPlugin extends Plugin {
 
     let draggingNode = null
     if (draggingTarget.type === 'resource') {
-      const resource = this.designer.materialManager.getComponentResourceById(
+      const resource = this.designer.materialManager.getComponentResource(
         draggingTarget.id,
       )
       if (!resource) return
       draggingNode = this.designer.documentModel?.createNode(
-        {
-          ...resource.schema,
-          title: resource.title,
-          componentName: resource.componentName,
-        },
+        resource.schema,
         null,
       )
     } else {
@@ -254,22 +250,24 @@ export class DragDropPlugin extends Plugin {
         ...draggingNode,
         parentId: node.id,
       })
-    } else if (
-      ['left', 'top'].includes(dragoverTarget.alignPosition) &&
-      node.parentId
-    ) {
-      this.designer.documentModel?.insertBefore(
-        { ...draggingNode, parentId: node.parentId },
-        node.id,
-      )
-    } else if (
-      ['right', 'bottom'].includes(dragoverTarget.alignPosition) &&
-      node.parentId
-    ) {
-      this.designer.documentModel?.insertAfter(
-        { ...draggingNode, parentId: node.parentId },
-        node.id,
-      )
+    } else {
+      if (!node.parentId) return
+      switch (dragoverTarget.alignPosition) {
+        case 'top':
+        case 'left':
+          this.designer.documentModel?.insertBefore(
+            { ...draggingNode, parentId: node.parentId },
+            node.id,
+          )
+          break
+        case 'bottom':
+        case 'right':
+          this.designer.documentModel?.insertAfter(
+            { ...draggingNode, parentId: node.parentId },
+            node.id,
+          )
+          break
+      }
     }
   }
 
@@ -278,7 +276,7 @@ export class DragDropPlugin extends Plugin {
   }
 
   destroy() {
-    this.#unsubscribers.forEach((uninstall) => uninstall())
+    this.#unsubscribers.forEach((unsubscribe) => unsubscribe())
     this.#unsubscribers = []
   }
 }

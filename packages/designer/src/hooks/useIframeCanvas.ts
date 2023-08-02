@@ -2,7 +2,6 @@
  * iframeCanvas
  */
 import { useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
 import { useDesigner } from './useDesigner'
 import { LC_DESIGNER } from '../common/constants'
 

@@ -3,11 +3,11 @@ export type Props = Record<string, unknown>
 export interface NodeSchema {
   title: string
   componentName: string
-  children: NodeSchema[]
+  children?: NodeSchema[]
   props: Props
 }
 
-export type BehaviorRules = 'move' | 'remove' | 'copy'
+export type BehaviorRule = 'move' | 'remove' | 'copy'
 
 export interface ComponentMetaSchema {
   componentName: string
@@ -20,7 +20,7 @@ export interface ComponentMetaSchema {
       isContainer?: boolean
       isModal?: boolean
       rootSelector?: string
-      disableBehaviors?: BehaviorRules[]
+      disableBehaviors?: BehaviorRule[]
       nestingRule?: {
         childWhiteList?: string[]
         parentWhiteList?: string[]
@@ -31,12 +31,12 @@ export interface ComponentMetaSchema {
 
 export interface ComponentSnippet {
   screenshot?: string
-  title: string
-  schema: Pick<NodeSchema, 'props' | 'children'>
+  schema: NodeSchema
 }
 
-export interface ComponentResource extends ComponentSnippet {
+export interface ComponentResource extends Omit<ComponentSnippet, 'schema'> {
   id: string
+  schema: NodeSchema
 }
 
 export type LcTargetType = 'resource' | 'node'

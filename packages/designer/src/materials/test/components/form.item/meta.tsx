@@ -1,6 +1,6 @@
 import { type ComponentMetaSchema } from '../../../../types'
 
-export const Form: ComponentMetaSchema = {
+export const FormItem: ComponentMetaSchema = {
   componentName: 'Form.Item',
   title: '表单项目',
   props: [

@@ -1,7 +1,8 @@
 import { type ComponentMetaSchema } from '../../../../types'
 
+const componentName = 'Form'
 export const Form: ComponentMetaSchema = {
-  componentName: 'Form',
+  componentName,
   title: '表单容器',
   props: [
     {
@@ -20,10 +21,9 @@ export const Form: ComponentMetaSchema = {
   },
   snippets: [
     {
-      title: '表单容器',
       schema: {
         title: '表单容器',
-        componentName: 'Form',
+        componentName,
         children: [
           {
             title: '提交按钮',
