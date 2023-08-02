@@ -231,7 +231,7 @@ export class DragDropPlugin extends Plugin {
 
     let draggingNode = null
     if (draggingTarget.type === 'resource') {
-      const resource = this.designer.materialManager.getComponentResource(
+      const resource = this.designer.materialManager.getResource(
         draggingTarget.id,
       )
       if (!resource) return

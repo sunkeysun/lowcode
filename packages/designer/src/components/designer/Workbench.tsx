@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useComponentResources } from '../../hooks/useComponentResources'
+import { useMaterialResources } from '../../hooks/useMaterialResources'
 import { useWorkbench } from '../../hooks/useWorkbench'
-import { Resource } from './Resource'
+import { ResourceComponent } from './ResourceComponent'
 import { IframeCanvas } from './IframeCanvas'
 import { useDesigner } from '../../hooks/useDesigner'
 import type { NodeSchema } from '../../types'
@@ -9,7 +9,7 @@ import type { NodeSchema } from '../../types'
 export function Workbench() {
   const { designer } = useDesigner()
   const { containerRef } = useWorkbench()
-  const { resources } = useComponentResources()
+  const { resources } = useMaterialResources()
   const [schema, setSchema] = useState<NodeSchema | null>()
 
   if (!resources) return null
@@ -18,7 +18,7 @@ export function Workbench() {
     <div ref={containerRef}>
       <ul>
         {resources.map((resource, index) => (
-          <Resource key={index} resource={resource} />
+          <ResourceComponent key={index} resource={resource} />
         ))}
       </ul>
       <div>{JSON.stringify(schema)}</div>

@@ -17,11 +17,11 @@ export class MaterialManager {
     return this.#componentMetaMap
   }
 
-  getComponentResources() {
+  getResources() {
     return resourceEntity.selectors.selectAll(this.designer.state)
   }
 
-  getComponentResource(id: string) {
+  getResource(id: string) {
     return resourceEntity.selectors.selectById(this.designer.state, id)
   }
 
@@ -35,7 +35,7 @@ export class MaterialManager {
     return this.componentMap.get(componentName)
   }
 
-  initComponentResources() {
+  initResources() {
     if (!this.componentMetaMap.size) return
     const resources = Array.from(this.componentMetaMap
       .values())
@@ -55,7 +55,7 @@ export class MaterialManager {
   ) {
     this.#componentMap = new Map(Object.entries(componentMap))
     this.#componentMetaMap = new Map(Object.entries(componentMataMap))
-    this.initComponentResources()
+    this.initResources()
   }
 
   destroy() {
