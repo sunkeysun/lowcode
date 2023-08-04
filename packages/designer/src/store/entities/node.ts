@@ -15,10 +15,12 @@ export interface NodeEntity {
   title: string
   componentName: string
   props: Props
-  childrenIds: string[]
+  childIds: string[]
   parentId: string | null
   documentId: string
   childNodes?: NodeEntity[]
+  isLocked: boolean
+  hidden: boolean
 }
 
 const adapter = createEntityAdapter<NodeEntity>()
@@ -43,13 +45,13 @@ function insert(
   const parentNode = state.entities[parentId]
   if (!refParentNode || !parentNode) return
 
-  const refIndex = refParentNode.childrenIds?.findIndex(
+  const refIndex = refParentNode.childIds?.findIndex(
     (childId) => childId === refId,
   )
   if (refIndex < 0) return
 
   if (state.entities[insertNode.id]) {
-    parentNode.childrenIds = parentNode.childrenIds.filter(
+    parentNode.childIds = parentNode.childIds.filter(
       (childId) => childId !== insertNode.id,
     )
     adapter.updateOne(state, {
@@ -63,7 +65,7 @@ function insert(
     })
   }
   const targetIndex = location === 'before' ? refIndex : refIndex + 1
-  refParentNode.childrenIds.splice(targetIndex, 0, insertNode.id)
+  refParentNode.childIds.splice(targetIndex, 0, insertNode.id)
 
   if (childNodes) {
     adapter.addMany(state, childNodes)
@@ -79,14 +81,14 @@ export const slice = createSlice({
       const { payload: nodeId } = action
       function removeTree(nodeId: string) {
         const parentId = state.entities[nodeId]?.parentId
-        const childrenIds = state.entities[nodeId]?.childrenIds ?? []
+        const childrenIds = state.entities[nodeId]?.childIds ?? []
         if (parentId) {
           const parentNode = state.entities[parentId]
           if (parentNode) {
-            const childIndex = parentNode.childrenIds.findIndex(
+            const childIndex = parentNode.childIds.findIndex(
               (childId) => childId === nodeId,
             )
-            parentNode.childrenIds.splice(childIndex, 1)
+            parentNode.childIds.splice(childIndex, 1)
           }
         }
         if (childrenIds?.length > 0) {
@@ -104,7 +106,7 @@ export const slice = createSlice({
       adapter.addOne(state, node)
 
       if (node.parentId) {
-        state.entities[node.parentId]?.childrenIds.push(node.id)
+        state.entities[node.parentId]?.childIds.push(node.id)
       }
       if (childNodes) {
         adapter.addMany(state, childNodes)

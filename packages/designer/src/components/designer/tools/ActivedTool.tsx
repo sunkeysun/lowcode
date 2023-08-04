@@ -5,26 +5,34 @@ export function ActivedTool() {
 
   if (!domRect || !activedNode) return null
 
+  const { top, left, width, height } = domRect
+
   return (
     <div
       style={{
         position: 'absolute',
-        top: domRect.top,
-        left: domRect.left,
-        width: domRect.width,
-        height: domRect.height,
+        top,
+        left,
+        width,
+        height,
         border: '1px solid blue',
         pointerEvents: 'none',
       }}
     >
-      <div style={{
-        position: 'absolute',
-        top: -20,
-        left: 0,
-        pointerEvents: 'initial',
-        width: 100,
-      }}>
-        <button onClick={() => console.log('选择组件树')} style={{ fontSize: 10, padding: 0 }}>组件树</button>
+      <div
+        style={{
+          position: 'absolute',
+          top: -20,
+          left: 0,
+          width: 100,
+        }}
+      >
+        <button
+          onClick={() => console.log('选择组件树')}
+          style={{ fontSize: 10, padding: 0, pointerEvents: 'initial' }}
+        >
+          组件树
+        </button>
       </div>
     </div>
   )

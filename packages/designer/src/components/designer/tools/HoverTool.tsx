@@ -15,6 +15,7 @@ export function HoverTool() {
         height: domRect.height,
         border: '1px dashed red',
         pointerEvents: 'none',
+        boxSizing: 'border-box',
       }}
     >
     </div>

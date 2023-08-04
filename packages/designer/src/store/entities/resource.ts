@@ -7,6 +7,7 @@ import type { NodeSchema, ComponentSnippet } from '../../types'
 
 interface ResourceEntity extends ComponentSnippet {
   id: string
+  title: string
   screenshot?: string;
   schema: NodeSchema
 }

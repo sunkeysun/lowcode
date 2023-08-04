@@ -6,7 +6,7 @@ import {
   MouseoverDriver,
   MouseclickDriver,
   CanvasMutateDriver,
-} from '../../../shell'
+} from '../../shell'
 
 export class IframeCanvas {
   #drivers: EventDriver[] = []
@@ -17,7 +17,7 @@ export class IframeCanvas {
       new DragoverDriver(iframeElement, shellManager.dispatchEvent),
       new MouseoverDriver(iframeElement, shellManager.dispatchEvent),
       new MouseclickDriver(iframeElement, shellManager.dispatchEvent),
-      new CanvasMutateDriver(iframeElement, shellManager.dispatchEvent)
+      new CanvasMutateDriver(iframeElement, shellManager.dispatchEvent),
     )
   }
 

@@ -2,7 +2,6 @@
  * 拖拽插件
  */
 import type {
-  AcceptStatus,
   DragoverTarget,
   AlignDirection,
   AlignPosition,
@@ -84,15 +83,15 @@ export class DragDropPlugin extends Plugin {
     if (this.isInRect(ev, domRect)) {
       // 鼠标在内容区
       nodeId = node.id
-      if (!node.childrenIds?.length) {
+      if (!node.childIds?.length) {
         alignPosition = 'in'
       } else {
         // 存在 children 则计算相对 children 的插入位置
         const afterChildId = this.getNearestChild(ev, node, 'after')
         const beforeIndex = afterChildId
-          ? node.childrenIds.findIndex((id) => id === afterChildId) - 1
-          : node.childrenIds.length - 1
-        const beforeChildId = node.childrenIds[beforeIndex]
+          ? node.childIds.findIndex((id) => id === afterChildId) - 1
+          : node.childIds.length - 1
+        const beforeChildId = node.childIds[beforeIndex]
         if (beforeChildId) {
           const beforeNodeDom =
             this.designer.documentModel?.getNodeDom(beforeChildId)
@@ -156,9 +155,9 @@ export class DragDropPlugin extends Plugin {
     parentNode: NodeEntity,
     nearType: 'before' | 'after',
   ) {
-    const { childrenIds = [] } = parentNode
+    const { childIds = [] } = parentNode
     const { clientX, clientY } = ev
-    const childId = childrenIds.find((childId) => {
+    const childId = childIds.find((childId) => {
       const childDom = this.designer.documentModel?.getNodeDom(childId)
       if (!childDom) return false
       const { top, left, right, bottom } = childDom.getBoundingClientRect()
@@ -173,8 +172,52 @@ export class DragDropPlugin extends Plugin {
     return childId
   }
 
-  getAcceptStatus(): AcceptStatus {
-    return 'accept'
+  canAccept({
+    nodeId,
+    alignPosition,
+  }: {
+    nodeId: string
+    alignPosition: AlignPosition | null
+  }) {
+    const draggingTarget = this.designer.documentModel?.getDragingTarget()
+    if (!draggingTarget) return
+    let componentName = ''
+
+    if (draggingTarget.type === 'resource') {
+      const resource = this.designer.materialManager.getResource(
+        draggingTarget.id,
+      )
+      if (!resource) return
+      componentName = resource.schema.componentName
+    } else {
+      const draggingNode = this.designer.documentModel?.getNode(
+        draggingTarget.id,
+      )
+      if (!draggingNode) return
+      componentName = draggingNode.id
+    }
+
+    let targetNode = this.designer.documentModel?.getNode(nodeId)
+    if (alignPosition !== 'in') {
+      const parentId = targetNode?.parentId
+      if (!parentId) return
+      targetNode = this.designer.documentModel?.getNode(parentId)
+    }
+
+    if (!targetNode) return
+    const componentMeta =
+      this.designer.materialManager.getComponentMeta(componentName)
+    const componentBehavior =
+      this.designer.materialManager.getComponentBehavior(
+        targetNode.componentName,
+      )
+    if (
+      !componentMeta ||
+      !componentBehavior ||
+      !componentBehavior.canDrop(componentMeta)
+    )
+      return
+    return true
   }
 
   handleDragStart = (event: DragStartEvent) => {
@@ -206,7 +249,9 @@ export class DragDropPlugin extends Plugin {
     const acceptStatus =
       alignPosition !== 'in' && !targetNode.parentId
         ? 'reject'
-        : this.getAcceptStatus()
+        : this.canAccept(nodeAlignData)
+        ? 'accept'
+        : 'reject'
     const dragoverTarget: DragoverTarget = {
       nodeId,
       acceptStatus,

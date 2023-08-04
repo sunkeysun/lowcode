@@ -6,14 +6,13 @@ import { HoverTool } from './HoverTool'
 export function CanvasTools() {
   const { canvasState } = useCanvasState()
   if (!canvasState) return null
-  const { domRect } = canvasState
 
   return (
     <div
       id="iframeMask"
       style={{
-        ...domRect,
-        position: 'fixed',
+        position: 'absolute',
+        inset: 0,
         pointerEvents: 'none',
         overflow: 'hidden',
       }}

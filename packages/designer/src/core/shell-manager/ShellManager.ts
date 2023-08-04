@@ -1,8 +1,8 @@
 /**
  * 终端管理
  */
-import { Designer } from '../../..';
-import { type EngineEvent } from '../../../shell/events/EngineEvent'
+import { type Designer } from '../Designer';
+import { type EngineEvent } from '../../shell/events/EngineEvent'
 import EventEmitter from 'eventemitter3'
 import { Workbench } from './Workbench';
 import { IframeCanvas } from './IframeCanvas';

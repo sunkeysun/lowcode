@@ -1,5 +1,5 @@
 import { ShellManager } from '.'
-import { type EventDriver, DragDropDriver } from '../../../shell'
+import { type EventDriver, DragDropDriver } from '../../shell'
 
 export class Workbench {
   #drivers: EventDriver[] = []

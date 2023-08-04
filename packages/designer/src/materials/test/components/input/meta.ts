@@ -13,8 +13,8 @@ export const Input: ComponentMetaSchema = {
   ],
   snippets: [
     {
+      title: '默认内容',
       schema: {
-        title: '默认内容',
         componentName,
         props: {
           defaultValue: '默认哈哈哈',

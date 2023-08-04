@@ -36,8 +36,8 @@ export const Button: ComponentMetaSchema = {
   ],
   snippets: [
     {
+      title: '提交按钮',
       schema: {
-        title: '提交按钮',
         componentName,
         props: {
           htmlType: 'submit',
@@ -46,8 +46,8 @@ export const Button: ComponentMetaSchema = {
       },
     },
     {
+      title: '提交按钮',
       schema: {
-        title: '提交按钮',
         componentName,
         props: {
           htmlType: 'reset',

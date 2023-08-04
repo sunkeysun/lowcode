@@ -88,15 +88,18 @@ export class DocumentModel {
     )
     if (!targetNode) return null
 
-    const { title, componentName, childrenIds, props } = targetNode
+    const { title, componentName, childIds, props, isLocked, hidden } =
+      targetNode
 
     const schema: NodeSchema = {
       title,
       componentName,
-      children: childrenIds
+      children: childIds
         ?.map((childId) => this.getNodeSchemaById(childId) as NodeSchema)
         .filter(Boolean),
       props,
+      isLocked,
+      hidden,
     }
     return schema
   }
@@ -206,11 +209,13 @@ export class DocumentModel {
         props,
         parentId,
         documentId,
-        childrenIds: !children?.length
+        childIds: !children?.length
           ? []
           : children.map(
               (child: NodeSchema) => create(child, nodeId, documentId).id,
             ),
+        hidden: false,
+        isLocked: false,
       }
       childNodes.push(node)
       return node

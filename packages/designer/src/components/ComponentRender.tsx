@@ -10,7 +10,7 @@ export function ComponentRender({ nodeId }: { nodeId: string }) {
 
   return (
     <Component {...node.props} ref={ref}>
-      {node.childrenIds?.map?.((nodeId, index) => (
+      {node.childIds?.map?.((nodeId, index) => (
         <ComponentRender nodeId={nodeId} key={index} />
       ))}
     </Component>

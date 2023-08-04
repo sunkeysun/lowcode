@@ -5,6 +5,7 @@ import { ResourceComponent } from './ResourceComponent'
 import { IframeCanvas } from './IframeCanvas'
 import { useDesigner } from '../../hooks/useDesigner'
 import type { NodeSchema } from '../../types'
+import { SettingsForm } from './SettingsForm'
 
 export function Workbench() {
   const { designer } = useDesigner()
@@ -26,6 +27,7 @@ export function Workbench() {
         获取schema
       </button>
       <IframeCanvas />
+      <SettingsForm />
     </div>
   )
 }

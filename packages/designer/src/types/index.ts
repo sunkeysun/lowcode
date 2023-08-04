@@ -5,6 +5,9 @@ export interface NodeSchema {
   componentName: string
   children?: NodeSchema[]
   props: Props
+  slots?: Record<string, NodeSchema>
+  hidden?: boolean
+  isLocked?: boolean
 }
 
 export type BehaviorRule = 'move' | 'remove' | 'copy'
@@ -12,14 +15,12 @@ export type BehaviorRule = 'move' | 'remove' | 'copy'
 export interface ComponentMetaSchema {
   componentName: string
   title: string
-  props: Record<string, unknown>[]
+  props: ComponentPropsSchema[]
   snippets: ComponentSnippet[]
-  slots?: Record<string, ComponentMetaSchema>
   configure?: {
     component?: {
       isContainer?: boolean
       isModal?: boolean
-      rootSelector?: string
       disableBehaviors?: BehaviorRule[]
       nestingRule?: {
         childWhiteList?: string[]
@@ -29,14 +30,35 @@ export interface ComponentMetaSchema {
   }
 }
 
-export interface ComponentSnippet {
-  screenshot?: string
-  schema: NodeSchema
+export interface ComponentPropsSchema {
+  name: string
+  title: {
+    label: string
+    tip?: string
+  }
+  defaultValue: unknown
+  setter: SetterSchema
 }
 
-export interface ComponentResource extends Omit<ComponentSnippet, 'schema'> {
+export interface ComponentSnippet {
+  title: string
+  screenshot?: string
+  schema: Omit<NodeSchema, 'title'>
+}
+
+export interface ComponentResource extends ComponentSnippet {
   id: string
-  schema: NodeSchema
+}
+
+export interface Materal<T = unknown> {
+  components: Record<string, T>
+  componentMetas: Record<string, ComponentMetaSchema>
+  setters?: Record<string, T>
+}
+
+export type SetterSchema = 'string' | {
+  componentName: string
+  props: Record<string, unknown>
 }
 
 export type LcTargetType = 'resource' | 'node'

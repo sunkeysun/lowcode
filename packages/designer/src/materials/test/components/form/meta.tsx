@@ -15,14 +15,14 @@ export const Form: ComponentMetaSchema = {
     component: {
       isContainer: true,
       nestingRule: {
-        childWhiteList: ['Form.Item'],
+        childWhiteList: ['Form.Item', 'Button'],
       },
     },
   },
   snippets: [
     {
+      title: '表单容器',
       schema: {
-        title: '表单容器',
         componentName,
         children: [
           {

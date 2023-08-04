@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useDesigner } from './useDesigner'
-import { Workbench } from '../core/managers/shellManager/Workbench'
+import { Workbench } from '../core/managers/shell-manager/Workbench'
 
 export function useWorkbench() {
   const containerRef = useRef<HTMLDivElement | null>(null)

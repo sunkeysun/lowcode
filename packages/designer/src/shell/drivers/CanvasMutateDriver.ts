@@ -16,7 +16,9 @@ export class CanvasMutateDriver extends EventDriver {
     this.contentDocument = iframe.contentDocument
     this.contentWindow = iframe.contentWindow
     this.contentDocument?.addEventListener('scroll', this.handleMutate)
-    this.contentWindow?.addEventListener('resize', this.handleMutate)
+    this.contentWindow?.addEventListener('resize', this.handleMutate, { passive: true })
+    window.addEventListener('resize', this.handleMutate)
+    document.addEventListener('scroll', this.handleMutate, { passive: true })
     this.handleMutate()
   }
 
@@ -41,5 +43,7 @@ export class CanvasMutateDriver extends EventDriver {
   destroy() {
     this.contentDocument?.removeEventListener('scroll', this.handleMutate)
     this.contentWindow?.removeEventListener('resize', this.handleMutate)
+    window.removeEventListener('resize', this.handleMutate)
+    document.removeEventListener('scroll', this.handleMutate)
   }
 }

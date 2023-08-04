@@ -20,6 +20,11 @@ export class CanvasMutatePlugin extends Plugin {
   handleCanvasMutate = (ev: CanvasMutateEvent) => {
     const { eventData } = ev
     if (!eventData) return
+    const canvasState = this.designer.documentModel?.getCanvasState()
+    if (canvasState && JSON.stringify(canvasState) === JSON.stringify(eventData)) {
+      return
+    }
+
     this.designer.documentModel?.setCanvasState(eventData)
   }
 
