@@ -11,27 +11,26 @@ export const Button: ComponentMetaSchema = {
         label: '原生类型',
         tip: '这是原生类型',
       },
-      setter: [
-        {
-          componentName: 'RadioGroupSetter',
-          props: {
-            options: [
-              {
-                label: 'Submit',
-                value: 'submit',
-              },
-              {
-                label: 'Reset',
-                value: 'reset',
-              },
-              {
-                label: 'Button',
-                value: 'button',
-              },
-            ],
-          },
+      setter: {
+        componentName: 'RadioGroupSetter',
+        props: {
+          options: [
+            {
+              label: 'Submit',
+              value: 'submit',
+            },
+            {
+              label: 'Reset',
+              value: 'reset',
+            },
+            {
+              label: 'Button',
+              value: 'button',
+            },
+          ],
         },
-      ],
+      },
+      defaultValue: '',
     },
   ],
   snippets: [
