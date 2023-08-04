@@ -177,6 +177,12 @@ export class DocumentModel {
     )
   }
 
+  updateNodeProps({ id, changes }: { id: string, changes: Record<string, unknown>}) {
+    return this.designer.dispatch(
+      nodeEntity.actions.updateProps({ id, changes })
+    )
+  }
+
   appendChild(node: NodeEntity) {
     return this.designer.dispatch(nodeEntity.actions.appendChild(node))
   }

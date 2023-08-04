@@ -5,10 +5,16 @@ export function useActivedNodeProps() {
   const { designer } = useDesigner()
   const { activedNode } = useActivedNode()
 
-  if (!activedNode)
-    return {}
+  if (!activedNode) return {}
   const schema = designer?.materialManager.getComponentPropsSchema(
     activedNode?.componentName,
   )
-  return { schema }
+  const onChange = (key: string, val: unknown) => {
+    designer?.documentModel?.updateNodeProps({
+      id: activedNode.id,
+      changes: { [key]: val },
+    })
+  }
+
+  return { schema, props: activedNode.props, onChange }
 }

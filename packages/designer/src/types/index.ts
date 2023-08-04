@@ -36,7 +36,6 @@ export interface ComponentPropsSchema {
     label: string
     tip?: string
   }
-  defaultValue: unknown
   setter: SetterSchema
 }
 
@@ -56,7 +55,7 @@ export interface Materal<T = unknown> {
   setters?: Record<string, T>
 }
 
-export type SetterSchema = 'string' | {
+export type SetterSchema = string | {
   componentName: string
   props: Record<string, unknown>
 }

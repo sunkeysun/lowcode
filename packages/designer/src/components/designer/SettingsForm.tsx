@@ -4,8 +4,8 @@ import * as setters from '../../setters'
 
 type SetterName = keyof typeof setters
 
-function Setter({ schema }: { schema: ComponentPropsSchema }) {
-  const { name, title, defaultValue, setter } = schema
+function Setter({ schema, props, onChange }: { schema: ComponentPropsSchema }) {
+  const { name, title, setter } = schema
   let setterName: SetterName | null = null
   let setterProps: Record<string, unknown> = {}
   if (typeof setter === 'string') {
@@ -28,24 +28,32 @@ function Setter({ schema }: { schema: ComponentPropsSchema }) {
         <span>{name}</span>
         <SetterComponent
           {...setterProps}
-          value={defaultValue}
-          onChange={(v) => console.log(v)}
+          value={props[name]}
+          onChange={(v) => onChange(name, v)}
         />
-        <span>{defaultValue as string}</span>
+        <span>{props[name]}</span>
       </div>
     </div>
   )
 }
 
-function SetterRender({ schema }: { schema: ComponentPropsSchema[] }) {
+function SetterRender({
+  schema,
+  props,
+  onChange,
+}: {
+  schema: ComponentPropsSchema[]
+}) {
   if (!schema) return
 
-  return schema.map((setterSchema) => <Setter schema={setterSchema} />)
+  return schema.map((setterSchema) => (
+    <Setter schema={setterSchema} props={props} onChange={onChange} />
+  ))
 }
 
 export function SettingsForm() {
-  const { schema } = useActivedNodeProps()
-  if (!schema) return null
+  const { schema, props, onChange } = useActivedNodeProps()
+  if (!schema || !props) return null
 
   return (
     <div
@@ -56,7 +64,7 @@ export function SettingsForm() {
       }}
     >
       <h5>设置表单</h5>
-      <SetterRender schema={schema} />
+      <SetterRender schema={schema} props={props} onChange={onChange} />
     </div>
   )
 }

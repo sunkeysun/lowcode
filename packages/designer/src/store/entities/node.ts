@@ -132,6 +132,19 @@ export const slice = createSlice({
     ) {
       insert(state, action.payload, 'after')
     },
+
+    updateProps(
+      state,
+      action: PayloadAction<{
+        id: string
+        changes: Record<string, unknown>
+      }>,
+    ) {
+      const { id, changes } = action.payload
+      const node = state.entities[id]
+      if (!node) return
+      Object.assign(node.props, changes)
+    },
   },
 })
 

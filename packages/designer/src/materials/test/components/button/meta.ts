@@ -16,21 +16,20 @@ export const Button: ComponentMetaSchema = {
         props: {
           options: [
             {
-              label: 'Submit',
+              label: '提交',
               value: 'submit',
             },
             {
-              label: 'Reset',
+              label: '重置',
               value: 'reset',
             },
             {
-              label: 'Button',
+              label: '按钮',
               value: 'button',
             },
           ],
         },
       },
-      defaultValue: '',
     },
   ],
   snippets: [
@@ -40,7 +39,6 @@ export const Button: ComponentMetaSchema = {
         componentName,
         props: {
           htmlType: 'submit',
-          text: '提交',
         },
       },
     },
@@ -50,7 +48,6 @@ export const Button: ComponentMetaSchema = {
         componentName,
         props: {
           htmlType: 'reset',
-          text: '重置',
         },
       },
     },

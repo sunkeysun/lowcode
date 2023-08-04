@@ -14,7 +14,8 @@ export function useActivedNode() {
   useEffect(() => {
     if (activedNode && canvasState) {
       const nodeDom = designer?.documentModel?.getNodeDom(activedNode.id)
-      nodeDom && setDomRect(nodeDom.getBoundingClientRect())
+      const domRect = nodeDom?.getBoundingClientRect() ?? null
+      setDomRect(domRect)
     } else {
       setDomRect(null)
     }
