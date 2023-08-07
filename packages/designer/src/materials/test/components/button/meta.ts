@@ -32,6 +32,28 @@ export const Button: ComponentMetaSchema = {
       },
     },
     {
+      name: 'json',
+      title: {
+        label: 'json数据',
+        tip: '这是原生类型',
+      },
+      setter: 'JsonSetter'
+    },
+    {
+      name: 'slot',
+      title: {
+        label: '自定义插槽',
+      },
+      setter: {
+        componentName: 'SlotSetter',
+        props: {},
+        initialValue: {
+          type: 'JSSlot',
+          value: [],
+        },
+      },
+    },
+    {
       name: 'isOk',
       title: {
         label: '是否ok',
@@ -41,6 +63,7 @@ export const Button: ComponentMetaSchema = {
     },
     {
       name: 'object',
+      display: 'block',
       title: {
         label: '对象标题',
       },
@@ -51,17 +74,17 @@ export const Button: ComponentMetaSchema = {
             items: [
               {
                 name: 'label',
-                title: '标题',
+                title: { label: '标题' },
                 setter: 'StringSetter',
               },
               {
                 name: 'isOpen',
-                title: '是否开启',
+                title: { label: '是否开启' },
                 setter: 'BoolSetter',
               },
               {
                 name: 'type',
-                title: '开启类型',
+                title: { label: '开启类型' },
                 setter: {
                   componentName: 'SelectSetter',
                   props: {
@@ -78,6 +101,25 @@ export const Button: ComponentMetaSchema = {
                   },
                 },
               },
+              {
+                name: 'typeObj',
+                display: 'block',
+                title: { label: '类型对象' },
+                setter: {
+                  componentName: 'ObjectSetter',
+                  props: {
+                    config: {
+                      items: [
+                        {
+                          name: 'div',
+                          title: { label: 'DIV' },
+                          setter: 'StringSetter',
+                        },                        
+                      ],
+                    },
+                  },
+                },
+              }
             ],
           },
         },
@@ -85,6 +127,7 @@ export const Button: ComponentMetaSchema = {
     },
     {
       name: 'array',
+      display: 'block',
       title: {
         label: '数组设置',
       },
@@ -93,19 +136,21 @@ export const Button: ComponentMetaSchema = {
         props: {
           itemSetter: {
             componentName: 'ObjectSetter',
+            display: 'inline',
             props: {
               config: {
                 items: [
                   {
                     name: 'name',
-                    title: '姓名',
+                    title: { label: '姓名' },
                     setter: 'StringSetter',
+                    isRequired: true,
                   },
                   {
                     name: 'age',
-                    title: '年龄',
+                    title: { label: '年龄' },
                     setter: 'NumberSetter',
-                  }
+                  },
                 ],
               },
             },

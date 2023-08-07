@@ -4,7 +4,7 @@ import * as setters from '../../setters'
 
 type SetterName = keyof typeof setters
 
-function SetterField({
+export function SetterField({
   schema,
   value,
   onChange,
@@ -13,7 +13,7 @@ function SetterField({
   value: unknown
   onChange: (v: unknown) => void
 }) {
-  const { name, title, setter } = schema
+  const { name, display, title, setter } = schema
   let setterName: SetterName | null = null
   let setterProps: Record<string, unknown> = {}
   if (typeof setter === 'string') {
@@ -27,71 +27,26 @@ function SetterField({
   const SetterComponent = setters[setterName]
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>
 
-  if (setterName === 'ObjectSetter') {
-    const { items } = setterProps.config
-    if (items?.length) {
-      return (
-        <>
-          {items.map((schema) => (
-            <SetterField
-              schema={schema}
-              value={value?.[schema.name]}
-              onChange={(v: unknown) => onChange({ [name]: v })}
-            />
-          ))}
-        </>
-      )
-    }
-  }
-
-  if (setterName === 'ArraySetter') {
-    const { itemSetter } = setterProps
-    return (
-      <>
-        {value?.map((v, index) => (
-          <>
-            <SetterField
-              schema={{ title, name: index, setter: itemSetter }}
-              value={v}
-              onChange={(v) => onChange({ [name]: v })}
-            />
-            <button
-              onClick={() =>
-                onChange({ [name]: value.filter((v, idx) => index !== idx) })
-              }
-            >
-              x
-            </button>
-          </>
-        ))}
-        <a
-          onClick={() => {
-            if (!value?.length) {
-              onChange({ [name]: [itemSetter.initialValue] })
-            } else {
-              onChange({ [name]: { [value.length]: itemSetter.initialValue } })
-            }
-          }}
-        >
-          添加一项
-        </a>
-      </>
-    )
-  }
-
   return (
-    <div>
-      <label>
-        {title.label}?{title.tip}
-      </label>
+    <div
+      style={{
+        padding: display === 'block' ? 20 : 0,
+      }}
+    >
+      <h5
+        style={{
+          backgroundColor: display === 'block' ? 'red' : 'initial',
+        }}
+      >
+        {title.label}
+      </h5>
       <div>
-        <span>{name}</span>
         <SetterComponent
           {...setterProps}
+          name={name}
           value={value}
           onChange={(v: unknown) => onChange({ [name]: v })}
         />
-        <span>{name}</span>
       </div>
     </div>
   )

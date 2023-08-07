@@ -13,7 +13,6 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.61.0
       '@typescript-eslint/parser': ^5.61.0
       '@vitejs/plugin-react': ^4.0.1
-      deepmerge: ^4.3.1
       eslint: ^8.44.0
       eslint-plugin-react-hooks: ^4.6.0
       eslint-plugin-react-refresh: ^0.4.1
@@ -26,7 +25,6 @@ importers:
       typescript: ^5.0.2
       vite: ^4.4.0
     dependencies:
-      deepmerge: 4.3.1
       eventemitter3: 5.0.1
       nanoid: 4.0.2
       react: 18.2.0
@@ -956,11 +954,6 @@ packages:
   /deep-is/0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
     dev: true
-
-  /deepmerge/4.3.1:
-    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
-    engines: {node: '>=0.10.0'}
-    dev: false
 
   /dir-glob/3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}

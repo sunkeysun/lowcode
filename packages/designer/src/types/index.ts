@@ -32,6 +32,7 @@ export interface ComponentMetaSchema {
 
 export interface ComponentPropSchema {
   name: string
+  display?: 'inline' | 'block'
   title: {
     label: string
     tip?: string
@@ -58,6 +59,7 @@ export interface Materal<T = unknown> {
 export type SetterSchema = string | {
   componentName: string
   props: Record<string, unknown>
+  initialValue?: unknown
 }
 
 export type LcTargetType = 'resource' | 'node'
