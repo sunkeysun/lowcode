@@ -72,6 +72,25 @@ function insert(
   }
 }
 
+function mergeProps(props: unknown, changes: unknown) {
+  if (!changes || typeof changes !== 'object') return
+
+  Object.keys(changes).forEach((key) => {
+    if (
+      changes[key] &&
+      typeof changes[key] === 'object' &&
+      !Array.isArray(changes[key])
+    ) {
+      if (typeof props[key] !== 'object') {
+        props[key] = {}
+      }
+      mergeProps(props[key], changes[key])
+    } else {
+      props[key] = changes[key]
+    }
+  })
+}
+
 export const name = 'node'
 export const slice = createSlice({
   name,
@@ -133,7 +152,7 @@ export const slice = createSlice({
       insert(state, action.payload, 'after')
     },
 
-    updateProps(
+    updatePropsValue(
       state,
       action: PayloadAction<{
         id: string
@@ -143,7 +162,7 @@ export const slice = createSlice({
       const { id, changes } = action.payload
       const node = state.entities[id]
       if (!node) return
-      Object.assign(node.props, changes)
+      mergeProps(node.props, changes)
     },
   },
 })

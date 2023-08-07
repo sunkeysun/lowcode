@@ -15,7 +15,7 @@ export type BehaviorRule = 'move' | 'remove' | 'copy'
 export interface ComponentMetaSchema {
   componentName: string
   title: string
-  props: ComponentPropsSchema[]
+  props: ComponentPropSchema[]
   snippets: ComponentSnippet[]
   configure?: {
     component?: {
@@ -30,7 +30,7 @@ export interface ComponentMetaSchema {
   }
 }
 
-export interface ComponentPropsSchema {
+export interface ComponentPropSchema {
   name: string
   title: {
     label: string

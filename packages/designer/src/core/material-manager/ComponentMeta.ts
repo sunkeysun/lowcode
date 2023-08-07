@@ -15,6 +15,10 @@ export class ComponentMeta {
     return this.componentMeta.componentName
   }
 
+  get disableBehaviors() {
+    return this.configure?.component?.disableBehaviors
+  }
+
   get configure() {
     return this.componentMeta.configure
   }

@@ -17,5 +17,5 @@ export interface CanvasMutateEventData {
 }
 
 export class CanvasMutateEvent extends EngineEvent<CanvasMutateEventData> {
-  static eventName: 'engine:canvas-mutate'
+  static eventName = 'engine:canvas-mutate'
 }

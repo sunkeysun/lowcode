@@ -6,10 +6,10 @@ import { LC_TARGET } from '../common/constants'
 import { useDesigner } from './useDesigner'
 import { useNode } from './useNode'
 
-export function useDragNode(nodeId: string) {
+export function useNodeComponent(nodeId: string) {
   const { designer } = useDesigner()
+  const { node } = useNode(nodeId)
   const ref = useRef<HTMLElement>(null)
-  const node = useNode(nodeId)
   useEffect(() => {
     if (ref.current && node) {
       ref.current[LC_TARGET] = {
@@ -21,5 +21,5 @@ export function useDragNode(nodeId: string) {
     return () => designer?.documentModel?.unmountNode(nodeId)
   }, [nodeId, designer, node])
 
-  return { ref }
+  return { ref, node }
 }

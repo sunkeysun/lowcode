@@ -14,7 +14,7 @@ export function RadioGroupSetter({
           <input
             type="radio"
             checked={value === option.value}
-            value={option.value}
+            value={option.value as string}
             onClick={() => onChange(option.value)}
           />
           {option.label}

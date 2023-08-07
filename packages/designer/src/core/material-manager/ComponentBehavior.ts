@@ -4,6 +4,8 @@ export class ComponentBehavior {
   constructor(private readonly componentMeta: ComponentMeta) {}
 
   canDrop(fromComponentMeta: ComponentMeta) {
+    const isContainer = this.componentMeta.isContainer
+    if (!isContainer) return false
     const fromNestingRule = fromComponentMeta.configure?.component?.nestingRule
     const nestingRule = this.componentMeta.configure?.component?.nestingRule
     if (!fromNestingRule && !nestingRule) return true
@@ -21,19 +23,19 @@ export class ComponentBehavior {
   }
 
   canMove() {
-    return !this.componentMeta.configure?.component?.disableBehaviors?.includes(
+    return !this.componentMeta.disableBehaviors?.includes(
       'move',
     )
   }
 
   canCopy() {
-    return !this.componentMeta.configure?.component?.disableBehaviors?.includes(
+    return !this.componentMeta.disableBehaviors?.includes(
       'copy',
     )
   }
 
   canRemove() {
-    return !this.componentMeta.configure?.component?.disableBehaviors?.includes(
+    return !this.componentMeta.disableBehaviors?.includes(
       'remove',
     )
   }

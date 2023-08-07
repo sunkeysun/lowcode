@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { useDesigner } from './useDesigner'
 
-export function useComponent(componentName: string) {
+export function useMaterialComponent(componentName: string) {
   const { designer } = useDesigner()
   const Component = useSelector(() =>
     designer?.materialManager.getComponent(componentName),

@@ -179,7 +179,7 @@ export class DocumentModel {
 
   updateNodeProps({ id, changes }: { id: string, changes: Record<string, unknown>}) {
     return this.designer.dispatch(
-      nodeEntity.actions.updateProps({ id, changes })
+      nodeEntity.actions.updatePropsValue({ id, changes })
     )
   }
 
@@ -236,6 +236,8 @@ export class DocumentModel {
 
   mountNode(nodeId: string, dom: HTMLElement) {
     this.#nodeDomMap.set(nodeId, dom)
+    const canvasState = this.getCanvasState()
+    canvasState && this.setCanvasState({ ...canvasState })
   }
 
   unmountNode(nodeId: string) {

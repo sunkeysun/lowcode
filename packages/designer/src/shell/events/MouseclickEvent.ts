@@ -2,14 +2,12 @@
  * mouseleave
  */
 
+import type { LCTarget } from '../../types';
 import { EngineEvent } from './EngineEvent';
 
 export interface MouseclickEventData {
   nativeEvent: MouseEvent
-  target: {
-    id: string
-    type: 'component' | 'node'
-  },
+  target: LCTarget
 }
 
 export class MouseclickEvent extends EngineEvent<MouseclickEventData> {

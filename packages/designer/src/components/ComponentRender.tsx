@@ -1,11 +1,9 @@
-import { useDragNode } from '../hooks/useDragNode'
-import { useNode } from '../hooks/useNode'
-import { useComponent } from '../hooks/useComponent'
+import { useNodeComponent } from '../hooks/useNodeComponent'
+import { useMaterialComponent } from '../hooks/useMaterialComponent'
 
 export function ComponentRender({ nodeId }: { nodeId: string }) {
-  const { node } = useNode(nodeId)
-  const { ref } = useDragNode(nodeId)
-  const { Component } = useComponent(node?.componentName as string)
+  const { ref, node } = useNodeComponent(nodeId)
+  const { Component } = useMaterialComponent(node?.componentName as string)
   if (!node || !Component) return null
 
   return (

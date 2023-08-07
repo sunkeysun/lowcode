@@ -1,10 +1,18 @@
 import { useActivedNodeProps } from '../../hooks/useActivedNodeProps'
-import { ComponentPropsSchema } from '../../types'
+import { ComponentPropSchema, Props } from '../../types'
 import * as setters from '../../setters'
 
 type SetterName = keyof typeof setters
 
-function Setter({ schema, props, onChange }: { schema: ComponentPropsSchema }) {
+function SetterField({
+  schema,
+  value,
+  onChange,
+}: {
+  schema: ComponentPropSchema
+  value: unknown
+  onChange: (v: unknown) => void
+}) {
   const { name, title, setter } = schema
   let setterName: SetterName | null = null
   let setterProps: Record<string, unknown> = {}
@@ -19,6 +27,58 @@ function Setter({ schema, props, onChange }: { schema: ComponentPropsSchema }) {
   const SetterComponent = setters[setterName]
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>
 
+  if (setterName === 'ObjectSetter') {
+    const { items } = setterProps.config
+    if (items?.length) {
+      return (
+        <>
+          {items.map((schema) => (
+            <SetterField
+              schema={schema}
+              value={value?.[schema.name]}
+              onChange={(v: unknown) => onChange({ [name]: v })}
+            />
+          ))}
+        </>
+      )
+    }
+  }
+
+  if (setterName === 'ArraySetter') {
+    const { itemSetter } = setterProps
+    return (
+      <>
+        {value?.map((v, index) => (
+          <>
+            <SetterField
+              schema={{ title, name: index, setter: itemSetter }}
+              value={v}
+              onChange={(v) => onChange({ [name]: v })}
+            />
+            <button
+              onClick={() =>
+                onChange({ [name]: value.filter((v, idx) => index !== idx) })
+              }
+            >
+              x
+            </button>
+          </>
+        ))}
+        <a
+          onClick={() => {
+            if (!value?.length) {
+              onChange({ [name]: [itemSetter.initialValue] })
+            } else {
+              onChange({ [name]: { [value.length]: itemSetter.initialValue } })
+            }
+          }}
+        >
+          添加一项
+        </a>
+      </>
+    )
+  }
+
   return (
     <div>
       <label>
@@ -28,10 +88,10 @@ function Setter({ schema, props, onChange }: { schema: ComponentPropsSchema }) {
         <span>{name}</span>
         <SetterComponent
           {...setterProps}
-          value={props[name]}
-          onChange={(v) => onChange(name, v)}
+          value={value}
+          onChange={(v: unknown) => onChange({ [name]: v })}
         />
-        <span>{props[name]}</span>
+        <span>{name}</span>
       </div>
     </div>
   )
@@ -42,18 +102,28 @@ function SetterRender({
   props,
   onChange,
 }: {
-  schema: ComponentPropsSchema[]
+  schema: ComponentPropSchema[]
+  props: Props
+  onChange: (v: unknown) => void
 }) {
   if (!schema) return
 
   return schema.map((setterSchema) => (
-    <Setter schema={setterSchema} props={props} onChange={onChange} />
+    <SetterField
+      schema={setterSchema}
+      value={props[setterSchema.name]}
+      onChange={onChange}
+    />
   ))
 }
 
 export function SettingsForm() {
   const { schema, props, onChange } = useActivedNodeProps()
   if (!schema || !props) return null
+
+  const handleChange = (v: unknown) => {
+    onChange(v)
+  }
 
   return (
     <div
@@ -64,7 +134,7 @@ export function SettingsForm() {
       }}
     >
       <h5>设置表单</h5>
-      <SetterRender schema={schema} props={props} onChange={onChange} />
+      <SetterRender schema={schema} props={props} onChange={handleChange} />
     </div>
   )
 }
