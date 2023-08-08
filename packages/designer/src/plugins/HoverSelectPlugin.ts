@@ -30,7 +30,12 @@ export class HoverSelectPlugin extends Plugin {
       eventData: { target },
     } = ev
     const activedNode = this.designer.documentModel?.getActivedNode()
-    if (target.type !== 'node' || activedNode?.id === target.id) {
+    const targetNode = this.designer.documentModel?.getNode(target.id)
+    if (
+      target.type !== 'node' ||
+      activedNode?.id === target.id ||
+      targetNode?.componentName === 'Slot'
+    ) {
       this.designer.documentModel?.setHoverTarget(null)
       return
     }
@@ -44,12 +49,20 @@ export class HoverSelectPlugin extends Plugin {
   }
 
   handleMouseclick = (ev: MouseclickEvent) => {
-    const { eventData: { target } } = ev
+    const {
+      eventData: { target },
+    } = ev
     const hoverTarget = this.designer.documentModel?.getHoverTarget()
+    const targetNode = this.designer.documentModel?.getNode(target.id)
+    if (!targetNode) return
     if (hoverTarget?.target.id === target.id) {
       this.designer.documentModel?.setHoverTarget(null)
     }
-    this.designer.documentModel?.setActivedNode(target.id)
+    let activeNodeId = targetNode.id
+    if (targetNode?.componentName === 'Slot') {
+      activeNodeId = targetNode.parentId as string
+    }
+    this.designer.documentModel?.setActivedNode(activeNodeId)
   }
 
   destroy() {

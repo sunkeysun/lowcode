@@ -68,24 +68,29 @@ export interface SetterConfig {
 export type SetterType = SetterConfig | string
 
 export type JSSlot = {
-  type: 'JSSlot',
+  type: 'JSSlot'
   value: NodeSchema[]
+  id?: string
+  params?: string[]
+  title?: string
 }
 
 export type JSFunction = {
   type: 'JSFunction',
   value: string
+  title?: string
 }
 
 export type JSExpression = {
   type: 'JSExpression'
   value: string
+  title?: string
 }
 
 export interface SetterProps<T = unknown> {
   value: T
   onChange: (v: T) => void
-  onReset: () => void
+  onInit: () => void
   [k: string]: unknown
 }
 

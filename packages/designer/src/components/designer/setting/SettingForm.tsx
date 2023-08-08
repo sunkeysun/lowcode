@@ -1,7 +1,9 @@
 import { useActivedNodeProps } from '../../../hooks/useActivedNodeProps'
 import type { ComponentPropSchema, TitleContent } from '../../../types'
 import * as setters from '../../../setters'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
+import { useDesigner } from '../../../hooks/useDesigner'
+import { useActivedNode } from '../../../hooks/useActivedNode'
 
 type SetterName = keyof typeof setters
 
@@ -18,18 +20,58 @@ export function SetterField({
   value: any
   onChange: (v: any) => void
 }) {
+  const { designer } = useDesigner()
+  const { activedNode } = useActivedNode()
   const { name, title, setter } = schema
   let setterName: SetterName | null = null
   let setterProps: Record<string, unknown> = {}
+  let defaultValue: unknown
   if (typeof setter === 'string') {
     setterName = setter as SetterName
     setterProps = {}
   } else {
     setterName = setter.componentName as SetterName
     setterProps = setter.props
+    defaultValue = setter.defaultValue
   }
 
   const SetterComponent = setters[setterName]
+
+  useEffect(() => {
+    if (
+      !!SetterComponent &&
+      typeof value === 'undefined' &&
+      typeof defaultValue !== 'undefined'
+    ) {
+      if (setterName === 'SlotSetter') {
+        const slotNode = designer?.documentModel?.createNode(
+          {
+            title: 'Slot',
+            componentName: 'Slot',
+            props: {},
+            children: [],
+          },
+          activedNode?.id as string,
+        )
+        if (slotNode) {
+          designer?.documentModel?.appendChild(slotNode)
+          onChange({ [name]: { ...defaultValue, id: slotNode.id } })
+        }
+      } else {
+        onChange({ [name]: defaultValue })
+      }
+    }
+  }, [
+    SetterComponent,
+    value,
+    defaultValue,
+    onChange,
+    name,
+    setterName,
+    designer,
+    activedNode,
+  ])
+
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>
 
   return (

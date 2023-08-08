@@ -1,16 +1,10 @@
 import { type ComponentMetaSchema } from '../../../types'
 
-const componentName = 'Root'
+const componentName = 'Slot'
 export const Root: ComponentMetaSchema = {
   componentName,
-  title: '页面组件',
-  props: [
-    {
-      name: 'title',
-      title: { label: '标题', tip: '默认内容' },
-      setter: 'StringSetter',
-    },
-  ],
+  title: 'Slot',
+  props: [],
   configure: {
     component: {
       isContainer: true,
@@ -23,12 +17,10 @@ export const Root: ComponentMetaSchema = {
   },
   snippets: [
     {
-      title: '页面组件',
+      title: 'Slot',
       schema: {
         componentName,
-        props: {
-          title: '页面组件标题',
-        },
+        props: {},
         children: [],
       },
     },

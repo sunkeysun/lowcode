@@ -5,6 +5,7 @@ import * as componentMap from '../../materials/test'
 import * as componentMatasMap from '../../materials/test/meta'
 import { Root } from '../rootMaterials/root'
 import { Root as RootMeta } from '../rootMaterials/root/meta'
+import { Slot } from '../rootMaterials/slot'
 
 export function Designer() {
   const { designer } = useDesigner()
@@ -19,7 +20,7 @@ export function Designer() {
         props: {},
       })
       setDocumentId(designer?.documentModel?.id)
-      designer?.materialManager.register({...componentMap, Root }, { ...componentMatasMap, Root: RootMeta })
+      designer?.materialManager.register({...componentMap, Root, Slot }, { ...componentMatasMap, Root: RootMeta })
     }
   }, [designer])
 

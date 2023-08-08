@@ -1,11 +1,7 @@
 /**
  * 拖拽插件
  */
-import type {
-  DragoverTarget,
-  AlignDirection,
-  AlignPosition,
-} from '../types'
+import type { DragoverTarget, AlignDirection, AlignPosition } from '../types'
 import { Designer } from '..'
 import { Plugin } from './Plugin'
 import {
@@ -198,6 +194,7 @@ export class DragDropPlugin extends Plugin {
     }
 
     let targetNode = this.designer.documentModel?.getNode(nodeId)
+    if (targetNode?.componentName === 'Slot') return true
     if (alignPosition !== 'in') {
       const parentId = targetNode?.parentId
       if (!parentId) return

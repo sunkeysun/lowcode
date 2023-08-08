@@ -19,7 +19,6 @@ export class ShellManager {
   }
 
   dispatchEvent = (event: EngineEvent) => {
-    console.log(event, '123')
     this.#eventBus.emit((event.constructor as EngineEventCls).eventName, event)
   }
 

@@ -10,6 +10,8 @@ import {
   type NodeSchema,
   type CanvasState,
   DraggingTarget,
+  Props,
+  JSSlot,
 } from '../types'
 import { Designer } from '..'
 
@@ -91,13 +93,25 @@ export class DocumentModel {
     const { title, componentName, childIds, props, isLocked, hidden } =
       targetNode
 
+    const realProps: Props = {}
+    Object.entries(props).forEach(([key, val]) => {
+      let slotVal = val as JSSlot
+      if (slotVal?.type === 'JSSlot' && slotVal.id) {
+        slotVal = {
+          ...slotVal,
+          value: this.getNodeSchemaById(slotVal.id)?.children ?? [],
+        }
+      }
+      realProps[key] = slotVal
+    })
+
     const schema: NodeSchema = {
       title,
       componentName,
       children: childIds
         ?.map((childId) => this.getNodeSchemaById(childId) as NodeSchema)
         .filter(Boolean),
-      props,
+      props: realProps,
       isLocked,
       hidden,
     }
@@ -177,9 +191,15 @@ export class DocumentModel {
     )
   }
 
-  updateNodeProps({ id, changes }: { id: string, changes: Record<string, unknown>}) {
+  updateNodeProps({
+    id,
+    changes,
+  }: {
+    id: string
+    changes: Record<string, unknown>
+  }) {
     return this.designer.dispatch(
-      nodeEntity.actions.updatePropsValue({ id, changes })
+      nodeEntity.actions.updatePropsValue({ id, changes }),
     )
   }
 

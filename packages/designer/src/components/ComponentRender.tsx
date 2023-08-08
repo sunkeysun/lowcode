@@ -1,6 +1,6 @@
 import { useNodeComponent } from '../hooks/useNodeComponent'
 import { useMaterialComponent } from '../hooks/useMaterialComponent'
-import { NodeSchema, Props } from '../types'
+import { JSSlot, Props } from '../types'
 
 export function ComponentRender({ nodeId }: { nodeId: string }) {
   const { ref, node } = useNodeComponent(nodeId)
@@ -8,13 +8,9 @@ export function ComponentRender({ nodeId }: { nodeId: string }) {
   if (!node || !Component) return null
   const realProps: Props = {}
   Object.entries(node.props).forEach(([key, val]) => {
-    const slotVal = val as { type: 'JSSlot'; value: NodeSchema[] }
-    if (slotVal?.type === 'JSSlot') {
-      realProps[key] = !slotVal.value?.length ? (
-        <div style={{ width: 20, height: 20, backgroundColor: 'red' }} />
-      ) : (
-        <ComponentRender nodeId="" />
-      )
+    const slotVal = val as JSSlot
+    if (slotVal?.type === 'JSSlot' && slotVal.id) {
+      realProps[key] = <ComponentRender nodeId={slotVal.id} />
     } else {
       realProps[key] = val
     }
