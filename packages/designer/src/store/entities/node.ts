@@ -72,11 +72,12 @@ function insert(
   }
 }
 
-function mergeProps(props: unknown, changes: unknown) {
+function mergeProps(props: Props, changes: Record<string, unknown>) {
   if (!changes || typeof changes !== 'object') return
 
   Object.keys(changes).forEach((key) => {
     if (
+      props[key] &&
       changes[key] &&
       typeof changes[key] === 'object' &&
       !Array.isArray(changes[key])
@@ -84,7 +85,7 @@ function mergeProps(props: unknown, changes: unknown) {
       if (typeof props[key] !== 'object') {
         props[key] = {}
       }
-      mergeProps(props[key], changes[key])
+      mergeProps(props[key] as Props, changes[key] as Record<string, unknown>)
     } else {
       props[key] = changes[key]
     }

@@ -5,7 +5,6 @@ export interface NodeSchema {
   componentName: string
   children?: NodeSchema[]
   props: Props
-  slots?: Record<string, NodeSchema>
   hidden?: boolean
   isLocked?: boolean
 }
@@ -64,14 +63,29 @@ export interface SetterConfig {
   componentName: string
   props: Record<string, unknown>
   defaultValue?: unknown
-  isRequired?: boolean
 }
 
 export type SetterType = SetterConfig | string
 
+export type JSSlot = {
+  type: 'JSSlot',
+  value: NodeSchema[]
+}
+
+export type JSFunction = {
+  type: 'JSFunction',
+  value: string
+}
+
+export type JSExpression = {
+  type: 'JSExpression'
+  value: string
+}
+
 export interface SetterProps<T = unknown> {
   value: T
   onChange: (v: T) => void
+  onReset: () => void
   [k: string]: unknown
 }
 

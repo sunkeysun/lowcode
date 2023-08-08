@@ -1,36 +1,80 @@
+import { useState } from 'react'
 import { SetterField } from '../../components/designer/setting/SettingForm'
 import type { SetterProps, ComponentPropSchema } from '../../types'
 
-export interface ObjectSetterProps extends SetterProps<unknown> {
+export interface ObjectSetterProps
+  extends SetterProps<Record<string, unknown>> {
   config: {
     items: ComponentPropSchema[]
-    inline?: boolean
   }
+  forceInline?: number
 }
 
-function ObjectFormSetter() {}
-
-function ObjectRowSetter() {}
-
-export function ObjectSetter({ config, value, onChange }: ObjectSetterProps) {
-  const { items, inline } = config
-  const objectValue = value as Record<string, unknown>
-  if (!items.length) return null
-
+function FormSetter({ config: { items }, value, onChange }: ObjectSetterProps) {
   return (
-    <div
-      style={{
-        display: inline ? 'flex' : 'block',
-      }} 
-    >
-      { inline && <button>+</button> }
-      {items.map((schema) => (
+    <>
+      {items.map((item, index) => (
         <SetterField
-          schema={schema}
-          value={objectValue?.[schema.name]}
+          key={index}
+          schema={item}
+          value={value?.[item.name]}
           onChange={onChange}
         />
       ))}
-    </div>
+    </>
   )
+}
+
+function RowSetter(props: ObjectSetterProps) {
+  const {
+    config: { items },
+    value,
+    onChange,
+  } = props
+  const [isOpenPopup, setIsOpenPopup] = useState(false)
+  const inlineItems = items.slice(0, 2)
+  return (
+    <>
+      <div
+        style={{
+          display: 'flex',
+        }}
+      >
+        {items.length > 2 && (
+          <button onClick={() => setIsOpenPopup(true)}>+</button>
+        )}
+        {inlineItems.map((item, index) => (
+          <SetterField
+            key={index}
+            schema={item}
+            value={value?.[item.name]}
+            onChange={onChange}
+          />
+        ))}
+      </div>
+      <div
+        style={{
+          position: 'fixed',
+          display: isOpenPopup ? 'block' : 'none',
+          top: 0,
+          left: 0,
+        }}
+      >
+        <button onClick={() => setIsOpenPopup(false)}>x</button>
+        <FormSetter {...props} />
+      </div>
+    </>
+  )
+}
+
+export function ObjectSetter(props: ObjectSetterProps) {
+  const { config, forceInline = 0 } = props
+  const { items } = config
+  if (!items.length) return null
+
+  if (forceInline) {
+    return <RowSetter {...props} />
+  }
+
+  return <FormSetter {...props} />
 }

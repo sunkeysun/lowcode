@@ -1,6 +1,7 @@
 import { useActivedNodeProps } from '../../../hooks/useActivedNodeProps'
 import type { ComponentPropSchema, TitleContent } from '../../../types'
 import * as setters from '../../../setters'
+import { useCallback, useEffect, useMemo } from 'react'
 
 type SetterName = keyof typeof setters
 
@@ -14,8 +15,8 @@ export function SetterField({
   onChange,
 }: {
   schema: ComponentPropSchema
-  value: unknown | unknown[]
-  onChange: (v: unknown | unknown[]) => void
+  value: any
+  onChange: (v: any) => void
 }) {
   const { name, title, setter } = schema
   let setterName: SetterName | null = null
@@ -32,14 +33,14 @@ export function SetterField({
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>
 
   return (
-    <div>
+    <>
       <SetterFieldTitle title={title} />
       <SetterComponent
         {...setterProps}
         value={value}
         onChange={(v: unknown) => onChange({ [name]: v })}
       />
-    </div>
+    </>
   )
 }
 

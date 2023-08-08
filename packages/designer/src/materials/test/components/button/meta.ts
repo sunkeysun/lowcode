@@ -155,6 +155,7 @@ export const Button: ComponentMetaSchema = {
           itemSetter: {
             componentName: 'ObjectSetter',
             props: {
+              forceInline: 1,
               config: {
                 items: [
                   {
@@ -167,6 +168,19 @@ export const Button: ComponentMetaSchema = {
                     name: 'age',
                     title: { label: '年龄' },
                     setter: 'NumberSetter',
+                  },
+                  {
+                    name: 'sex',
+                    title: { label: '性别' },
+                    setter: {
+                      componentName: 'RadioGroupSetter',
+                      props: {
+                        options: [
+                          { label: '男', value: 'male' },
+                          { label: '女', value: 'female' },
+                        ],
+                      },
+                    },
                   },
                 ],
               },

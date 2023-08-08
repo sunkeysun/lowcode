@@ -1,13 +1,15 @@
 import { SetterProps } from '../../types'
+import type { JSSlot } from '../../types'
 
-export function SlotSetter({ value, onChange }: SetterProps<boolean>) {
+export function SlotSetter({ value, onChange }: SetterProps<JSSlot | null>) {
   return (
     <label>
-      布尔设置器
       <input
         type="checkbox"
-        checked={value === true}
-        onChange={() => onChange(!value)}
+        checked={!!value}
+        onChange={() => {
+          !value ? onChange({ type: 'JSSlot', value: [] }) : onChange(null)
+        }}
       />
     </label>
   )
