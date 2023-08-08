@@ -41,15 +41,37 @@ export const Button: ComponentMetaSchema = {
     },
     {
       name: 'slot',
-      title: {
-        label: '自定义插槽',
-      },
+      title: '自定义插槽',
       setter: {
         componentName: 'SlotSetter',
         props: {},
-        initialValue: {
+        defaultValue: {
           type: 'JSSlot',
           value: [],
+        },
+      },
+    },
+    {
+      name: 'function',
+      title: '自定义函数',
+      setter: {
+        componentName: 'FunctionSetter',
+        props: {},
+        defaultValue: {
+          type: 'JSFunction',
+          value: '',
+        },
+      },
+    },
+    {
+      name: 'expression',
+      title: '自定义表达式',
+      setter: {
+        componentName: 'ExpressionSetter',
+        props: {},
+        defaultValue: {
+          type: 'JSExpression',
+          value: '',
         },
       },
     },
@@ -64,9 +86,7 @@ export const Button: ComponentMetaSchema = {
     {
       name: 'object',
       display: 'block',
-      title: {
-        label: '对象标题',
-      },
+      title: '对象标题',
       setter: {
         componentName: 'ObjectSetter',
         props: {
@@ -128,9 +148,7 @@ export const Button: ComponentMetaSchema = {
     {
       name: 'array',
       display: 'block',
-      title: {
-        label: '数组设置',
-      },
+      title: '数组设置',
       setter: {
         componentName: 'ArraySetter',
         props: {
@@ -154,7 +172,7 @@ export const Button: ComponentMetaSchema = {
                 ],
               },
             },
-            initialValue: {
+            defaultValue: {
               name: '我的姓名',
               age: '我的年龄',
             },

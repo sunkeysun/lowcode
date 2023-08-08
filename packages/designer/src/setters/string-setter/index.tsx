@@ -1,9 +1,5 @@
-export function StringSetter({
-  value,
-  onChange,
-}: {
-  value: string
-  onChange: (v: string) => void
-}) {
+import type { SetterProps } from '../../types'
+
+export function StringSetter({ value, onChange }: SetterProps<string>) {
   return <input value={value} onChange={(e) => onChange(e.target.value)} />
 }

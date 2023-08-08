@@ -1,25 +1,29 @@
-import { SetterField } from '../../components/designer/SettingsForm'
+import { SetterField } from '../../components/designer/setting/SettingForm'
+import type { SetterProps, SetterType } from '../../types'
 
-export function ArraySetter({ itemSetter, value, onChange }) {
-  let setter = itemSetter
-  if (itemSetter.componentName === 'ObjectSetter') {
-    setter.props.config.items = setter.props.config.items.filter(
-      (item) => item.isRequired,
-    )
-  }
+export function ArraySetter({
+  itemSetter,
+  value,
+  onChange,
+}: SetterProps<unknown | unknown[]>) {
+  const setter = itemSetter as SetterType
+  const valueArr = value as unknown[]
 
   return (
     <>
-      {value?.map((v, index) => (
+      {valueArr?.map((v, index) => (
         <div>
-          <button>+</button>
           <SetterField
-            schema={{ title: index, name: index, setter }}
+            schema={{
+              title: '',
+              name: String(index),
+              setter,
+            }}
             value={v}
             onChange={onChange}
           />
           <button
-            onClick={() => onChange(value.filter((_, idx) => index !== idx))}
+            onClick={() => onChange(valueArr.filter((_, idx) => index !== idx))}
           >
             x
           </button>
@@ -27,10 +31,12 @@ export function ArraySetter({ itemSetter, value, onChange }) {
       ))}
       <a
         onClick={() => {
-          if (!value?.length) {
-            onChange([itemSetter.initialValue])
+          const defaultValue =
+            typeof setter === 'string' ? null : setter?.defaultValue ?? null
+          if (!valueArr?.length) {
+            onChange([defaultValue])
           } else {
-            onChange({ [value.length]: itemSetter.initialValue })
+            onChange({ [valueArr.length]: defaultValue })
           }
         }}
       >

@@ -1,4 +1,12 @@
-import { SetterField } from '../../components/designer/SettingsForm'
+import { SetterField } from '../../components/designer/setting/SettingForm'
+
+function ObjectFormSetter() {
+
+}
+
+function ObjectRowSetter() {
+
+}
 
 export function ObjectSetter({ config, value, onChange }) {
   const { items } = config

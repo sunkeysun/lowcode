@@ -1,10 +1,6 @@
-export function NumberSetter({
-  value,
-  onChange,
-}: {
-  value: number
-  onChange: (v: number) => void
-}) {
+import { SetterProps } from '../../types'
+
+export function NumberSetter({ value, onChange }: SetterProps<number>) {
   return (
     <input
       type="number"

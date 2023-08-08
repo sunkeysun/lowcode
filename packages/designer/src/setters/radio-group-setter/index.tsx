@@ -1,12 +1,14 @@
+import type { SetterProps } from '../../types';
+
+interface Props extends SetterProps<unknown> {
+  options: Array<{ value: unknown, label: string}>
+}
+
 export function RadioGroupSetter({
   value,
   onChange,
   options,
-}: {
-  value: unknown
-  onChange: (v: unknown) => void
-  options: { label: string; value: unknown }[]
-}) {
+}: Props) {
   return (
     <>
       {options.map((option) => (

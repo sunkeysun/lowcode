@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import type { SetterProps } from '../../types'
 
-export function JsonSetter({ value, onChange }) {
-  const [editJson, setEditJson] = useState()
+export function JsonSetter({ value, onChange }: SetterProps<Record<string, unknown>>) {
+  const [editJson, setEditJson] = useState<string>()
 
   useEffect(() => {
     setEditJson(JSON.stringify(value, null, 2))

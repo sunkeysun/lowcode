@@ -14,7 +14,7 @@ export type BehaviorRule = 'move' | 'remove' | 'copy'
 
 export interface ComponentMetaSchema {
   componentName: string
-  title: string
+  title: TitleContent
   props: ComponentPropSchema[]
   snippets: ComponentSnippet[]
   configure?: {
@@ -33,11 +33,8 @@ export interface ComponentMetaSchema {
 export interface ComponentPropSchema {
   name: string
   display?: 'inline' | 'block'
-  title: {
-    label: string
-    tip?: string
-  }
-  setter: SetterSchema
+  title: TitleContent
+  setter: SetterType
 }
 
 export interface ComponentSnippet {
@@ -56,10 +53,26 @@ export interface Materal<T = unknown> {
   setters?: Record<string, T>
 }
 
-export type SetterSchema = string | {
+export interface TitleConfig {
+  label: string
+  tip: string
+}
+
+export type TitleContent = TitleConfig | string
+
+export interface SetterConfig {
   componentName: string
   props: Record<string, unknown>
-  initialValue?: unknown
+  defaultValue?: unknown
+  isRequired?: boolean
+}
+
+export type SetterType = SetterConfig | string
+
+export interface SetterProps<T = unknown> {
+  value: T
+  onChange: (v: T) => void
+  [k: string]: unknown
 }
 
 export type LcTargetType = 'resource' | 'node'
