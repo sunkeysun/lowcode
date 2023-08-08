@@ -154,7 +154,6 @@ export const Button: ComponentMetaSchema = {
         props: {
           itemSetter: {
             componentName: 'ObjectSetter',
-            display: 'inline',
             props: {
               config: {
                 items: [

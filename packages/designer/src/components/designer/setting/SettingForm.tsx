@@ -4,28 +4,8 @@ import * as setters from '../../../setters'
 
 type SetterName = keyof typeof setters
 
-function SetterFieldTitle({
-  title,
-  display = 'block',
-}: {
-  title: TitleContent
-  display?: 'inline' | 'block'
-}) {
-  return (
-    <div
-      style={{
-        padding: display === 'block' ? 20 : 0,
-      }}
-    >
-      <h5
-        style={{
-          backgroundColor: display === 'block' ? 'red' : 'initial',
-        }}
-      >
-        {typeof title === 'string' ? title : title.title}
-      </h5>
-    </div>
-  )
+function SetterFieldTitle({ title }: { title: TitleContent }) {
+  return <h5>{typeof title === 'string' ? title : title.label}</h5>
 }
 
 export function SetterField({
@@ -37,7 +17,7 @@ export function SetterField({
   value: unknown | unknown[]
   onChange: (v: unknown | unknown[]) => void
 }) {
-  const { name, display, title, setter } = schema
+  const { name, title, setter } = schema
   let setterName: SetterName | null = null
   let setterProps: Record<string, unknown> = {}
   if (typeof setter === 'string') {
@@ -53,7 +33,7 @@ export function SetterField({
 
   return (
     <div>
-      <SetterFieldTitle title={title} display={display} />
+      <SetterFieldTitle title={title} />
       <SetterComponent
         {...setterProps}
         value={value}
