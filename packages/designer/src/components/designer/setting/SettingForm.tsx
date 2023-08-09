@@ -1,7 +1,7 @@
 import { useActivedNodeProps } from '../../../hooks/useActivedNodeProps'
 import type { ComponentPropSchema, TitleContent } from '../../../types'
 import * as setters from '../../../setters'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDesigner } from '../../../hooks/useDesigner'
 import { useActivedNode } from '../../../hooks/useActivedNode'
 
@@ -20,6 +20,7 @@ export function SetterField({
   value: any
   onChange: (v: any) => void
 }) {
+  const initRef = useRef(false)
   const { designer } = useDesigner()
   const { activedNode } = useActivedNode()
   const { name, title, setter } = schema
@@ -38,11 +39,14 @@ export function SetterField({
   const SetterComponent = setters[setterName]
 
   useEffect(() => {
+    let slotNodeId = ''
     if (
       !!SetterComponent &&
       typeof value === 'undefined' &&
-      typeof defaultValue !== 'undefined'
+      typeof defaultValue !== 'undefined' &&
+      !initRef.current
     ) {
+      initRef.current = true
       if (setterName === 'SlotSetter') {
         const slotNode = designer?.documentModel?.createNode(
           {
@@ -54,7 +58,11 @@ export function SetterField({
           activedNode?.id as string,
         )
         if (slotNode) {
-          designer?.documentModel?.appendChild(slotNode)
+          designer?.documentModel?.appendSlot(slotNode)
+          slotNodeId = slotNode.id
+          console.log('append', slotNodeId, {
+            [name]: { ...defaultValue, id: slotNode.id },
+          })
           onChange({ [name]: { ...defaultValue, id: slotNode.id } })
         }
       } else {

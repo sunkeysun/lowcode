@@ -101,19 +101,18 @@ export const slice = createSlice({
       const { payload: nodeId } = action
       function removeTree(nodeId: string) {
         const parentId = state.entities[nodeId]?.parentId
-        const childrenIds = state.entities[nodeId]?.childIds ?? []
+        const childIds = state.entities[nodeId]?.childIds ?? []
         if (parentId) {
           const parentNode = state.entities[parentId]
           if (parentNode) {
-            const childIndex = parentNode.childIds.findIndex(
-              (childId) => childId === nodeId,
+            parentNode.childIds = parentNode.childIds.filter(
+              (childId) => childId !== nodeId,
             )
-            parentNode.childIds.splice(childIndex, 1)
           }
         }
-        if (childrenIds?.length > 0) {
-          childrenIds.forEach((childId) => removeTree(childId))
-          adapter.removeMany(state, childrenIds)
+        if (childIds?.length > 0) {
+          childIds.forEach((childId) => removeTree(childId))
+          adapter.removeMany(state, childIds)
         }
         adapter.removeOne(state, nodeId)
       }
@@ -164,6 +163,16 @@ export const slice = createSlice({
       const node = state.entities[id]
       if (!node) return
       mergeProps(node.props, changes)
+    },
+
+    appendSlot(state, action: PayloadAction<NodeEntity>) {
+      const { payload } = action
+      const { childNodes, ...node } = payload
+      adapter.addOne(state, node)
+
+      if (childNodes) {
+        adapter.addMany(state, childNodes)
+      }
     },
   },
 })

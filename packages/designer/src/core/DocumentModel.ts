@@ -98,7 +98,7 @@ export class DocumentModel {
       let slotVal = val as JSSlot
       if (slotVal?.type === 'JSSlot' && slotVal.id) {
         slotVal = {
-          ...slotVal,
+          type: 'JSSlot',
           value: this.getNodeSchemaById(slotVal.id)?.children ?? [],
         }
       }
@@ -203,6 +203,10 @@ export class DocumentModel {
     )
   }
 
+  appendSlot(node: NodeEntity) {
+    return this.designer.dispatch(nodeEntity.actions.appendSlot(node))
+  }
+
   appendChild(node: NodeEntity) {
     return this.designer.dispatch(nodeEntity.actions.appendChild(node))
   }
@@ -221,6 +225,8 @@ export class DocumentModel {
 
   createNode(schema: NodeSchema, parentId: string | null) {
     const childNodes: NodeEntity[] = []
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this
     function create(
       schema: NodeSchema,
       parentId: string | null,
@@ -228,11 +234,34 @@ export class DocumentModel {
     ) {
       const { title, componentName, props, children } = schema
       const nodeId = uniqId()
+      const realProps = { ...props }
+      Object.entries(props).forEach(([key, val]) => {
+        const slotVal = val as JSSlot
+        if (slotVal?.type === 'JSSlot') {
+          const slotNode = self.createNode(
+            {
+              title: 'Slot',
+              props: {},
+              componentName: 'Slot',
+              children: slotVal.value,
+            },
+            nodeId,
+          )
+          self.appendSlot(slotNode)
+          realProps[key] = {
+            type: 'JSSlot',
+            id: slotNode.id,
+          }
+        } else {
+          realProps[key] = val
+        }
+      })
+
       const node: NodeEntity = {
         id: nodeId,
         title,
         componentName,
-        props,
+        props: realProps,
         parentId,
         documentId,
         childIds: !children?.length
@@ -251,6 +280,15 @@ export class DocumentModel {
   }
 
   removeNode(nodeId: string) {
+    const node = this.getNode(nodeId)
+    if (node?.props) {
+      Object.values(node.props).forEach((val) => {
+        const slotVal = val as JSSlot
+        if (slotVal?.type === 'JSSlot' && slotVal.id) {
+          this.designer.dispatch(nodeEntity.actions.remove(slotVal.id))
+        }
+      })
+    }
     this.designer.dispatch(nodeEntity.actions.remove(nodeId))
   }
 

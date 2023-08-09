@@ -1,7 +1,7 @@
 import { useActivedNode } from '../../../hooks/useActivedNode'
 
 export function ActivedTool() {
-  const { activedNode, domRect } = useActivedNode()
+  const { activedNode, domRect, remove } = useActivedNode()
 
   if (!domRect || !activedNode) return null
 
@@ -28,10 +28,10 @@ export function ActivedTool() {
         }}
       >
         <button
-          onClick={() => console.log('选择组件树')}
+          onClick={() => remove()}
           style={{ fontSize: 10, padding: 0, pointerEvents: 'initial' }}
         >
-          组件树
+          x
         </button>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { type ComponentMetaSchema } from '../../../types'
 
 const componentName = 'Slot'
-export const Root: ComponentMetaSchema = {
+export const Slot: ComponentMetaSchema = {
   componentName,
   title: 'Slot',
   props: [],

@@ -208,12 +208,14 @@ export class DragDropPlugin extends Plugin {
       this.designer.materialManager.getComponentBehavior(
         targetNode.componentName,
       )
+    console.log(componentMeta, componentBehavior, componentBehavior?.canDrop(componentMeta!), '99999')
+
     if (
       !componentMeta ||
       !componentBehavior ||
       !componentBehavior.canDrop(componentMeta)
     )
-      return
+      return false
     return true
   }
 

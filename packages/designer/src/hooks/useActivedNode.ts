@@ -21,5 +21,18 @@ export function useActivedNode() {
     }
   }, [designer?.documentModel, activedNode, canvasState])
 
-  return { activedNode, domRect }
+  const remove = () => {
+    if (activedNode?.id) {
+      designer?.documentModel?.removeNode(activedNode.id)
+      if (activedNode.parentId) {
+        designer?.documentModel?.setActivedNode(activedNode.parentId)
+      } else {
+        designer?.documentModel?.setActivedNode(
+          designer?.documentModel?.getRootNode()?.id as string,
+        )
+      }
+    }
+  }
+
+  return { activedNode, domRect, remove }
 }
