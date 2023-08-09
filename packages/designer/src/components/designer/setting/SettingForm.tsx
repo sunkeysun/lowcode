@@ -20,7 +20,7 @@ export function SetterField({
   value: any
   onChange: (v: any) => void
 }) {
-  const initRef = useRef(false)
+  const initIdRef = useRef<string>('')
   const { designer } = useDesigner()
   const { activedNode } = useActivedNode()
   const { name, title, setter } = schema
@@ -40,14 +40,15 @@ export function SetterField({
 
   useEffect(() => {
     if (
+      !!activedNode &&
       !!SetterComponent &&
       typeof value === 'undefined' &&
       typeof defaultValue !== 'undefined' &&
-      !initRef.current
+      initIdRef.current !== activedNode.id
     ) {
-      initRef.current = true
+      const activedNodeId = activedNode.id
+      initIdRef.current = activedNodeId
       if (setterName === 'SlotSetter') {
-        const activedNodeId = activedNode?.id as string
         const slotDefaultValue = defaultValue as JSSlot
         const slotNode = designer?.documentModel?.createSlot(
           activedNodeId,
@@ -74,7 +75,7 @@ export function SetterField({
     onChange,
     name,
     setterName,
-    activedNode?.id,
+    activedNode,
     designer?.documentModel,
   ])
 

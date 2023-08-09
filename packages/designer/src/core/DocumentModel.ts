@@ -286,15 +286,6 @@ export class DocumentModel {
   }
 
   removeNode(nodeId: string) {
-    const node = this.getNode(nodeId)
-    if (node?.props) {
-      Object.values(node.props).forEach((val) => {
-        const slotVal = val as JSSlot
-        if (slotVal?.type === 'JSSlot' && slotVal.id) {
-          this.designer.dispatch(nodeEntity.actions.remove(slotVal.id))
-        }
-      })
-    }
     this.designer.dispatch(nodeEntity.actions.remove(nodeId))
   }
 

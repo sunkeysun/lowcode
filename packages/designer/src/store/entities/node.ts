@@ -8,7 +8,7 @@ import {
   type EntityState,
 } from '@reduxjs/toolkit'
 import { type RootState } from '..'
-import { type Props } from '../../types'
+import { JSSlot, type Props } from '../../types'
 
 export interface NodeEntity {
   id: string
@@ -72,6 +72,33 @@ function insert(
   }
 }
 
+function remove(state: EntityState<NodeEntity>, nodeId: string) {
+  const parentId = state.entities[nodeId]?.parentId
+  const childIds = state.entities[nodeId]?.childIds ?? []
+  const props = state.entities[nodeId]?.props ?? {}
+
+  Object.values(props).forEach((propValue) => {
+    const slotPropValue = propValue as JSSlot
+    if (slotPropValue.type === 'JSSlot' && slotPropValue.id) {
+      remove(state, slotPropValue.id)
+    }
+  })
+
+  if (parentId) {
+    const parentNode = state.entities[parentId]
+    if (parentNode) {
+      parentNode.childIds = parentNode.childIds.filter(
+        (childId) => childId !== nodeId,
+      )
+    }
+  }
+  if (childIds?.length > 0) {
+    childIds.forEach((childId) => remove(state, childId))
+    adapter.removeMany(state, childIds)
+  }
+  adapter.removeOne(state, nodeId)
+}
+
 function mergeProps(props: Props, changes: Record<string, unknown>) {
   if (!changes || typeof changes !== 'object') return
 
@@ -99,24 +126,7 @@ export const slice = createSlice({
   reducers: {
     remove(state, action: PayloadAction<string>) {
       const { payload: nodeId } = action
-      function removeTree(nodeId: string) {
-        const parentId = state.entities[nodeId]?.parentId
-        const childIds = state.entities[nodeId]?.childIds ?? []
-        if (parentId) {
-          const parentNode = state.entities[parentId]
-          if (parentNode) {
-            parentNode.childIds = parentNode.childIds.filter(
-              (childId) => childId !== nodeId,
-            )
-          }
-        }
-        if (childIds?.length > 0) {
-          childIds.forEach((childId) => removeTree(childId))
-          adapter.removeMany(state, childIds)
-        }
-        adapter.removeOne(state, nodeId)
-      }
-      removeTree(nodeId)
+      remove(state, nodeId)
     },
 
     appendChild(state, action: PayloadAction<NodeEntity>) {
