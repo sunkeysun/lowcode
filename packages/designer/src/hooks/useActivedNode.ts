@@ -25,7 +25,12 @@ export function useActivedNode() {
     if (activedNode?.id) {
       designer?.documentModel?.removeNode(activedNode.id)
       if (activedNode.parentId) {
-        designer?.documentModel?.setActivedNode(activedNode.parentId)
+        const parentNode = designer?.documentModel?.getNode(activedNode.parentId)
+        if (parentNode?.componentName === 'Slot') {
+          designer?.documentModel?.setActivedNode(parentNode.parentId as string)
+        } else {
+          designer?.documentModel?.setActivedNode(activedNode.parentId)
+        }
       } else {
         designer?.documentModel?.setActivedNode(
           designer?.documentModel?.getRootNode()?.id as string,

@@ -208,7 +208,6 @@ export class DragDropPlugin extends Plugin {
       this.designer.materialManager.getComponentBehavior(
         targetNode.componentName,
       )
-    console.log(componentMeta, componentBehavior, componentBehavior?.canDrop(componentMeta!), '99999')
 
     if (
       !componentMeta ||
@@ -233,7 +232,16 @@ export class DragDropPlugin extends Plugin {
     const node = this.designer.documentModel?.getNode(target.id)
     if (!node) return
 
-    const nodeAlignData = this.getNodeAlignData(nativeEvent, node)
+    let nodeAlignData = null
+    if (node.componentName === 'Slot') {
+      nodeAlignData = {
+        nodeId: node.id,
+        alignPosition: 'in' as const,
+        alignDirection: 'vertical' as const,
+      }
+    } else {
+      nodeAlignData = this.getNodeAlignData(nativeEvent, node)
+    }
     if (
       !nodeAlignData ||
       !nodeAlignData.nodeId ||

@@ -1,7 +1,11 @@
 import { useActivedNode } from '../../../hooks/useActivedNode'
+import { useMaterialComponentBehavior } from '../../../hooks/useMaterialComponentBehavior'
 
 export function ActivedTool() {
   const { activedNode, domRect, remove } = useActivedNode()
+  const { behavior } = useMaterialComponentBehavior(
+    activedNode?.componentName as string,
+  )
 
   if (!domRect || !activedNode) return null
 
@@ -27,12 +31,14 @@ export function ActivedTool() {
           width: 100,
         }}
       >
-        <button
-          onClick={() => remove()}
-          style={{ fontSize: 10, padding: 0, pointerEvents: 'initial' }}
-        >
-          x
-        </button>
+        {behavior?.canRemove() && (
+          <button
+            onClick={() => remove()}
+            style={{ fontSize: 10, padding: 0, pointerEvents: 'initial' }}
+          >
+            x
+          </button>
+        )}
       </div>
     </div>
   )
