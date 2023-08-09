@@ -10,7 +10,7 @@ export function ComponentRender({ nodeId }: { nodeId: string }) {
   Object.entries(node.props).forEach(([key, val]) => {
     const slotVal = val as JSSlot
     if (slotVal?.type === 'JSSlot' && slotVal.id) {
-      realProps[key] = <ComponentRender nodeId={slotVal.id} />
+      realProps[key] = slotVal.enabled ? <ComponentRender nodeId={slotVal.id} /> : null
     } else {
       realProps[key] = val
     }

@@ -250,6 +250,7 @@ export class DocumentModel {
           self.appendSlot(slotNode)
           realProps[key] = {
             type: 'JSSlot',
+            enabled: true,
             id: slotNode.id,
           }
         } else {

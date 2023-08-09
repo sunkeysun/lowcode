@@ -1,7 +1,7 @@
 import { useActivedNodeProps } from '../../../hooks/useActivedNodeProps'
-import type { ComponentPropSchema, TitleContent } from '../../../types'
+import type { ComponentPropSchema, JSSlot, TitleContent } from '../../../types'
 import * as setters from '../../../setters'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useDesigner } from '../../../hooks/useDesigner'
 import { useActivedNode } from '../../../hooks/useActivedNode'
 
@@ -39,7 +39,6 @@ export function SetterField({
   const SetterComponent = setters[setterName]
 
   useEffect(() => {
-    let slotNodeId = ''
     if (
       !!SetterComponent &&
       typeof value === 'undefined' &&
@@ -47,38 +46,9 @@ export function SetterField({
       !initRef.current
     ) {
       initRef.current = true
-      if (setterName === 'SlotSetter') {
-        const slotNode = designer?.documentModel?.createNode(
-          {
-            title: 'Slot',
-            componentName: 'Slot',
-            props: {},
-            children: [],
-          },
-          activedNode?.id as string,
-        )
-        if (slotNode) {
-          designer?.documentModel?.appendSlot(slotNode)
-          slotNodeId = slotNode.id
-          console.log('append', slotNodeId, {
-            [name]: { ...defaultValue, id: slotNode.id },
-          })
-          onChange({ [name]: { ...defaultValue, id: slotNode.id } })
-        }
-      } else {
-        onChange({ [name]: defaultValue })
-      }
+      onChange({ [name]: defaultValue })
     }
-  }, [
-    SetterComponent,
-    value,
-    defaultValue,
-    onChange,
-    name,
-    setterName,
-    designer,
-    activedNode,
-  ])
+  }, [SetterComponent, value, defaultValue, onChange, name])
 
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>
 

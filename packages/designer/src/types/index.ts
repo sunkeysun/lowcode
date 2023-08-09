@@ -71,6 +71,7 @@ export type JSSlot = {
   type: 'JSSlot'
   value: NodeSchema[]
   id?: string
+  enabled: boolean
   params?: string[]
   title?: string
 }

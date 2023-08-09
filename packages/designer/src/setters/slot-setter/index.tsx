@@ -1,14 +1,16 @@
 import { SetterProps } from '../../types'
 import type { JSSlot } from '../../types'
 
-export function SlotSetter({ value, onChange }: SetterProps<JSSlot | null>) {
+export function SlotSetter({ value, onChange }: SetterProps<JSSlot>) {
   return (
     <label>
       <input
         type="checkbox"
-        checked={!!value}
+        checked={value.enabled}
         onChange={() => {
-          !value ? onChange({ type: 'JSSlot', value: [] }) : onChange(null)
+          value.enabled
+            ? onChange({ ...value, enabled: false })
+            : onChange({ ...value, enabled: true })
         }}
       />
     </label>
