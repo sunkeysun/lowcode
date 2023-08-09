@@ -6,6 +6,11 @@ import { useDesigner } from '../../../hooks/useDesigner'
 import { useActivedNode } from '../../../hooks/useActivedNode'
 
 type SetterName = keyof typeof setters
+type SetterComponent = (p: {
+  value: unknown
+  onChange: (v: unknown) => void
+  [k: string]: unknown
+}) => React.ReactNode
 
 function SetterFieldTitle({ title }: { title: TitleContent }) {
   return <h5>{typeof title === 'string' ? title : title.label}</h5>
@@ -17,8 +22,8 @@ export function SetterField({
   onChange,
 }: {
   schema: ComponentPropSchema
-  value: any
-  onChange: (v: any) => void
+  value: unknown
+  onChange: (v: unknown) => void
 }) {
   const initIdRef = useRef<string>('')
   const { designer } = useDesigner()
@@ -36,7 +41,7 @@ export function SetterField({
     defaultValue = setter.defaultValue
   }
 
-  const SetterComponent = setters[setterName]
+  const SetterComponent = setters[setterName] as SetterComponent
 
   useEffect(() => {
     if (

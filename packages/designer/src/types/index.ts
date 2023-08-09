@@ -91,7 +91,6 @@ export type JSExpression = {
 export interface SetterProps<T = unknown> {
   value: T
   onChange: (v: T) => void
-  onInit: () => void
   [k: string]: unknown
 }
 
