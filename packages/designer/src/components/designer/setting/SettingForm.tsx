@@ -1,7 +1,7 @@
 import { useActivedNodeProps } from '../../../hooks/useActivedNodeProps'
 import type { ComponentPropSchema, JSSlot, TitleContent } from '../../../types'
 import * as setters from '../../../setters'
-import { useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDesigner } from '../../../hooks/useDesigner'
 import { useActivedNode } from '../../../hooks/useActivedNode'
 
@@ -46,9 +46,37 @@ export function SetterField({
       !initRef.current
     ) {
       initRef.current = true
-      onChange({ [name]: defaultValue })
+      if (setterName === 'SlotSetter') {
+        const activedNodeId = activedNode?.id as string
+        const slotDefaultValue = defaultValue as JSSlot
+        const slotNode = designer?.documentModel?.createSlot(
+          activedNodeId,
+          slotDefaultValue,
+        )
+        if (slotNode) {
+          designer?.documentModel?.appendSlot(slotNode)
+          onChange({
+            [name]: {
+              ...slotDefaultValue,
+              id: slotNode.id,
+              enabled: !!slotDefaultValue.value?.length,
+            },
+          })
+        }
+      } else {
+        onChange({ [name]: defaultValue })
+      }
     }
-  }, [SetterComponent, value, defaultValue, onChange, name])
+  }, [
+    SetterComponent,
+    value,
+    defaultValue,
+    onChange,
+    name,
+    setterName,
+    activedNode?.id,
+    designer?.documentModel,
+  ])
 
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>
 

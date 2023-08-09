@@ -223,6 +223,19 @@ export class DocumentModel {
     )
   }
 
+  createSlot(parentId: string, slotProp: JSSlot) {
+    const slotNode = this.createNode(
+      {
+        title: 'Slot',
+        props: {},
+        componentName: 'Slot',
+        children: slotProp.value,
+      },
+      parentId,
+    )
+    return slotNode
+  }
+
   createNode(schema: NodeSchema, parentId: string | null) {
     const childNodes: NodeEntity[] = []
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -238,19 +251,11 @@ export class DocumentModel {
       Object.entries(props).forEach(([key, val]) => {
         const slotVal = val as JSSlot
         if (slotVal?.type === 'JSSlot') {
-          const slotNode = self.createNode(
-            {
-              title: 'Slot',
-              props: {},
-              componentName: 'Slot',
-              children: slotVal.value,
-            },
-            nodeId,
-          )
+          const slotNode = self.createSlot(nodeId, slotVal)
           self.appendSlot(slotNode)
           realProps[key] = {
-            type: 'JSSlot',
-            enabled: true,
+            ...slotVal,
+            enabled: !!slotVal.value?.length,
             id: slotNode.id,
           }
         } else {
