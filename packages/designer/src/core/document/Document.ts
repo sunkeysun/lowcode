@@ -1,9 +1,9 @@
 /**
  * document model
  */
-import { type NodeEntity } from '../store/entities/node'
-import { documentEntity, documentUI, nodeEntity } from '../store'
-import { uniqId } from '../common/util'
+import { type NodeEntity } from '../../store/entities/node'
+import { documentEntity, documentUI, nodeEntity } from '../../store'
+import { uniqId } from '../../common/util'
 import {
   HoverTarget,
   type DragoverTarget,
@@ -12,10 +12,10 @@ import {
   DraggingTarget,
   Props,
   JSSlot,
-} from '../types'
-import { Designer } from '..'
+} from '../../types'
+import { Designer } from '../..'
 
-export class DocumentModel {
+export class Document {
   #id: string
   #rootNode: NodeEntity
   #nodeDomMap = new Map<string, HTMLElement>()

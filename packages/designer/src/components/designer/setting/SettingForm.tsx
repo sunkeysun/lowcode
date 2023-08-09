@@ -55,12 +55,12 @@ export function SetterField({
       initIdRef.current = activedNodeId
       if (setterName === 'SlotSetter') {
         const slotDefaultValue = defaultValue as JSSlot
-        const slotNode = designer?.documentModel?.createSlot(
+        const slotNode = designer?.document?.createSlot(
           activedNodeId,
           slotDefaultValue,
         )
         if (slotNode) {
-          designer?.documentModel?.appendSlot(slotNode)
+          designer?.document?.appendSlot(slotNode)
           onChange({
             [name]: {
               ...slotDefaultValue,
@@ -81,7 +81,7 @@ export function SetterField({
     name,
     setterName,
     activedNode,
-    designer?.documentModel,
+    designer?.document,
   ])
 
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>

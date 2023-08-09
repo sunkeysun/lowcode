@@ -1,12 +1,12 @@
-import { ShellManager } from '.'
+import { Shell } from './'
 import { type EventDriver, DragDropDriver } from '../../shell'
 
 export class Workbench {
   #drivers: EventDriver[] = []
 
-  constructor(container: HTMLElement, shellManager: ShellManager) {
+  constructor(container: HTMLElement, shell: Shell) {
     this.#drivers.push(
-      new DragDropDriver(container, shellManager.dispatchEvent),
+      new DragDropDriver(container, shell.dispatchEvent),
     )
   }
 

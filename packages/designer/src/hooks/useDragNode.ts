@@ -14,9 +14,9 @@ export function useDragNode(nodeId: string) {
         id: nodeId,
         type: 'node',
       }
-      designer?.documentModel?.mountNode(nodeId, ref.current)
+      designer?.document?.mountNode(nodeId, ref.current)
     }
-    return () => designer?.documentModel?.unmountNode(nodeId)
+    return () => designer?.document?.unmountNode(nodeId)
   }, [nodeId, designer])
 
   return { ref }

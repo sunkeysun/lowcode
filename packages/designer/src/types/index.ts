@@ -9,7 +9,7 @@ export interface NodeSchema {
   isLocked?: boolean
 }
 
-export type BehaviorRule = 'move' | 'remove' | 'copy'
+export type BehaviorRule = 'move' | 'remove' | 'copy' | 'hover' | 'select'
 
 export interface ComponentMetaSchema {
   componentName: string
@@ -71,13 +71,13 @@ export type JSSlot = {
   type: 'JSSlot'
   value: NodeSchema[]
   id?: string
-  enabled: boolean
+  enabled?: boolean
   params?: string[]
   title?: string
 }
 
 export type JSFunction = {
-  type: 'JSFunction',
+  type: 'JSFunction'
   value: string
   title?: string
 }

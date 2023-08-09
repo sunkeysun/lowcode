@@ -9,7 +9,7 @@ import { IframeCanvas } from './IframeCanvas';
 
 type EngineEventCls = { new (): EngineEvent; eventName: string }
 
-export class ShellManager {
+export class Shell {
   #workbench: Workbench | null = null
   #iframeCanvas: IframeCanvas | null = null
   #eventBus = new EventEmitter()

@@ -12,6 +12,8 @@ export const Slot: ComponentMetaSchema = {
         'move',
         'remove',
         'copy',
+        'hover',
+        'select',
       ],
     },
   },

@@ -8,15 +8,15 @@ export function useHoverNode() {
   const [domRect, setDomRect] = useState<DOMRect | null>(null)
   const { designer } = useDesigner()
   const { canvasState } = useCanvasState()
-  const hoverNode = useSelector(() => designer!.documentModel!.getHoverTarget())
+  const hoverNode = useSelector(() => designer!.document!.getHoverTarget())
   useEffect(() => {
     if (hoverNode && canvasState) {
-      const nodeDom = designer?.documentModel?.getNodeDom(hoverNode?.target.id)
+      const nodeDom = designer?.document?.getNodeDom(hoverNode?.target.id)
       setDomRect(nodeDom?.getBoundingClientRect() as DOMRect)
     } else {
       setDomRect(null)
     }
-  }, [designer?.documentModel, hoverNode, canvasState])
+  }, [designer?.document, hoverNode, canvasState])
 
   return { hoverNode, domRect }
 }

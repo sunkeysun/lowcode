@@ -18,19 +18,19 @@ export class DragDropPlugin extends Plugin {
   constructor(private readonly designer: Designer) {
     super()
     this.#unsubscribers.push(
-      this.designer.shellManager.subscribeEvent(
+      this.designer.shell.subscribeEvent(
         DragStartEvent,
         this.handleDragStart,
       ),
-      this.designer.shellManager.subscribeEvent(
+      this.designer.shell.subscribeEvent(
         DragEndEvent,
         this.handleDragEnd,
       ),
-      this.designer.shellManager.subscribeEvent(
+      this.designer.shell.subscribeEvent(
         DragOverEvent,
         this.handleDragOver,
       ),
-      this.designer.shellManager.subscribeEvent(
+      this.designer.shell.subscribeEvent(
         DragLeaveEvent,
         this.handleDragLeave,
       ),
@@ -66,7 +66,7 @@ export class DragDropPlugin extends Plugin {
   }
 
   getNodeAlignData(ev: MouseEvent, node: NodeEntity) {
-    const nodeDom = this.designer.documentModel?.getNodeDom(node.id)
+    const nodeDom = this.designer.document?.getNodeDom(node.id)
     if (!nodeDom) return null
     const domRect = nodeDom.getBoundingClientRect()
     const { offsetX, offsetY } = ev
@@ -90,7 +90,7 @@ export class DragDropPlugin extends Plugin {
         const beforeChildId = node.childIds[beforeIndex]
         if (beforeChildId) {
           const beforeNodeDom =
-            this.designer.documentModel?.getNodeDom(beforeChildId)
+            this.designer.document?.getNodeDom(beforeChildId)
           if (beforeNodeDom) {
             nodeId = beforeChildId
             alignDirection = this.getAlignDirection(beforeNodeDom)
@@ -98,7 +98,7 @@ export class DragDropPlugin extends Plugin {
           }
         } else if (afterChildId) {
           const afterNodeDom =
-            this.designer.documentModel?.getNodeDom(afterChildId)
+            this.designer.document?.getNodeDom(afterChildId)
           if (afterNodeDom) {
             nodeId = afterChildId
             alignDirection = this.getAlignDirection(afterNodeDom)
@@ -108,7 +108,7 @@ export class DragDropPlugin extends Plugin {
       }
     } else {
       nodeId = node.id
-      const nodeDom = this.designer.documentModel?.getNodeDom(node.id)
+      const nodeDom = this.designer.document?.getNodeDom(node.id)
       alignDirection = this.getAlignDirection(nodeDom)
       if (alignDirection === 'vertical') {
         if (offsetY / (height - offsetY) <= 1) {
@@ -154,7 +154,7 @@ export class DragDropPlugin extends Plugin {
     const { childIds = [] } = parentNode
     const { clientX, clientY } = ev
     const childId = childIds.find((childId) => {
-      const childDom = this.designer.documentModel?.getNodeDom(childId)
+      const childDom = this.designer.document?.getNodeDom(childId)
       if (!childDom) return false
       const { top, left, right, bottom } = childDom.getBoundingClientRect()
       if (nearType === 'after' && (clientY < top || clientX < left)) {
@@ -175,37 +175,37 @@ export class DragDropPlugin extends Plugin {
     nodeId: string
     alignPosition: AlignPosition | null
   }) {
-    const draggingTarget = this.designer.documentModel?.getDragingTarget()
+    const draggingTarget = this.designer.document?.getDragingTarget()
     if (!draggingTarget) return
     let componentName = ''
 
     if (draggingTarget.type === 'resource') {
-      const resource = this.designer.materialManager.getResource(
+      const resource = this.designer.material.getResource(
         draggingTarget.id,
       )
       if (!resource) return
       componentName = resource.schema.componentName
     } else {
-      const draggingNode = this.designer.documentModel?.getNode(
+      const draggingNode = this.designer.document?.getNode(
         draggingTarget.id,
       )
       if (!draggingNode) return
       componentName = draggingNode.id
     }
 
-    let targetNode = this.designer.documentModel?.getNode(nodeId)
+    let targetNode = this.designer.document?.getNode(nodeId)
     if (targetNode?.componentName === 'Slot') return true
     if (alignPosition !== 'in') {
       const parentId = targetNode?.parentId
       if (!parentId) return
-      targetNode = this.designer.documentModel?.getNode(parentId)
+      targetNode = this.designer.document?.getNode(parentId)
     }
 
     if (!targetNode) return
     const componentMeta =
-      this.designer.materialManager.getComponentMeta(componentName)
+      this.designer.material.getComponentMeta(componentName)
     const componentBehavior =
-      this.designer.materialManager.getComponentBehavior(
+      this.designer.material.getComponentBehavior(
         targetNode.componentName,
       )
 
@@ -222,14 +222,14 @@ export class DragDropPlugin extends Plugin {
     const {
       eventData: { target },
     } = event
-    this.designer.documentModel?.setDraggingTarget(target)
+    this.designer.document?.setDraggingTarget(target)
   }
 
   handleDragOver = (event: DragOverEvent) => {
     const {
       eventData: { target, nativeEvent },
     } = event
-    const node = this.designer.documentModel?.getNode(target.id)
+    const node = this.designer.document?.getNode(target.id)
     if (!node) return
 
     let nodeAlignData = null
@@ -251,7 +251,7 @@ export class DragDropPlugin extends Plugin {
       return
 
     const { nodeId, alignPosition, alignDirection } = nodeAlignData
-    const targetNode = this.designer.documentModel?.getNode(nodeId)
+    const targetNode = this.designer.document?.getNode(nodeId)
     if (!targetNode) return
     const acceptStatus =
       alignPosition !== 'in' && !targetNode.parentId
@@ -265,40 +265,40 @@ export class DragDropPlugin extends Plugin {
       alignPosition,
       alignDirection,
     }
-    this.designer.documentModel?.setDragoverTarget(dragoverTarget)
+    this.designer.document?.setDragoverTarget(dragoverTarget)
   }
 
   handleDragEnd = () => {
-    const draggingTarget = this.designer.documentModel?.getDragingTarget()
-    const dragoverTarget = this.designer.documentModel?.getDragoverTarget()
-    this.designer.documentModel?.setDraggingTarget(null)
-    this.designer.documentModel?.setDragoverTarget(null)
+    const draggingTarget = this.designer.document?.getDragingTarget()
+    const dragoverTarget = this.designer.document?.getDragoverTarget()
+    this.designer.document?.setDraggingTarget(null)
+    this.designer.document?.setDragoverTarget(null)
 
     if (!draggingTarget || dragoverTarget?.acceptStatus !== 'accept') {
       return
     }
 
-    const node = this.designer.documentModel?.getNode(dragoverTarget.nodeId)
+    const node = this.designer.document?.getNode(dragoverTarget.nodeId)
     if (!node) return
 
     let draggingNode = null
     if (draggingTarget.type === 'resource') {
-      const resource = this.designer.materialManager.getResource(
+      const resource = this.designer.material.getResource(
         draggingTarget.id,
       )
       if (!resource) return
-      draggingNode = this.designer.documentModel?.createNode(
+      draggingNode = this.designer.document?.createNode(
         resource.schema,
         null,
       )
     } else {
-      draggingNode = this.designer.documentModel?.getNode(draggingTarget.id)
+      draggingNode = this.designer.document?.getNode(draggingTarget.id)
     }
 
     if (!draggingNode) return
 
     if (dragoverTarget.alignPosition === 'in') {
-      this.designer.documentModel?.appendChild({
+      this.designer.document?.appendChild({
         ...draggingNode,
         parentId: node.id,
       })
@@ -307,14 +307,14 @@ export class DragDropPlugin extends Plugin {
       switch (dragoverTarget.alignPosition) {
         case 'top':
         case 'left':
-          this.designer.documentModel?.insertBefore(
+          this.designer.document?.insertBefore(
             { ...draggingNode, parentId: node.parentId },
             node.id,
           )
           break
         case 'bottom':
         case 'right':
-          this.designer.documentModel?.insertAfter(
+          this.designer.document?.insertAfter(
             { ...draggingNode, parentId: node.parentId },
             node.id,
           )
@@ -324,7 +324,7 @@ export class DragDropPlugin extends Plugin {
   }
 
   handleDragLeave = () => {
-    this.designer.documentModel?.setDragoverTarget(null)
+    this.designer.document?.setDragoverTarget(null)
   }
 
   destroy() {

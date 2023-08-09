@@ -3,6 +3,6 @@ import { useDesigner } from './useDesigner';
 
 export function useActivedDocument() {
   const { designer } = useDesigner()
-  const document = useSelector(() => designer?.documentModel?.getDocument())
+  const document = useSelector(() => designer?.document?.getDocument())
   return { document }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useDesigner } from './useDesigner'
-import { Workbench } from '../core/managers/shell-manager/Workbench'
+import { Workbench } from '../core/shell/Workbench'
 
 export function useWorkbench() {
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -9,7 +9,9 @@ export function useWorkbench() {
 
   useEffect(() => {
     if (containerRef.current && designer && !workbenchRef.current) {
-      workbenchRef.current = designer.shellManager.createWorkbench(containerRef.current)
+      workbenchRef.current = designer.shell.createWorkbench(
+        containerRef.current,
+      )
     }
   }, [designer])
 

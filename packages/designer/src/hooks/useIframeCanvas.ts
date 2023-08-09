@@ -21,7 +21,7 @@ export function useIframeCanvas() {
     const contentWindow = iframeRef.current?.contentWindow
     const contentDocument = iframeRef.current?.contentDocument
     if (contentWindow && contentDocument) {
-      contentWindow[LC_DESIGNER].shellManager.createIframeCanvas(iframeRef.current)
+      contentWindow[LC_DESIGNER].shell.createIframeCanvas(iframeRef.current)
     }
   }
 

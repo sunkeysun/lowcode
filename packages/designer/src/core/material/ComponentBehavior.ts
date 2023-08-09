@@ -39,4 +39,16 @@ export class ComponentBehavior {
       'remove',
     )
   }
+
+  canHover() {
+    return !this.componentMeta.disableBehaviors?.includes(
+      'hover',
+    )
+  }
+
+  canSelect() {
+    return !this.componentMeta.disableBehaviors?.includes(
+      'select',
+    )
+  }
 }

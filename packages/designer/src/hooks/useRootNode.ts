@@ -3,6 +3,6 @@ import { useDesigner } from './useDesigner';
 
 export function useRootNode() {
   const { designer }  = useDesigner()
-  const rootNode = useSelector(() => designer!.documentModel!.getRootNode())
+  const rootNode = useSelector(() => designer!.document!.getRootNode())
   return rootNode
 }

@@ -23,7 +23,7 @@ export function Workbench() {
         ))}
       </ul>
       <div>{JSON.stringify(schema)}</div>
-      <button onClick={() => setSchema(designer?.documentModel?.getSchema())}>
+      <button onClick={() => setSchema(designer?.document?.getSchema())}>
         获取schema
       </button>
       <IframeCanvas />

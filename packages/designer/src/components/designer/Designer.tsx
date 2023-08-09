@@ -13,22 +13,22 @@ export function Designer() {
   const [, setDocumentId] = useState<string>()
 
   useEffect(() => {
-    if (!designer?.documentModel) {
+    if (!designer?.document) {
       designer?.createDocument({
         title: '默认页面',
         componentName: 'Root',
         children: [],
         props: {},
       })
-      setDocumentId(designer?.documentModel?.id)
-      designer?.materialManager.register(
+      setDocumentId(designer?.document?.id)
+      designer?.material.register(
         { ...componentMap, Root, Slot },
         { ...componentMatasMap, Root: RootMeta, Slot: SlotMeta },
       )
     }
   }, [designer])
 
-  if (!designer?.documentModel) {
+  if (!designer?.document) {
     return null
   }
 

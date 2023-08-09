@@ -5,7 +5,7 @@ import { uniqId } from '../../common/util'
 import { ComponentBehavior } from './ComponentBehavior'
 import { ComponentMeta } from './ComponentMeta'
 
-export class MaterialManager {
+export class Material {
   #componentMap = new Map<string, unknown>()
   #componentMetaMap = new Map<string, ComponentMeta>()
   #componentBehaviorMap = new Map<string, ComponentBehavior>()

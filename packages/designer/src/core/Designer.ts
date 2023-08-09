@@ -1,28 +1,28 @@
 /**
  * Designer
  */
-import { store } from '../store'
-import { DocumentModel } from './DocumentModel'
-import { DragDropPlugin, type Plugin } from '../plugins'
 import { type NodeSchema } from '../types'
-import { MaterialManager } from './material-manager'
-import { ShellManager } from './shell-manager'
+import { store } from '../store'
+import { Document } from './document/Document'
+import { DragDropPlugin, type Plugin } from '../plugins'
+import { Material } from './material'
+import { Shell } from './shell'
 import { HoverSelectPlugin } from '../plugins/HoverSelectPlugin'
 import { CanvasMutatePlugin } from '../plugins/CanvasMutatePlugin'
 
 export class Designer {
   #store = store
   #plugins: Plugin[] = []
-  #documentModel: DocumentModel | null = null
-  #materialManager = new MaterialManager(this)
-  #shellManager = new ShellManager(this)
+  #document: Document | null = null
+  #material = new Material(this)
+  #shell = new Shell(this)
 
   constructor() {
     this.initPlugins()
   }
 
-  get shellManager() {
-    return this.#shellManager
+  get shell() {
+    return this.#shell
   }
 
   get store() {
@@ -33,12 +33,12 @@ export class Designer {
     return this.store.getState()
   }
 
-  get documentModel() {
-    return this.#documentModel
+  get document() {
+    return this.#document
   }
 
-  get materialManager() {
-    return this.#materialManager
+  get material() {
+    return this.#material
   }
 
   get plugins() {
@@ -50,7 +50,7 @@ export class Designer {
   }
 
   createDocument(schema: NodeSchema) {
-    this.#documentModel = new DocumentModel(this, schema)
+    this.#document = new Document(this, schema)
   }
 
   initPlugins() {
