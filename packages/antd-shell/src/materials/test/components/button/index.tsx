@@ -1,21 +1,7 @@
-import { forwardRef } from 'react'
+import { ButtonProps, Button as OriginButton } from 'antd';
+import { forwardRef } from 'react';
 
-export const Button = forwardRef<
-  HTMLButtonElement,
-  { htmlType: string; isOk: boolean; object: any; slot: React.ReactNode }
->(({ htmlType, slot }, ref) => {
-  return (
-    <div>
-      <button
-        ref={ref}
-        onClick={() => {
-          /**/
-        }}
-        style={{ marginRight: 50 }}
-      >
-        {htmlType}按钮
-      </button>
-      {slot}
-    </div>
-  )
+export const Button = forwardRef<HTMLElement, ButtonProps>(function (props, ref) {
+  const { slot } = props
+  return <OriginButton {...props} ref={ref}>{slot}</OriginButton>
 })

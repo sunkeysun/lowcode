@@ -15,6 +15,7 @@ export const DesignerProvider = ({
     console.warn('designer not exist.')
     return null
   }
+
   return (
     <DesignerContext.Provider value={designer}>
       <Provider store={designer.store}>{children}</Provider>

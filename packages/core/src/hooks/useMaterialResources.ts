@@ -3,6 +3,12 @@ import { useDesigner } from './useDesigner'
 
 export function useMaterialResources() {
   const { designer } = useDesigner()
-  const resources = useSelector(() => designer?.material.getResources())
+  let resources = useSelector(() => designer?.material.getResources())
+  resources = resources?.filter((resource) => {
+    const behavior = designer?.material.getBehaviorByName(
+      resource.schema.componentName,
+    )
+    return behavior?.canAdd()
+  })
   return { resources }
 }

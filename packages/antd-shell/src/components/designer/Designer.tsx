@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useDesigner } from '@lowcode/core'
+import { useDesigner, useReady } from '@lowcode/core'
 import { Workbench } from './Workbench'
-import * as componentMap from '../../materials/test'
-import * as componentMatasMap from '../../materials/test/meta'
-import { Root } from '../rootMaterials/root'
-import { Root as RootMeta } from '../rootMaterials/root/meta'
-import { Slot } from '../rootMaterials/slot'
-import { Slot as SlotMeta } from '../rootMaterials/slot/meta'
+import { Spin } from 'antd'
 
 export function Designer() {
   const { designer } = useDesigner()
   const [, setDocumentId] = useState<string>()
+  const { isReady } = useReady()
 
   useEffect(() => {
     if (!designer?.document) {
@@ -21,16 +17,14 @@ export function Designer() {
         props: {},
       })
       setDocumentId(designer?.document?.id)
-      designer?.material.register(
-        { ...componentMap, Root, Slot },
-        { ...componentMatasMap, Root: RootMeta, Slot: SlotMeta },
-      )
     }
   }, [designer])
 
-  if (!designer?.document) {
-    return null
-  }
+  if (!designer?.document) return null
 
-  return <Workbench />
+  return (
+    <Spin spinning={!isReady}>
+      <Workbench />
+    </Spin>
+  )
 }

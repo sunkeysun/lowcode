@@ -51,4 +51,10 @@ export class Behavior {
       'select',
     )
   }
+
+  canAdd() {
+    return !this.componentMeta.disableBehaviors?.includes(
+      'add',
+    )
+  }
 }

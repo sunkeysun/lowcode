@@ -10,7 +10,8 @@ export class Material {
   #metaMap = new Map<string, Meta>()
   #behaviorMap = new Map<string, Behavior>()
 
-  constructor(private readonly designer: Designer) {}
+  constructor(private readonly designer: Designer) {
+  }
 
   get componentMap() {
     return this.#componentMap
@@ -88,6 +89,7 @@ export class Material {
     this.initMetas(componentMetaMap)
     this.initBehaviors()
     this.initResources()
+    this.designer.setMaterialReady()
   }
 
   destroy() {

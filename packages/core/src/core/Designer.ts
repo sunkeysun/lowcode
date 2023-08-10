@@ -2,7 +2,7 @@
  * Designer
  */
 import { type NodeSchema } from '../types'
-import { store } from '../store'
+import { projectUI, store } from '../store'
 import { Document } from './document/Document'
 import { DragDropPlugin, type Plugin } from '../plugins'
 import { Material } from './material'
@@ -47,6 +47,14 @@ export class Designer {
 
   get dispatch() {
     return this.store.dispatch
+  }
+
+  get isReady() {
+    return projectUI.selectors.selectReady(this.state)
+  }
+
+  setMaterialReady() {
+    this.dispatch(projectUI.actions.setReady())
   }
 
   createDocument(schema: NodeSchema) {

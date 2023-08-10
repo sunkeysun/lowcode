@@ -1,6 +1,6 @@
 import { useActiveNode, useMaterialBehaviorByName } from '@lowcode/core'
 
-export function ActivedTool() {
+export function ActiveTool() {
   const { activeNode, domRect, removeActiveNode } = useActiveNode()
   const { behavior } = useMaterialBehaviorByName(
     activeNode?.componentName as string,

@@ -1,4 +1,4 @@
-import { type ComponentMetaSchema } from '../../../types'
+import { type ComponentMetaSchema } from '@lowcode/core'
 
 const componentName = 'Root'
 export const Root: ComponentMetaSchema = {
@@ -18,6 +18,7 @@ export const Root: ComponentMetaSchema = {
         'move',
         'remove',
         'copy',
+        'add',
       ],
     },
   },

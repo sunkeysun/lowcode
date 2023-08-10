@@ -196,4 +196,5 @@ export const actions = slice.actions
 export const selectors = {
   selectById: (state: RootState, id: string) =>
     entitySelectors.selectById(state, id),
+  selectAll: (state: RootState) => entitySelectors.selectAll(state),
 }

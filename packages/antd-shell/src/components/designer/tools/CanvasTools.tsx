@@ -1,5 +1,5 @@
 import { useCanvasState } from '@lowcode/core'
-import { ActivedTool } from './ActivedTool'
+import { ActiveTool } from './ActiveTool'
 import { DragoverTool } from './DragoverTool'
 import { HoverTool } from './HoverTool'
 
@@ -17,7 +17,7 @@ export function CanvasTools() {
         overflow: 'hidden',
       }}
     >
-      <ActivedTool />
+      <ActiveTool />
       <HoverTool />
       <DragoverTool />
     </div>

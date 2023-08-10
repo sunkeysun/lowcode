@@ -1,4 +1,4 @@
-import { type ComponentMetaSchema } from '../../../types'
+import { type ComponentMetaSchema } from '@lowcode/core'
 
 const componentName = 'Slot'
 export const Slot: ComponentMetaSchema = {
@@ -14,6 +14,7 @@ export const Slot: ComponentMetaSchema = {
         'copy',
         'hover',
         'select',
+        'add',
       ],
     },
   },

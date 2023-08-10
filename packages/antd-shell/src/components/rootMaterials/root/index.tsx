@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useEffect } from 'react'
 
 export const Root = forwardRef<
   HTMLDivElement,
@@ -7,6 +7,9 @@ export const Root = forwardRef<
     title: string
   }
 >(({ children, title }, ref) => {
+  useEffect(() => {
+    console.log('123')
+  }, [])
   return (
     <div
       ref={ref}

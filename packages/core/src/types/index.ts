@@ -9,7 +9,7 @@ export interface NodeSchema {
   isLocked?: boolean
 }
 
-export type BehaviorRule = 'move' | 'remove' | 'copy' | 'hover' | 'select'
+export type BehaviorRule = 'move' | 'remove' | 'copy' | 'hover' | 'select' | 'add'
 
 export interface ComponentMetaSchema {
   componentName: string
