@@ -4,19 +4,19 @@ import { useDesigner } from './useDesigner'
 import { useEffect } from 'react'
 import { useCanvasState } from './useCanvasState'
 
-export function useHoverNode() {
+export function useHoverTarget() {
   const [domRect, setDomRect] = useState<DOMRect | null>(null)
   const { designer } = useDesigner()
   const { canvasState } = useCanvasState()
-  const hoverNode = useSelector(() => designer!.document!.getHoverTarget())
+  const hoverTarget = useSelector(() => designer!.document!.hoverTarget)
   useEffect(() => {
-    if (hoverNode && canvasState) {
-      const nodeDom = designer?.document?.getNodeDom(hoverNode?.target.id)
+    if (hoverTarget && canvasState) {
+      const nodeDom = designer?.document?.getNodeDomById(hoverTarget?.id)
       setDomRect(nodeDom?.getBoundingClientRect() as DOMRect)
     } else {
       setDomRect(null)
     }
-  }, [designer?.document, hoverNode, canvasState])
+  }, [designer?.document, hoverTarget, canvasState])
 
-  return { hoverNode, domRect }
+  return { hoverTarget, domRect }
 }

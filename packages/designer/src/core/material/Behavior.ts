@@ -1,9 +1,9 @@
-import { type ComponentMeta } from './ComponentMeta'
+import { type Meta } from './Meta'
 
-export class ComponentBehavior {
-  constructor(private readonly componentMeta: ComponentMeta) {}
+export class Behavior {
+  constructor(private readonly componentMeta: Meta) {}
 
-  canDrop(fromComponentMeta: ComponentMeta) {
+  canDrop(fromComponentMeta: Meta) {
     const isContainer = this.componentMeta.isContainer
     if (!isContainer) return false
     const fromNestingRule = fromComponentMeta.configure?.component?.nestingRule

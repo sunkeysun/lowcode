@@ -2,13 +2,13 @@ import { ComponentMetaSchema } from '../../types'
 import { Designer } from '../Designer'
 import { resourceEntity } from '../../store'
 import { uniqId } from '../../common/util'
-import { ComponentBehavior } from './ComponentBehavior'
-import { ComponentMeta } from './ComponentMeta'
+import { Behavior } from './Behavior'
+import { Meta } from './Meta'
 
 export class Material {
   #componentMap = new Map<string, unknown>()
-  #componentMetaMap = new Map<string, ComponentMeta>()
-  #componentBehaviorMap = new Map<string, ComponentBehavior>()
+  #metaMap = new Map<string, Meta>()
+  #behaviorMap = new Map<string, Behavior>()
 
   constructor(private readonly designer: Designer) {}
 
@@ -16,39 +16,39 @@ export class Material {
     return this.#componentMap
   }
 
-  get componentMetaMap() {
-    return this.#componentMetaMap
+  get metaMap() {
+    return this.#metaMap
   }
 
   getResources() {
     return resourceEntity.selectors.selectAll(this.designer.state)
   }
 
-  getResource(id: string) {
+  getResourceById(id: string) {
     return resourceEntity.selectors.selectById(this.designer.state, id)
   }
 
-  getComponentMeta(componentName: string) {
-    return this.componentMetaMap.get(componentName)
+  getMetaByName(componentName: string) {
+    return this.metaMap.get(componentName)
   }
 
-  getComponentBehavior(componentName: string) {
-    return this.#componentBehaviorMap.get(componentName)
+  getBehaviorByName(componentName: string) {
+    return this.#behaviorMap.get(componentName)
   }
 
-  getComponent(componentName: string) {
+  getComponentByName(componentName: string) {
     return this.componentMap.get(componentName)
   }
 
-  getComponentPropsSchema(componentName: string) {
-    const componentMeta = this.getComponentMeta(componentName)
-    return componentMeta?.props
+  getPropsSchemaByName(componentName: string) {
+    const meta = this.getMetaByName(componentName)
+    return meta?.props
   }
 
   initResources() {
-    const resources = Array.from(this.componentMetaMap.values())
-      .map((componentMeta) =>
-        componentMeta.snippets.map(({ title, schema, screenshot }) => ({
+    const resources = Array.from(this.metaMap.values())
+      .map((meta) =>
+        meta.snippets.map(({ title, schema, screenshot }) => ({
           id: uniqId(),
           title,
           screenshot,
@@ -62,20 +62,20 @@ export class Material {
     this.designer.dispatch(resourceEntity.actions.setAll(resources))
   }
 
-  initComponentBehaviors() {
-    Array.from(this.componentMetaMap.values()).forEach((componentMeta) =>
-      this.#componentBehaviorMap.set(
-        componentMeta.componentName,
-        new ComponentBehavior(componentMeta),
+  initBehaviors() {
+    Array.from(this.metaMap.values()).forEach((meta) =>
+      this.#behaviorMap.set(
+        meta.componentName,
+        new Behavior(meta),
       ),
     )
   }
 
-  initComponentMetas(componentMetaMap: Record<string, ComponentMetaSchema>) {
-    Object.values(componentMetaMap).forEach((componentMeta) =>
-      this.#componentMetaMap.set(
-        componentMeta.componentName,
-        new ComponentMeta(componentMeta),
+  initMetas(metaMap: Record<string, ComponentMetaSchema>) {
+    Object.values(metaMap).forEach((meta) =>
+      this.#metaMap.set(
+        meta.componentName,
+        new Meta(meta),
       ),
     )
   }
@@ -85,15 +85,15 @@ export class Material {
     componentMetaMap: Record<string, ComponentMetaSchema>,
   ) {
     this.#componentMap = new Map(Object.entries(componentMap))
-    this.initComponentMetas(componentMetaMap)
-    this.initComponentBehaviors()
+    this.initMetas(componentMetaMap)
+    this.initBehaviors()
     this.initResources()
   }
 
   destroy() {
     this.#componentMap.clear()
-    this.#componentMetaMap.clear()
-    this.#componentBehaviorMap.clear()
+    this.#metaMap.clear()
+    this.#behaviorMap.clear()
     this.designer.dispatch(resourceEntity.actions.removeAll())
   }
 }

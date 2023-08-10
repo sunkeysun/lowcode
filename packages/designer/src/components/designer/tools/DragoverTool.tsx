@@ -1,8 +1,8 @@
-import { useDragoverNode } from '../../../hooks/useDragoverNode'
+import { useDragoverTarget } from '../../../hooks/useDragoverTarget'
 import { capitalize } from '../../../common/util'
 
 export function DragoverTool() {
-  const { dragoverTarget, domRect } = useDragoverNode()
+  const { dragoverTarget, domRect } = useDragoverTarget()
   if (!dragoverTarget || !domRect) return null
   let borderStyle: Record<string, string> = {
     backgroundColor:

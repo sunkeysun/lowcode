@@ -1,9 +1,9 @@
-import { useActivedNodeProps } from '../../../hooks/useActivedNodeProps'
+import { useActiveNodeProps } from '../../../hooks/useActiveNodeProps'
 import type { ComponentPropSchema, JSSlot, TitleContent } from '../../../types'
 import * as setters from '../../../setters'
 import { useEffect, useRef } from 'react'
 import { useDesigner } from '../../../hooks/useDesigner'
-import { useActivedNode } from '../../../hooks/useActivedNode'
+import { useActiveNode } from '../../../hooks/useActiveNode'
 
 type SetterName = keyof typeof setters
 type SetterComponent = (p: {
@@ -23,11 +23,11 @@ export function SetterField({
 }: {
   schema: ComponentPropSchema
   value: unknown
-  onChange: (v: unknown) => void
+  onChange: (v: Record<string, unknown>) => void
 }) {
   const initIdRef = useRef<string>('')
   const { designer } = useDesigner()
-  const { activedNode } = useActivedNode()
+  const { activeNode } = useActiveNode()
   const { name, title, setter } = schema
   let setterName: SetterName | null = null
   let setterProps: Record<string, unknown> = {}
@@ -45,18 +45,18 @@ export function SetterField({
 
   useEffect(() => {
     if (
-      !!activedNode &&
+      !!activeNode &&
       !!SetterComponent &&
       typeof value === 'undefined' &&
       typeof defaultValue !== 'undefined' &&
-      initIdRef.current !== activedNode.id
+      initIdRef.current !== activeNode.id
     ) {
-      const activedNodeId = activedNode.id
-      initIdRef.current = activedNodeId
+      const activeNodeId = activeNode.id
+      initIdRef.current = activeNodeId
       if (setterName === 'SlotSetter') {
         const slotDefaultValue = defaultValue as JSSlot
         const slotNode = designer?.document?.createSlot(
-          activedNodeId,
+          activeNodeId,
           slotDefaultValue,
         )
         if (slotNode) {
@@ -80,7 +80,7 @@ export function SetterField({
     onChange,
     name,
     setterName,
-    activedNode,
+    activeNode,
     designer?.document,
   ])
 
@@ -99,7 +99,7 @@ export function SetterField({
 }
 
 export function SettingForm() {
-  const { schema, props, onChange } = useActivedNodeProps()
+  const { schema, props, onChange } = useActiveNodeProps()
   if (!schema || !props) return null
 
   return (
@@ -111,8 +111,9 @@ export function SettingForm() {
       }}
     >
       <h5>设置表单</h5>
-      {schema.map((setterSchema) => (
+      {schema.map((setterSchema, index) => (
         <SetterField
+          key={index}
           schema={setterSchema}
           value={props[setterSchema.name]}
           onChange={onChange}

@@ -1,10 +1,10 @@
-import { useNodeComponent } from '../hooks/useNodeComponent'
-import { useMaterialComponent } from '../hooks/useMaterialComponent'
+import { useNodeComponentById } from '../hooks/useNodeComponentById'
+import { useMaterialComponentByName } from '../hooks/useMaterialComponentByName'
 import { JSSlot, Props } from '../types'
 
 export function ComponentRender({ nodeId }: { nodeId: string }) {
-  const { ref, node } = useNodeComponent(nodeId)
-  const { Component } = useMaterialComponent(node?.componentName as string)
+  const { ref, node } = useNodeComponentById(nodeId)
+  const { Component } = useMaterialComponentByName(node?.componentName as string)
   if (!node || !Component) return null
   const realProps: Props = {}
   Object.entries(node.props).forEach(([key, val]) => {

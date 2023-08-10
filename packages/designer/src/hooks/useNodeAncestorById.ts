@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux'
 import { useDesigner } from './useDesigner'
 
-export function useNodeParents(nodeId: string) {
+export function useNodeAncestorById(nodeId: string) {
   const { designer } = useDesigner()
   const nodeParents = useSelector(() =>
-    designer!.document!.getNodeParents(nodeId),
+    designer!.document!.getNodeAncestorById(nodeId),
   )
   return { nodeParents }
 }

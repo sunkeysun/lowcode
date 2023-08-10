@@ -1,4 +1,4 @@
-import { Shell } from '.'
+import { Shell } from '..'
 import {
   type EventDriver,
   DragDropDriver,
@@ -6,7 +6,7 @@ import {
   MouseoverDriver,
   MouseclickDriver,
   CanvasMutateDriver,
-} from '../../shell'
+} from '../../../shell'
 
 export class IframeCanvas {
   #drivers: EventDriver[] = []

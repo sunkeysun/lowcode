@@ -40,7 +40,7 @@ export class Document {
     return this.#id
   }
 
-  getDocument() {
+  get document() {
     const document = documentEntity.selectors.selectById(
       this.designer.state,
       this.id,
@@ -48,39 +48,41 @@ export class Document {
     return document
   }
 
-  getRootNode() {
-    const document = this.getDocument()
-    if (!document) return null
+  get rootNode() {
+    if (!this.document) return null
     return nodeEntity.selectors.selectById(
       this.designer.state,
-      document.rootNodeId,
+      this.document.rootNodeId,
     )
   }
 
-  getSchema() {
-    const rootNode = this.getRootNode()
+  get schema() {
+    const rootNode = this.rootNode
     if (!rootNode) return null
     return this.getNodeSchemaById(rootNode.id)
   }
 
-  getActivedNode() {
-    const document = this.getDocument()
+  get activeNode() {
     return nodeEntity.selectors.selectById(
       this.designer.state,
-      document?.activedNodeId as string,
+      this.document?.activedNodeId as string,
     )
   }
 
-  getDragingTarget() {
+  get dragingTarget() {
     return documentUI.selectors.selectDragingTarget(this.designer.state)
   }
 
-  getDragoverTarget() {
+  get dragoverTarget() {
     return documentUI.selectors.selectDragoverTarget(this.designer.state)
   }
 
-  getHoverTarget() {
+  get hoverTarget() {
     return documentUI.selectors.selectHoverTarget(this.designer.state)
+  }
+
+  get canvasState() {
+    return documentUI.selectors.selectCanvasState(this.designer.state)
   }
 
   getNodeSchemaById(nodeId: string) {
@@ -118,26 +120,22 @@ export class Document {
     return schema
   }
 
-  getNode(nodeId: string) {
+  getNodeById(nodeId: string) {
     return nodeEntity.selectors.selectById(this.designer.state, nodeId)
   }
 
-  getNodeParents(nodeId: string) {
-    let node = this.getNode(nodeId)
+  getNodeAncestorById(nodeId: string) {
+    let node = this.getNodeById(nodeId)
     const parents = []
     while (node?.parentId) {
-      node = this.getNode(node.parentId)
+      node = this.getNodeById(node.parentId)
       parents.push(node)
     }
     return parents
   }
 
-  getNodeDom(nodeId: string) {
+  getNodeDomById(nodeId: string) {
     return this.#nodeDomMap.get(nodeId)
-  }
-
-  getCanvasState() {
-    return documentUI.selectors.selectCanvasState(this.designer.state)
   }
 
   setCanvasState(canvasState: CanvasState) {
@@ -291,7 +289,7 @@ export class Document {
 
   mountNode(nodeId: string, dom: HTMLElement) {
     this.#nodeDomMap.set(nodeId, dom)
-    const canvasState = this.getCanvasState()
+    const canvasState = this.canvasState
     canvasState && this.setCanvasState({ ...canvasState })
   }
 

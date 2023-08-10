@@ -108,9 +108,7 @@ export type DragoverTarget = {
   acceptStatus: AcceptStatus
 } | null
 
-export type HoverTarget = {
-  target: LCTarget
-} | null
+export type HoverTarget = LCTarget | null
 
 export interface LCTarget {
   id: string

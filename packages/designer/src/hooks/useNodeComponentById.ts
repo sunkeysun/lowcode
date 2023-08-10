@@ -4,11 +4,11 @@
 import { useEffect, useRef } from 'react'
 import { LC_TARGET } from '../common/constants'
 import { useDesigner } from './useDesigner'
-import { useNode } from './useNode'
+import { useNodeById } from './useNodeById'
 
-export function useNodeComponent(nodeId: string) {
+export function useNodeComponentById(nodeId: string) {
   const { designer } = useDesigner()
-  const { node } = useNode(nodeId)
+  const { node } = useNodeById(nodeId)
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {
     if (ref.current && node) {

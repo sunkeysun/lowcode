@@ -1,9 +1,9 @@
-import { useHoverNode } from '../../../hooks/useHoverNode'
+import { useHoverTarget } from '../../../hooks/useHoverTarget'
 
 export function HoverTool() {
-  const { hoverNode, domRect } = useHoverNode()
+  const { hoverTarget, domRect } = useHoverTarget()
 
-  if (!domRect || !hoverNode) return null
+  if (!domRect || !hoverTarget) return null
 
   return (
     <div

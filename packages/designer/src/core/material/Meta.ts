@@ -1,6 +1,6 @@
 import { ComponentMetaSchema } from '../../types';
 
-export class ComponentMeta {
+export class Meta {
   constructor(private readonly componentMeta: ComponentMetaSchema) {}
 
   get schema() {

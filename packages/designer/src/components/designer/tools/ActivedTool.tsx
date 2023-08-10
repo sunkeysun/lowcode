@@ -1,13 +1,13 @@
-import { useActivedNode } from '../../../hooks/useActivedNode'
-import { useMaterialComponentBehavior } from '../../../hooks/useMaterialComponentBehavior'
+import { useActiveNode } from '../../../hooks/useActiveNode'
+import { useMaterialBehaviorByName } from '../../../hooks/useMaterialBehaviorByName'
 
 export function ActivedTool() {
-  const { activedNode, domRect, remove } = useActivedNode()
-  const { behavior } = useMaterialComponentBehavior(
-    activedNode?.componentName as string,
+  const { activeNode, domRect, remove } = useActiveNode()
+  const { behavior } = useMaterialBehaviorByName(
+    activeNode?.componentName as string,
   )
 
-  if (!domRect || !activedNode) return null
+  if (!domRect || !activeNode) return null
 
   const { top, left, width, height } = domRect
 

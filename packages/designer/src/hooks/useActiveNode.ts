@@ -4,40 +4,38 @@ import { useDesigner } from './useDesigner'
 import { useEffect } from 'react'
 import { useCanvasState } from './useCanvasState'
 
-export function useActivedNode() {
+export function useActiveNode() {
   const [domRect, setDomRect] = useState<DOMRect | null>(null)
   const { designer } = useDesigner()
   const { canvasState } = useCanvasState()
-  const activedNode = useSelector(() =>
-    designer!.document!.getActivedNode(),
-  )
+  const activeNode = useSelector(() => designer!.document!.activeNode)
   useEffect(() => {
-    if (activedNode && canvasState) {
-      const nodeDom = designer?.document?.getNodeDom(activedNode.id)
+    if (activeNode && canvasState) {
+      const nodeDom = designer?.document?.getNodeDomById(activeNode.id)
       const domRect = nodeDom?.getBoundingClientRect() ?? null
       setDomRect(domRect)
     } else {
       setDomRect(null)
     }
-  }, [designer?.document, activedNode, canvasState])
+  }, [designer?.document, activeNode, canvasState])
 
   const remove = () => {
-    if (activedNode?.id) {
-      designer?.document?.removeNode(activedNode.id)
-      if (activedNode.parentId) {
-        const parentNode = designer?.document?.getNode(activedNode.parentId)
+    if (activeNode?.id) {
+      designer?.document?.removeNode(activeNode.id)
+      if (activeNode.parentId) {
+        const parentNode = designer?.document?.getNodeById(activeNode.parentId)
         if (parentNode?.componentName === 'Slot') {
           designer?.document?.setActivedNode(parentNode.parentId as string)
         } else {
-          designer?.document?.setActivedNode(activedNode.parentId)
+          designer?.document?.setActivedNode(activeNode.parentId)
         }
       } else {
         designer?.document?.setActivedNode(
-          designer?.document?.getRootNode()?.id as string,
+          designer?.document?.rootNode?.id as string,
         )
       }
     }
   }
 
-  return { activedNode, domRect, remove }
+  return { activeNode, domRect, remove }
 }

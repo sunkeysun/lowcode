@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import { LC_TARGET } from '../common/constants'
 import { useDesigner } from './useDesigner'
 
-export function useDragNode(nodeId: string) {
+export function useDragNodeById(nodeId: string) {
   const { designer } = useDesigner()
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {

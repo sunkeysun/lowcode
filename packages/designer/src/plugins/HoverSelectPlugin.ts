@@ -10,10 +10,7 @@ export class HoverSelectPlugin extends Plugin {
   constructor(private readonly designer: Designer) {
     super()
     this.#unsubscribers.push(
-      this.designer.shell.subscribeEvent(
-        MouseoverEvent,
-        this.handleMouseover,
-      ),
+      this.designer.shell.subscribeEvent(MouseoverEvent, this.handleMouseover),
       this.designer.shell.subscribeEvent(
         MouseleaveEvent,
         this.handleMouseleave,
@@ -29,9 +26,9 @@ export class HoverSelectPlugin extends Plugin {
     const {
       eventData: { target },
     } = ev
-    const activedNode = this.designer.document?.getActivedNode()
-    const targetNode = this.designer.document?.getNode(target.id)
-    const behavior = this.designer.material.getComponentBehavior(
+    const activedNode = this.designer.document?.activeNode
+    const targetNode = this.designer.document?.getNodeById(target.id)
+    const behavior = this.designer.material.getBehaviorByName(
       targetNode?.componentName as string,
     )
     if (
@@ -43,11 +40,11 @@ export class HoverSelectPlugin extends Plugin {
       this.designer.document?.setHoverTarget(null)
       return
     }
-    this.designer.document?.setHoverTarget({ target })
+    this.designer.document?.setHoverTarget(target)
   }
 
   handleMouseleave = () => {
-    const hoverTarget = this.designer.document?.getHoverTarget()
+    const hoverTarget = this.designer.document?.hoverTarget
     if (!hoverTarget) return
     this.designer.document?.setHoverTarget(null)
   }
@@ -56,14 +53,14 @@ export class HoverSelectPlugin extends Plugin {
     const {
       eventData: { target },
     } = ev
-    const hoverTarget = this.designer.document?.getHoverTarget()
-    const targetNode = this.designer.document?.getNode(target.id)
+    const hoverTarget = this.designer.document?.hoverTarget
+    const targetNode = this.designer.document?.getNodeById(target.id)
     if (!targetNode) return
-    if (hoverTarget?.target.id === target.id) {
+    if (hoverTarget?.id === target.id) {
       this.designer.document?.setHoverTarget(null)
     }
     let activeNodeId = targetNode.id
-    const behavior = this.designer.material.getComponentBehavior(
+    const behavior = this.designer.material.getBehaviorByName(
       targetNode.componentName,
     )
     if (!behavior?.canSelect()) {

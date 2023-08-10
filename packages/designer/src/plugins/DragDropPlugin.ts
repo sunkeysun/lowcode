@@ -18,22 +18,10 @@ export class DragDropPlugin extends Plugin {
   constructor(private readonly designer: Designer) {
     super()
     this.#unsubscribers.push(
-      this.designer.shell.subscribeEvent(
-        DragStartEvent,
-        this.handleDragStart,
-      ),
-      this.designer.shell.subscribeEvent(
-        DragEndEvent,
-        this.handleDragEnd,
-      ),
-      this.designer.shell.subscribeEvent(
-        DragOverEvent,
-        this.handleDragOver,
-      ),
-      this.designer.shell.subscribeEvent(
-        DragLeaveEvent,
-        this.handleDragLeave,
-      ),
+      this.designer.shell.subscribeEvent(DragStartEvent, this.handleDragStart),
+      this.designer.shell.subscribeEvent(DragEndEvent, this.handleDragEnd),
+      this.designer.shell.subscribeEvent(DragOverEvent, this.handleDragOver),
+      this.designer.shell.subscribeEvent(DragLeaveEvent, this.handleDragLeave),
     )
   }
 
@@ -66,7 +54,7 @@ export class DragDropPlugin extends Plugin {
   }
 
   getNodeAlignData(ev: MouseEvent, node: NodeEntity) {
-    const nodeDom = this.designer.document?.getNodeDom(node.id)
+    const nodeDom = this.designer.document?.getNodeDomById(node.id)
     if (!nodeDom) return null
     const domRect = nodeDom.getBoundingClientRect()
     const { offsetX, offsetY } = ev
@@ -90,15 +78,14 @@ export class DragDropPlugin extends Plugin {
         const beforeChildId = node.childIds[beforeIndex]
         if (beforeChildId) {
           const beforeNodeDom =
-            this.designer.document?.getNodeDom(beforeChildId)
+            this.designer.document?.getNodeDomById(beforeChildId)
           if (beforeNodeDom) {
             nodeId = beforeChildId
             alignDirection = this.getAlignDirection(beforeNodeDom)
             alignPosition = alignDirection === 'vertical' ? 'bottom' : 'right'
           }
         } else if (afterChildId) {
-          const afterNodeDom =
-            this.designer.document?.getNodeDom(afterChildId)
+          const afterNodeDom = this.designer.document?.getNodeDomById(afterChildId)
           if (afterNodeDom) {
             nodeId = afterChildId
             alignDirection = this.getAlignDirection(afterNodeDom)
@@ -108,7 +95,7 @@ export class DragDropPlugin extends Plugin {
       }
     } else {
       nodeId = node.id
-      const nodeDom = this.designer.document?.getNodeDom(node.id)
+      const nodeDom = this.designer.document?.getNodeDomById(node.id)
       alignDirection = this.getAlignDirection(nodeDom)
       if (alignDirection === 'vertical') {
         if (offsetY / (height - offsetY) <= 1) {
@@ -154,7 +141,7 @@ export class DragDropPlugin extends Plugin {
     const { childIds = [] } = parentNode
     const { clientX, clientY } = ev
     const childId = childIds.find((childId) => {
-      const childDom = this.designer.document?.getNodeDom(childId)
+      const childDom = this.designer.document?.getNodeDomById(childId)
       if (!childDom) return false
       const { top, left, right, bottom } = childDom.getBoundingClientRect()
       if (nearType === 'after' && (clientY < top || clientX < left)) {
@@ -175,39 +162,33 @@ export class DragDropPlugin extends Plugin {
     nodeId: string
     alignPosition: AlignPosition | null
   }) {
-    const draggingTarget = this.designer.document?.getDragingTarget()
+    const draggingTarget = this.designer.document?.dragingTarget
     if (!draggingTarget) return
     let componentName = ''
 
     if (draggingTarget.type === 'resource') {
-      const resource = this.designer.material.getResource(
-        draggingTarget.id,
-      )
+      const resource = this.designer.material.getResourceById(draggingTarget.id)
       if (!resource) return
       componentName = resource.schema.componentName
     } else {
-      const draggingNode = this.designer.document?.getNode(
-        draggingTarget.id,
-      )
+      const draggingNode = this.designer.document?.getNodeById(draggingTarget.id)
       if (!draggingNode) return
       componentName = draggingNode.id
     }
 
-    let targetNode = this.designer.document?.getNode(nodeId)
+    let targetNode = this.designer.document?.getNodeById(nodeId)
     if (targetNode?.componentName === 'Slot') return true
     if (alignPosition !== 'in') {
       const parentId = targetNode?.parentId
       if (!parentId) return
-      targetNode = this.designer.document?.getNode(parentId)
+      targetNode = this.designer.document?.getNodeById(parentId)
     }
 
     if (!targetNode) return
-    const componentMeta =
-      this.designer.material.getComponentMeta(componentName)
-    const componentBehavior =
-      this.designer.material.getComponentBehavior(
-        targetNode.componentName,
-      )
+    const componentMeta = this.designer.material.getMetaByName(componentName)
+    const componentBehavior = this.designer.material.getBehaviorByName(
+      targetNode.componentName,
+    )
 
     if (
       !componentMeta ||
@@ -229,7 +210,7 @@ export class DragDropPlugin extends Plugin {
     const {
       eventData: { target, nativeEvent },
     } = event
-    const node = this.designer.document?.getNode(target.id)
+    const node = this.designer.document?.getNodeById(target.id)
     if (!node) return
 
     let nodeAlignData = null
@@ -251,7 +232,7 @@ export class DragDropPlugin extends Plugin {
       return
 
     const { nodeId, alignPosition, alignDirection } = nodeAlignData
-    const targetNode = this.designer.document?.getNode(nodeId)
+    const targetNode = this.designer.document?.getNodeById(nodeId)
     if (!targetNode) return
     const acceptStatus =
       alignPosition !== 'in' && !targetNode.parentId
@@ -269,8 +250,8 @@ export class DragDropPlugin extends Plugin {
   }
 
   handleDragEnd = () => {
-    const draggingTarget = this.designer.document?.getDragingTarget()
-    const dragoverTarget = this.designer.document?.getDragoverTarget()
+    const draggingTarget = this.designer.document?.dragingTarget
+    const dragoverTarget = this.designer.document?.dragoverTarget
     this.designer.document?.setDraggingTarget(null)
     this.designer.document?.setDragoverTarget(null)
 
@@ -278,21 +259,16 @@ export class DragDropPlugin extends Plugin {
       return
     }
 
-    const node = this.designer.document?.getNode(dragoverTarget.nodeId)
+    const node = this.designer.document?.getNodeById(dragoverTarget.nodeId)
     if (!node) return
 
     let draggingNode = null
     if (draggingTarget.type === 'resource') {
-      const resource = this.designer.material.getResource(
-        draggingTarget.id,
-      )
+      const resource = this.designer.material.getResourceById(draggingTarget.id)
       if (!resource) return
-      draggingNode = this.designer.document?.createNode(
-        resource.schema,
-        null,
-      )
+      draggingNode = this.designer.document?.createNode(resource.schema, null)
     } else {
-      draggingNode = this.designer.document?.getNode(draggingTarget.id)
+      draggingNode = this.designer.document?.getNodeById(draggingTarget.id)
     }
 
     if (!draggingNode) return

@@ -5,7 +5,7 @@ import { type Designer } from '../Designer';
 import { type EngineEvent } from '../../shell/events/EngineEvent'
 import EventEmitter from 'eventemitter3'
 import { Workbench } from './Workbench';
-import { IframeCanvas } from './IframeCanvas';
+import { IframeCanvas } from './canvas/IframeCanvas';
 
 type EngineEventCls = { new (): EngineEvent; eventName: string }
 

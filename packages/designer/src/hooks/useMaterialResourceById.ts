@@ -4,7 +4,7 @@
 import { useEffect, useRef } from 'react';
 import { LC_TARGET } from '../common/constants';
 
-export function useMaterialResourceComponent(resourceId: string) {
+export function useMaterialResourceById(resourceId: string) {
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {
     if (ref.current) {
