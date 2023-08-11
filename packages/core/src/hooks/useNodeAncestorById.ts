@@ -3,8 +3,8 @@ import { useDesigner } from './useDesigner'
 
 export function useNodeAncestorById(nodeId: string) {
   const { designer } = useDesigner()
-  const nodeParents = useSelector(() =>
+  const nodeAncestor = useSelector(() =>
     designer!.document!.getNodeAncestorById(nodeId),
   )
-  return { nodeParents }
+  return { nodeAncestor }
 }

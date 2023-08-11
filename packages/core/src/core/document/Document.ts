@@ -126,12 +126,12 @@ export class Document {
 
   getNodeAncestorById(nodeId: string) {
     let node = this.getNodeById(nodeId)
-    const parents = []
+    const ancestor = []
     while (node?.parentId) {
       node = this.getNodeById(node.parentId)
-      parents.push(node)
+      ancestor.push(node)
     }
-    return parents
+    return ancestor
   }
 
   getNodeDomById(nodeId: string) {
