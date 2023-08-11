@@ -2,6 +2,7 @@ import { useDragoverTarget, capitalize } from '@lowcode/core'
 
 export function DragoverTool() {
   const { dragoverTarget, domRect } = useDragoverTarget()
+
   if (!dragoverTarget || !domRect) return null
   let borderStyle: Record<string, string> = {
     backgroundColor:

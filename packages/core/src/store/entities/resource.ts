@@ -16,7 +16,7 @@ const adapter = createEntityAdapter<ResourceEntity>({})
 const initialState = adapter.getInitialState()
 
 export const name = 'resource'
-export const slice = createSlice({
+const slice = createSlice({
   name,
   initialState,
   reducers: {

@@ -15,7 +15,7 @@ const adapter = createEntityAdapter<DocumentEntity>({})
 const initialState = adapter.getInitialState()
 
 export const name = 'document'
-export const slice = createSlice({
+const slice = createSlice({
   name,
   initialState,
   reducers: {

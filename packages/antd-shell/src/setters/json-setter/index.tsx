@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
-import type { SetterProps } from '../../types'
+import type { SetterProps } from '@lowcode/core'
+import { Input } from 'antd'
 
 export function JsonSetter({
   value,
@@ -22,7 +23,7 @@ export function JsonSetter({
   }, [editJson])
 
   return (
-    <textarea
+    <Input.TextArea
       value={editJson}
       onChange={(e) => setEditJson(e.target.value)}
       onBlur={() => onChange(jsonObj)}

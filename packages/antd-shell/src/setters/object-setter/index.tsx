@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { EditOutlined } from '@ant-design/icons'
+import type { SetterProps, ComponentPropSchema } from '@lowcode/core'
 import { SetterField } from '../../components/designer/setting/SettingForm'
-import type { SetterProps, ComponentPropSchema } from '../../types'
+import { Popover, Row, Col } from 'antd'
 
 export interface ObjectSetterProps
   extends SetterProps<Record<string, unknown>> {
@@ -31,39 +32,34 @@ function RowSetter(props: ObjectSetterProps) {
     value,
     onChange,
   } = props
-  const [isOpenPopup, setIsOpenPopup] = useState(false)
   const inlineItems = items.slice(0, 2)
   return (
-    <>
-      <div
-        style={{
-          display: 'flex',
-        }}
-      >
-        {items.length > 2 && (
-          <button onClick={() => setIsOpenPopup(true)}>+</button>
-        )}
-        {inlineItems.map((item, index) => (
+    <Row
+      style={{
+        display: 'flex',
+      }}
+    >
+      {items.length > 2 && (
+        <Col>
+          <Popover
+            placement="left"
+            title="编辑数据"
+            content={<FormSetter {...props} />}
+          >
+            <EditOutlined />
+          </Popover>
+        </Col>
+      )}
+      {inlineItems.map((item, index) => (
+        <Col key={index}>
           <SetterField
-            key={index}
             schema={item}
             value={value?.[item.name]}
             onChange={onChange}
           />
-        ))}
-      </div>
-      <div
-        style={{
-          position: 'fixed',
-          display: isOpenPopup ? 'block' : 'none',
-          top: 0,
-          left: 0,
-        }}
-      >
-        <button onClick={() => setIsOpenPopup(false)}>x</button>
-        <FormSetter {...props} />
-      </div>
-    </>
+        </Col>
+      ))}
+    </Row>
   )
 }
 

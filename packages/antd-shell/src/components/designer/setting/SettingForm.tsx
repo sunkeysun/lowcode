@@ -1,13 +1,10 @@
 import {
-  useDesigner,
-  useActiveNode,
   useActiveNodeProps,
-  ComponentPropSchema,
-  JSSlot,
-  TitleContent,
+  useSetterField,
+  type ComponentPropSchema,
 } from '@lowcode/core'
 import * as setters from '../../../setters'
-import { useEffect, useRef } from 'react'
+import { Form } from 'antd'
 
 type SetterName = keyof typeof setters
 type SetterComponent = (p: {
@@ -15,10 +12,6 @@ type SetterComponent = (p: {
   onChange: (v: unknown) => void
   [k: string]: unknown
 }) => React.ReactNode
-
-function SetterFieldTitle({ title }: { title: TitleContent }) {
-  return <h5>{typeof title === 'string' ? title : title.label}</h5>
-}
 
 export function SetterField({
   schema,
@@ -29,76 +22,23 @@ export function SetterField({
   value: unknown
   onChange: (v: Record<string, unknown>) => void
 }) {
-  const initIdRef = useRef<string>('')
-  const { designer } = useDesigner()
-  const { activeNode } = useActiveNode()
-  const { name, title, setter } = schema
-  let setterName: SetterName | null = null
-  let setterProps: Record<string, unknown> = {}
-  let defaultValue: unknown
-  if (typeof setter === 'string') {
-    setterName = setter as SetterName
-    setterProps = {}
-  } else {
-    setterName = setter.componentName as SetterName
-    setterProps = setter.props
-    defaultValue = setter.defaultValue
-  }
-
-  const SetterComponent = setters[setterName] as SetterComponent
-
-  useEffect(() => {
-    if (
-      !!activeNode &&
-      !!SetterComponent &&
-      typeof value === 'undefined' &&
-      typeof defaultValue !== 'undefined' &&
-      initIdRef.current !== activeNode.id
-    ) {
-      const activeNodeId = activeNode.id
-      initIdRef.current = activeNodeId
-      if (setterName === 'SlotSetter') {
-        const slotDefaultValue = defaultValue as JSSlot
-        const slotNode = designer?.document?.createSlot(
-          activeNodeId,
-          slotDefaultValue,
-        )
-        if (slotNode) {
-          designer?.document?.appendSlot(slotNode)
-          onChange({
-            [name]: {
-              ...slotDefaultValue,
-              id: slotNode.id,
-              enabled: !!slotDefaultValue.value?.length,
-            },
-          })
-        }
-      } else {
-        onChange({ [name]: defaultValue })
-      }
-    }
-  }, [
-    SetterComponent,
+  const { name, title, setterName, setterProps } = useSetterField({
+    schema,
     value,
-    defaultValue,
     onChange,
-    name,
-    setterName,
-    activeNode,
-    designer?.document,
-  ])
+  })
 
+  const SetterComponent = setters[setterName as SetterName] as SetterComponent
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>
 
   return (
-    <>
-      <SetterFieldTitle title={title} />
+    <Form.Item label={typeof title === 'string' ? title : title.label}>
       <SetterComponent
         {...setterProps}
         value={value}
         onChange={(v: unknown) => onChange({ [name]: v })}
       />
-    </>
+    </Form.Item>
   )
 }
 
@@ -107,14 +47,7 @@ export function SettingForm() {
   if (!schema || !props) return null
 
   return (
-    <div
-      style={{
-        width: 200,
-        border: '1px solid',
-        marginLeft: 800,
-      }}
-    >
-      <h5>设置表单</h5>
+    <Form title="设置表单">
       {schema.map((setterSchema, index) => (
         <SetterField
           key={index}
@@ -123,6 +56,6 @@ export function SettingForm() {
           onChange={onChange}
         />
       ))}
-    </div>
+    </Form>
   )
 }

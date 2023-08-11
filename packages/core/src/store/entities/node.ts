@@ -120,7 +120,7 @@ function mergeProps(props: Props, changes: Record<string, unknown>) {
 }
 
 export const name = 'node'
-export const slice = createSlice({
+const slice = createSlice({
   name,
   initialState: adapter.getInitialState(),
   reducers: {

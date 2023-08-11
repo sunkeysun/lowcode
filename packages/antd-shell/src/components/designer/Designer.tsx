@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDesigner, useReady } from '@lowcode/core'
-import { Workbench } from './Workbench'
+import { Workbench } from './layout/Workbench'
 import { Spin } from 'antd'
 
 export function Designer() {

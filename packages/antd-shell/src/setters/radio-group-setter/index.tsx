@@ -1,7 +1,8 @@
-import type { SetterProps } from '../../types';
+import { Radio } from 'antd'
+import type { SetterProps } from '@lowcode/core'
 
 export interface RadioGroupSetterProps extends SetterProps<unknown> {
-  options: Array<{ value: unknown, label: string}>
+  options: Array<{ value: string | number | boolean; label: string }>
 }
 
 export function RadioGroupSetter({
@@ -9,19 +10,5 @@ export function RadioGroupSetter({
   onChange,
   options,
 }: RadioGroupSetterProps) {
-  return (
-    <>
-      {options.map((option) => (
-        <label>
-          <input
-            type="radio"
-            checked={value === option.value}
-            value={option.value as string}
-            onClick={() => onChange(option.value)}
-          />
-          {option.label}
-        </label>
-      ))}
-    </>
-  )
+  return <Radio.Group value={value} onChange={onChange} options={options} />
 }

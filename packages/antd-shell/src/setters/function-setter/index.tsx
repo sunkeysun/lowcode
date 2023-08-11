@@ -1,13 +1,16 @@
-import type { SetterProps, JSFunction } from '../../types'
+import type { SetterProps, JSFunction } from '@lowcode/core'
+import { Input } from 'antd'
 
 export function FunctionSetter({
   value,
   onChange,
 }: SetterProps<JSFunction | null>) {
   return (
-    <input
+    <Input
       value={value?.value}
-      onChange={(e) => onChange({ type: 'JSFunction', value: e.target.value })}
+      onChange={(evt) =>
+        onChange({ type: 'JSFunction', value: evt.target.value })
+      }
     />
   )
 }

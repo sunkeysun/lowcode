@@ -1,14 +1,6 @@
-import type { SetterProps } from '../../types'
+import type { SetterProps } from '@lowcode/core'
+import { Switch } from 'antd'
 
 export function BoolSetter({ value, onChange }: SetterProps<boolean>) {
-  return (
-    <label>
-      布尔设置器
-      <input
-        type="checkbox"
-        checked={value === true}
-        onChange={() => onChange(!value)}
-      />
-    </label>
-  )
+  return <Switch checked={value} onChange={onChange} />
 }

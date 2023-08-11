@@ -35,7 +35,7 @@ const slice = createSlice({
 })
 
 export const reducer = slice.reducer
-export const actions = slice.actions
+export const actions = { ...slice.actions }
 export const selectors = {
   selectState: (state: RootState) => state.ui.projectUI,
   selectReady: (state: RootState) => state.ui.projectUI.isReady,

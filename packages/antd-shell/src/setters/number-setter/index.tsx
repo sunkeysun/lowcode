@@ -1,11 +1,12 @@
-import { SetterProps } from '../../types'
+import type { SetterProps } from '@lowcode/core'
+import { InputNumber } from 'antd'
 
 export function NumberSetter({ value, onChange }: SetterProps<number>) {
   return (
-    <input
+    <InputNumber
       type="number"
       value={value}
-      onChange={(e) => onChange(+e.target.value)}
+      onChange={(value) => onChange(value as number)}
     />
   )
 }

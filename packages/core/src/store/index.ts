@@ -12,8 +12,8 @@ export const store = configureStore({
   reducer: {
     entities: combineReducers({
       [documentEntity.name]: documentEntity.reducer,
-      [nodeEntity.slice.name]: nodeEntity.slice.reducer,
-      [resourceEntity.slice.name]: resourceEntity.slice.reducer,
+      [nodeEntity.name]: nodeEntity.reducer,
+      [resourceEntity.name]: resourceEntity.reducer,
     }),
     ui: combineReducers({
       [documentUI.name]: documentUI.reducer,
