@@ -7,13 +7,13 @@ export function DragoverTool() {
   let borderStyle: Record<string, string> = {
     backgroundColor:
       dragoverTarget.acceptStatus === 'accept'
-        ? 'rgba(0, 0, 255, 0.3)'
+        ? 'rgba(0,121,242,0.04)'
         : 'rgba(255, 0, 0, 0.3)',
   }
   if (dragoverTarget.alignPosition !== 'in') {
     borderStyle = {
       [`border${capitalize(dragoverTarget.alignPosition)}`]: `3px solid ${
-        dragoverTarget.acceptStatus === 'accept' ? 'blue' : 'red'
+        dragoverTarget.acceptStatus === 'accept' ? '#197aff' : 'red'
       }`,
     }
   }

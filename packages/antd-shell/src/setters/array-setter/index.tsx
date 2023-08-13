@@ -28,7 +28,7 @@ export function ArraySetter({
           </Col>
           <Col>
             <DeleteOutlined
-              onChange={() =>
+              onClick={() =>
                 onChange(valueArr.filter((_, idx) => index !== idx))
               }
             />

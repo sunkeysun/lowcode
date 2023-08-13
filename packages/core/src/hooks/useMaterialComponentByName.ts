@@ -6,8 +6,8 @@ export function useMaterialComponentByName(componentName: string) {
   const Component = useSelector(() =>
     designer?.material.getComponentByName(componentName),
   ) as React.FC<{
-    children: React.ReactNode
-    ref: React.RefObject<HTMLElement>
+    children?: React.ReactNode
+    ref: (ref: HTMLElement) => void
   }>
 
   return { Component }

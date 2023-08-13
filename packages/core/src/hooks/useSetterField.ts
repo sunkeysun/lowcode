@@ -15,7 +15,7 @@ export function useSetterField({
   const initIdRef = useRef<string>('')
   const { designer } = useDesigner()
   const { activeNode } = useActiveNode()
-  const { name, title, setter } = schema
+  const { name, title, setter, display } = schema
   let setterName = ''
   let setterProps: Record<string, unknown> = {}
   let defaultValue: unknown
@@ -59,5 +59,5 @@ export function useSetterField({
     }
   }, [value, defaultValue, onChange, name, activeNode, designer?.document, setterName])
 
-  return { name, title, setterName, setterProps }
+  return { name, title, display, setterName, setterProps }
 }

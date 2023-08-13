@@ -1,4 +1,4 @@
-import { type ComponentMetaSchema } from '../../../../types'
+import { type ComponentMetaSchema } from '@lowcode/core'
 
 const componentName = 'Form'
 export const Form: ComponentMetaSchema = {

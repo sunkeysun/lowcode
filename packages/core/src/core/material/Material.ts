@@ -1,9 +1,10 @@
-import { ComponentMetaSchema } from '../../types'
+import { ComponentMetaSchema, AssetSchema } from '../../types'
 import { Designer } from '../Designer'
 import { resourceEntity } from '../../store'
 import { uniqId } from '../../common/util'
 import { Behavior } from './Behavior'
 import { Meta } from './Meta'
+import { Asset } from './Asset'
 
 export class Material {
   #componentMap = new Map<string, unknown>()
@@ -79,6 +80,14 @@ export class Material {
         new Meta(meta),
       ),
     )
+  }
+
+  loadAsset(assetJson: AssetSchema) {
+    // this.#componentMap = new Map(Object.entries(componentMap))
+    // this.initMetas(componentMetaMap)
+    // this.initBehaviors()
+    // this.initResources()
+    // this.designer.setMaterialReady()
   }
 
   register(

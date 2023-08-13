@@ -1,7 +1,7 @@
 /**
  * dragover event
  */
-import type { LCTarget } from 'src/types'
+import type { LCTarget } from '../../types'
 import { EngineEvent } from './EngineEvent'
 
 export interface DragOverEventData {

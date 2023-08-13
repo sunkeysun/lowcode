@@ -13,7 +13,8 @@ export function HoverTool() {
         left: domRect.left,
         width: domRect.width,
         height: domRect.height,
-        border: '1px dashed red',
+        border: '1px dashed #197aff',
+        backgroundColor: 'rgba(0,121,242,.04)',
         pointerEvents: 'none',
         boxSizing: 'border-box',
       }}

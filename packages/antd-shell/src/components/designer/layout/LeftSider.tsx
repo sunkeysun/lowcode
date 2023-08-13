@@ -15,7 +15,8 @@ export function LeftSider() {
       theme="light"
       collapsible
       trigger={null}
-      width={348}
+      width={314}
+      collapsedWidth={48}
       collapsed={!activePanel}
     >
       <Layout style={{ flexDirection: 'row', height: '100%' }}>
@@ -43,7 +44,7 @@ export function LeftSider() {
             ]}
           />
         </Layout>
-        <Layout style={{ position: 'relative', overflow: 'hidden' }}>
+        <Layout style={{ position: 'relative' }}>
           <ResourcePanel
             open={activePanel === 'resource'}
             onClose={() => setActivePanel('')}

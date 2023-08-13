@@ -4,7 +4,7 @@ import {
   type ComponentPropSchema,
 } from '@lowcode/core'
 import * as setters from '../../../setters'
-import { Form } from 'antd'
+import { Form, Layout, Tabs } from 'antd'
 
 type SetterName = keyof typeof setters
 type SetterComponent = (p: {
@@ -22,7 +22,7 @@ export function SetterField({
   value: unknown
   onChange: (v: Record<string, unknown>) => void
 }) {
-  const { name, title, setterName, setterProps } = useSetterField({
+  const { name, title, display, setterName, setterProps } = useSetterField({
     schema,
     value,
     onChange,
@@ -31,8 +31,11 @@ export function SetterField({
   const SetterComponent = setters[setterName as SetterName] as SetterComponent
   if (!SetterComponent) return <div>Setter未实现({setterName})</div>
 
-  return (
-    <Form.Item label={typeof title === 'string' ? title : title.label}>
+  const formItem = (
+    <Form.Item
+      label={typeof title === 'string' ? title : title.label}
+      style={{ marginBottom: 16 }}
+    >
       <SetterComponent
         {...setterProps}
         value={value}
@@ -40,6 +43,12 @@ export function SetterField({
       />
     </Form.Item>
   )
+
+  if (display === 'block') {
+    return <Form layout="vertical">{formItem}</Form>
+  }
+
+  return formItem
 }
 
 export function SettingForm() {
@@ -47,15 +56,29 @@ export function SettingForm() {
   if (!schema || !props) return null
 
   return (
-    <Form title="设置表单">
-      {schema.map((setterSchema, index) => (
-        <SetterField
-          key={index}
-          schema={setterSchema}
-          value={props[setterSchema.name]}
-          onChange={onChange}
-        />
-      ))}
-    </Form>
+    <Tabs
+      activeKey="props"
+      centered
+      items={[
+        {
+          key: 'props',
+          label: '属性',
+          children: (
+            <Layout style={{ padding: 12, backgroundColor: 'transparent' }}>
+              <Form colon={false} component={false} title="设置表单">
+                {schema.map((setterSchema, index) => (
+                  <SetterField
+                    key={index}
+                    schema={setterSchema}
+                    value={props[setterSchema.name]}
+                    onChange={onChange}
+                  />
+                ))}
+              </Form>
+            </Layout>
+          ),
+        },
+      ]}
+    />
   )
 }

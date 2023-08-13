@@ -1,4 +1,4 @@
-import { type ComponentMetaSchema } from '../../../../types'
+import { type ComponentMetaSchema } from '@lowcode/core'
 
 const componentName = 'Input'
 export const Input: ComponentMetaSchema = {
@@ -6,7 +6,7 @@ export const Input: ComponentMetaSchema = {
   title: '输入框',
   props: [
     {
-      name: 'defaultValue',
+      name: 'value',
       title: { label: '默认值', tip: '默认内容' },
       setter: 'StringSetter',
     },
@@ -17,7 +17,7 @@ export const Input: ComponentMetaSchema = {
       schema: {
         componentName,
         props: {
-          defaultValue: '默认哈哈哈',
+          value: '默认哈哈哈',
         },
       },
     },

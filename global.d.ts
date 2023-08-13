@@ -1,5 +1,4 @@
-import { Designer } from './src'
-import { type LCTarget } from './src/types'
+import { Designer, LCTarget } from '@lowcode/core'
 
 declare global {
   interface HTMLElement {

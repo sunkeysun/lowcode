@@ -26,6 +26,10 @@ function ComponentRender({ nodeId }: { nodeId: string }) {
     }
   })
 
+  if (!node.childIds?.length) {
+    return <Component {...realProps} ref={ref} />
+  }
+
   return (
     <Component {...realProps} ref={ref}>
       {node.childIds?.map?.((nodeId, index) => (

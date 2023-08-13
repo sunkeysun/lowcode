@@ -129,7 +129,9 @@ export class Document {
     const ancestor = []
     while (node?.parentId) {
       node = this.getNodeById(node.parentId)
-      ancestor.push(node)
+      if (node?.componentName !== 'Slot') {
+        ancestor.push(node)
+      }
     }
     return ancestor
   }
@@ -271,8 +273,8 @@ export class Document {
         childIds: !children?.length
           ? []
           : children.map(
-              (child: NodeSchema) => create(child, nodeId, documentId).id,
-            ),
+            (child: NodeSchema) => create(child, nodeId, documentId).id,
+          ),
         hidden: false,
         isLocked: false,
       }

@@ -46,6 +46,18 @@ export interface ComponentResource extends ComponentSnippet {
   id: string
 }
 
+export interface AssetSchema {
+  packages: AssetPackage[]
+}
+
+export interface AssetPackage {
+  package: string
+  version: string
+  urls: string[]
+  editUrls: string[]
+  components: string[]
+}
+
 export interface Materal<T = unknown> {
   components: Record<string, T>
   componentMetas: Record<string, ComponentMetaSchema>
