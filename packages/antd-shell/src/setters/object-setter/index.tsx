@@ -1,7 +1,7 @@
 import { EditOutlined } from '@ant-design/icons'
+import { Popover } from 'antd'
 import type { SetterProps, ComponentPropSchema } from '@lowcode/core'
 import { SetterField } from '../../components/designer/setting/SettingForm'
-import { Popover, Row, Col } from 'antd'
 
 export interface ObjectSetterProps
   extends SetterProps<Record<string, unknown>> {
@@ -34,32 +34,27 @@ function RowSetter(props: ObjectSetterProps) {
   } = props
   const inlineItems = items.slice(0, 2)
   return (
-    <Row
-      style={{
-        display: 'flex',
-      }}
-    >
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       {items.length > 2 && (
-        <Col>
-          <Popover
-            placement="left"
-            title="编辑数据"
-            content={<FormSetter {...props} />}
-          >
-            <EditOutlined />
-          </Popover>
-        </Col>
+        <Popover
+          trigger="click"
+          placement="left"
+          title="编辑数据"
+          content={<FormSetter {...props} />}
+        >
+          <EditOutlined />
+        </Popover>
       )}
       {inlineItems.map((item, index) => (
-        <Col key={index}>
-          <SetterField
-            schema={item}
-            value={value?.[item.name]}
-            onChange={onChange}
-          />
-        </Col>
+        <SetterField
+          key={index}
+          schema={{ ...item, title: '' }}
+          value={value?.[item.name]}
+          style={{ marginBottom: 0, marginLeft: 4, marginRight: 4 }}
+          onChange={onChange}
+        />
       ))}
-    </Row>
+    </div>
   )
 }
 

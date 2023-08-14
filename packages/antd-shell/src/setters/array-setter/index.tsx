@@ -1,7 +1,6 @@
 import { SetterField } from '../../components/designer/setting/SettingForm'
 import type { SetterProps, SetterType } from '@lowcode/core'
-import { Row, Col } from 'antd'
-import { DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, DragOutlined } from '@ant-design/icons'
 
 export function ArraySetter({
   itemSetter,
@@ -14,26 +13,25 @@ export function ArraySetter({
   return (
     <>
       {valueArr?.map((v, index) => (
-        <Row>
-          <Col>
-            <SetterField
-              schema={{
-                title: '',
-                name: String(index),
-                setter,
-              }}
-              value={v}
-              onChange={onChange}
-            />
-          </Col>
-          <Col>
-            <DeleteOutlined
-              onClick={() =>
-                onChange(valueArr.filter((_, idx) => index !== idx))
-              }
-            />
-          </Col>
-        </Row>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <SetterField
+            schema={{
+              title: '',
+              name: String(index),
+              setter,
+            }}
+            style={{ marginBottom: 2 }}
+            value={v}
+            onChange={onChange}
+          />
+          <DragOutlined
+            onClick={() => onChange(valueArr.filter((_, idx) => index !== idx))}
+          />
+          <DeleteOutlined
+            style={{ marginLeft: 12 }}
+            onClick={() => onChange(valueArr.filter((_, idx) => index !== idx))}
+          />
+        </div>
       ))}
       <a
         onClick={() => {

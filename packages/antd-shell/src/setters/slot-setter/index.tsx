@@ -8,5 +8,5 @@ export function SlotSetter({ value, onChange }: SetterProps<JSSlot>) {
     onChange({ ...value, enabled: checked })
   }
 
-  return <Switch checked={value?.enabled} onChange={handleChange} />
+  return <Switch checked={value?.enabled} size="small" onChange={handleChange} />
 }

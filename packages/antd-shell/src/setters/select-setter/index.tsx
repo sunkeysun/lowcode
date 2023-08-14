@@ -9,8 +9,9 @@ export function SelectSetter({ value, onChange, options }: SelectSetterProps) {
   return (
     <Select
       value={value}
-      onChange={(value) => onChange(value)}
       options={options}
+      size="small"
+      onChange={(value) => onChange(value)}
     />
   )
 }

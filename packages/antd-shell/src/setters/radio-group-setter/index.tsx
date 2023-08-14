@@ -13,8 +13,10 @@ export function RadioGroupSetter({
   return (
     <Radio.Group
       value={value}
-      onChange={(evt) => onChange(evt.target.value)}
       options={options}
+      size="small"
+      optionType="button"
+      onChange={(evt) => onChange(evt.target.value)}
     />
   )
 }

@@ -25,6 +25,7 @@ export function JsonSetter({
   return (
     <Input.TextArea
       value={editJson}
+      size="small"
       onChange={(e) => setEditJson(e.target.value)}
       onBlur={() => onChange(jsonObj)}
     />

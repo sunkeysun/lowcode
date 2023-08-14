@@ -165,6 +165,12 @@ export const Button: ComponentMetaSchema = {
                     isRequired: true,
                   },
                   {
+                    name: 'desc',
+                    title: { label: '描述' },
+                    setter: 'StringSetter',
+                    isRequired: true,
+                  },
+                  {
                     name: 'age',
                     title: { label: '年龄' },
                     setter: 'NumberSetter',
@@ -187,7 +193,7 @@ export const Button: ComponentMetaSchema = {
             },
             defaultValue: {
               name: '我的姓名',
-              age: '我的年龄',
+              age: 18,
             },
           },
         },

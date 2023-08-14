@@ -3,8 +3,9 @@ import {
   useSetterField,
   type ComponentPropSchema,
 } from '@lowcode/core'
+import { type CSSProperties } from 'react'
 import * as setters from '../../../setters'
-import { Form, Layout, Tabs } from 'antd'
+import { Form, Layout, Tabs, Tooltip, Typography } from 'antd'
 
 type SetterName = keyof typeof setters
 type SetterComponent = (p: {
@@ -16,10 +17,12 @@ type SetterComponent = (p: {
 export function SetterField({
   schema,
   value,
+  style = { marginBottom: 8 },
   onChange,
 }: {
   schema: ComponentPropSchema
   value: unknown
+  style?: CSSProperties
   onChange: (v: Record<string, unknown>) => void
 }) {
   const { name, title, display, setterName, setterProps } = useSetterField({
@@ -33,8 +36,14 @@ export function SetterField({
 
   const formItem = (
     <Form.Item
-      label={typeof title === 'string' ? title : title.label}
-      style={{ marginBottom: 16 }}
+      label={
+        typeof title === 'string' ? (
+          title
+        ) : (
+          <Tooltip title={title.tip}>{title.label}</Tooltip>
+        )
+      }
+      style={style}
     >
       <SetterComponent
         {...setterProps}
@@ -45,7 +54,29 @@ export function SetterField({
   )
 
   if (display === 'block') {
-    return <Form layout="vertical">{formItem}</Form>
+    return (
+      <>
+        <Typography.Title
+          level={5}
+          style={{
+            margin: '0 -12px',
+            backgroundColor: 'rgba(150,150,150,.1)',
+            padding: '2px 12px',
+            fontSize: 14,
+            fontWeight: 500,
+          }}
+        >
+          {typeof title === 'string' ? title : title.label}
+        </Typography.Title>
+        <div style={{ padding: 8 }}>
+          <SetterComponent
+            {...setterProps}
+            value={value}
+            onChange={(v: unknown) => onChange({ [name]: v })}
+          />
+        </div>
+      </>
+    )
   }
 
   return formItem
@@ -65,7 +96,15 @@ export function SettingForm() {
           label: '属性',
           children: (
             <Layout style={{ padding: 12, backgroundColor: 'transparent' }}>
-              <Form colon={false} component={false} title="设置表单">
+              <Form
+                labelCol={{ span: 6 }}
+                style={{ fontSize: 12 }}
+                labelAlign="left"
+                labelWrap
+                colon={false}
+                component={false}
+                title="设置表单"
+              >
                 {schema.map((setterSchema, index) => (
                   <SetterField
                     key={index}

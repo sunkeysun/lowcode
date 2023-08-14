@@ -8,6 +8,7 @@ export function ExpressionSetter({
   return (
     <Input
       value={value?.value}
+      size="small"
       onChange={(e) =>
         onChange({ type: 'JSExpression', value: e.target.value })
       }

@@ -8,6 +8,7 @@ export function FunctionSetter({
   return (
     <Input
       value={value?.value}
+      size="small"
       onChange={(evt) =>
         onChange({ type: 'JSFunction', value: evt.target.value })
       }

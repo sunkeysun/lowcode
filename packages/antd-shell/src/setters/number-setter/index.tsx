@@ -6,6 +6,7 @@ export function NumberSetter({ value, onChange }: SetterProps<number>) {
     <InputNumber
       type="number"
       value={value}
+      size="small"
       onChange={(value) => onChange(value as number)}
     />
   )
